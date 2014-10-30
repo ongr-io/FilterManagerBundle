@@ -1,0 +1,56 @@
+framework:
+    secret: "supersecret"
+    test: ~
+
+ongr_elasticsearch:
+    connections:
+        default:
+            hosts:
+                - { host: 127.0.0.1, port: 9200 }
+            index_name: filter_manager_testing
+            settings:
+                refresh_interval: -1
+                number_of_shards: 2
+                number_of_replicas: 0
+                index:
+                    refresh_interval: -1
+                analysis:
+                    tokenizer:
+                        pathTokenizer:
+                            type : path_hierarchy
+                            buffer_size: 2024
+                            skip: 0
+                            delimiter: /
+                    filter:
+                        incremental_filter:
+                            type: edge_ngram
+                            min_gram: 1
+                            max_gram: 20
+                    analyzer:
+                        urlAnalyzer:
+                            type: custom
+                            tokenizer: keyword
+                            filter: [lowercase]
+    managers:
+        default:
+            connection: default
+            mappings:
+                - AcmeTestBundle
+
+ongr_filter_manager:
+    managers:
+        foo_filters:
+            filters: ['phrase']
+            repository: 'product'
+    filters:
+        match:
+            phrase:
+                request_field: 'q'
+        pager:
+            pager:
+                request_field: 'page'
+                count_per_page: 12
+        range:
+            range:
+                request_field: 'range'
+                field: 'price'

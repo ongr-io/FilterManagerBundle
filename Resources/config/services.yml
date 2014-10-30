@@ -1,0 +1,10 @@
+parameters:
+    ongr_filter_manager.filter_map:
+        choice: ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice
+        match: ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch
+        document_field: ONGR\FilterManagerBundle\Filters\Widget\Search\DocumentField
+        sort: ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort
+        pager: ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager
+        range: ONGR\FilterManagerBundle\Filters\Widget\Range\Range
+
+services:

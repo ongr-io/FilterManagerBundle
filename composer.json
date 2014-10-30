@@ -1,0 +1,29 @@
+{
+    "name": "ongr/filter-manager-bundle",
+    "description": "Filter manager bundle for product lists",
+    "type": "symfony-bundle",
+    "homepage": "http://ongr.io",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ONGR team",
+            "homepage": "http://www.nfq.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "symfony/symfony": "~2.3",
+        "ongr/elasticsearch-bundle": "~0.1"
+    },
+    "require-dev": {
+        "ongr/pager-bundle": "dev-master",
+        "phpunit/phpunit": "~4.1",
+        "squizlabs/php_codesniffer": "~1.5"
+    },
+    "suggest": {
+        "ongr/pager-bundle": "Enables pager filter"
+    },
+    "autoload": {
+        "psr-4": { "ONGR\\FilterManagerBundle\\": "" }
+    }
+}
