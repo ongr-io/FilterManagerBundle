@@ -36,7 +36,7 @@ public function registerBundles()
 Step 3: Add configuration for manager
 -----------------------------
 
-Add minimal configuration for Filtermanager bundle.
+Add minimal configuration for FilterManager bundle.
 
 ```yaml
 #app/config/config.yml
