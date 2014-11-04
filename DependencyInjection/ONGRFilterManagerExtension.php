@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * This is the class that loads and manages bundle configuration
+ * This is the class that loads and manages bundle configuration.
  */
 class ONGRFilterManagerExtension extends Extension
 {
@@ -31,19 +31,13 @@ class ONGRFilterManagerExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         $filterMap = $container->getParameter('ongr_filter_manager.filter_map');
 
         foreach ($config['filters'] as $type => $filters) {
-
-            if (!isset($filterMap[$type])) {
-                throw new \Exception("Unknown filter type '$type'.");
-            }
-
             foreach ($filters as $name => $filter) {
-
                 $filterDefinition = new Definition($filterMap[$type]);
                 $filterDefinition->addMethodCall('setRequestField', [$filter['request_field']]);
                 if (isset($filter['field'])) {
@@ -66,7 +60,6 @@ class ONGRFilterManagerExtension extends Extension
         }
 
         foreach ($config['managers'] as $name => $manager) {
-
             $filtersContainer = new Definition('ONGR\FilterManagerBundle\Search\FiltersContainer');
 
             foreach ($manager['filters'] as $filter) {
@@ -89,7 +82,7 @@ class ONGRFilterManagerExtension extends Extension
     }
 
     /**
-     * Adds relation to filter
+     * Adds relation to filter.
      *
      * @param Definition $definition
      * @param array      $filter
@@ -107,7 +100,7 @@ class ONGRFilterManagerExtension extends Extension
     }
 
     /**
-     * Creates relation definition by given parameters
+     * Creates relation definition by given parameters.
      *
      * @param string $type
      * @param array  $relations
