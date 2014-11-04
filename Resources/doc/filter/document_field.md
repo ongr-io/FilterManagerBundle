@@ -33,7 +33,7 @@ ongr_filter_manager:
     managers:
         item_list:
             filters:
-                - document_field
+                - colors
             repository: 'item'
     filters:
         document_field:

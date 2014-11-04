@@ -18,7 +18,7 @@ ongr_search_page:
         template: "AcmeDemoBundle:List:results.html.twig"
 ```
 This specific example will render template `AcmeDemoBundle:List:results.html.twig`,
-with manager data from manager named `manager_list`.
+with [SearchResponse][1] from [FiltersManager][2] named `item_list`.
 
 ### Using custom controller.
 You can still use custom controller by getting your needed manager from the container.
@@ -48,7 +48,7 @@ class ListController extends Controller
      *
      * @return Response
      */
-    public function managerAction(Request $request)
+    public function indexAction(Request $request)
     {
         return $this->render(
             'AcmeDemoBundle:List:results.html.twig',
@@ -75,18 +75,18 @@ class ListController extends Controller
 ```
 
 ## Template variables
-If you're using default controller, the *Filter manager* variable in template will be named `filter_manager`,
+If you're using default controller, [SearchResponse][1] from [FiltersManager][2] will be named `filter_manager` in template,
 otherwise it's whatever you call it in your controller.
 
-You can use *Filter manager* to get results in your template.
+You can use [SearchResponse][1] to get results in your template.
 Example:
 ```
-{% for item in filter_manager.getResult %}
+{% for item in filter_manager.result %}
     <b>{{ item.title }}</b>
 {% endfor %}
 ```
 
-You can also use *Filter manager* to get data about your filter.
+You can also use it to get data about your filter.
 Example:
 ```
 Pager url parameters: {{ filter_manager.filters.pager.getUrlParameters() }}
@@ -100,3 +100,5 @@ A complete list of parameters for each filter can be found in its documentation:
 * [Pager filter](filter/pager.md)
 * [Sort filter](filter/sort.md)
 
+[1]: https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php
+[2]: https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FiltersManager.php
