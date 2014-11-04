@@ -18,6 +18,7 @@ class AppKernel extends Kernel
     {
         return [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+            new Symfony\Bundle\TwigBundle\TwigBundle(),
             new ONGR\ElasticsearchBundle\ONGRElasticsearchBundle(),
             new ONGR\FilterManagerBundle\ONGRFilterManagerBundle(),
             new ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\AcmeTestBundle(),

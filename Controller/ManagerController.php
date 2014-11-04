@@ -19,10 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 class ManagerController extends Controller
 {
     /**
-     * Renders view with filter manager response
+     * Renders view with filter manager response.
      *
      * @param Request $request
-     * @param string $managerName
+     * @param string  $managerName Filter manager name.
+     * @param string  $template    Template name.
      *
      * @return Response
      */
@@ -35,10 +36,10 @@ class ManagerController extends Controller
     }
 
     /**
-     * Returns search response results from filter manager
+     * Returns search response results from filter manager.
      *
      * @param Request $request
-     * @param string $name
+     * @param string  $name    Filter manager name.
      *
      * @return array
      */

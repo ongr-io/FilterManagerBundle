@@ -1,6 +1,11 @@
 framework:
     secret: "supersecret"
     test: ~
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: "%kernel.debug%"
+    templating:
+        engines: ['twig']
 
 ongr_elasticsearch:
     connections:
