@@ -15,12 +15,12 @@ use ONGR\FilterManagerBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
 /**
- * Unit test for configuration tree
+ * Unit test for configuration tree.
  */
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Returns sample minimal configuration for filter manager
+     * Returns sample minimal configuration for filter manager.
      *
      * @return array
      */
@@ -42,6 +42,10 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                                 'include' => ['color'],
                                 'exclude' => [],
                             ],
+                            'reset' => [
+                                'include' => [],
+                                'exclude' => ['size'],
+                            ]
                         ],
                     ],
                 ],
@@ -52,21 +56,17 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
                 'pager' => [
-                    'paging' => [
-                        'request_field' => 'page'
-                    ]
+                    'paging' => ['request_field' => 'page']
                 ],
                 'range' => [
-                    'range' => [
-                        'request_field' => 'range'
-                    ]
+                    'range' => ['request_field' => 'range']
                 ]
             ],
         ];
     }
 
     /**
-     * Data provider for testConfiguration()
+     * Data provider for testConfiguration().
      *
      * @return array
      */
@@ -82,31 +82,39 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['es_manager'] = 'default';
 
         // Case #0 Base configuration with default values.
-        $cases[] = [$baseConfig, $expectedBaseConfig];
+        $cases[] = [
+            $baseConfig,
+            $expectedBaseConfig,
+        ];
 
         // Case #1 Normalize relations string to array.
         $customConfig = $baseConfig;
         $customConfig['filters']['match']['phrase']['relations']['search']['include'] = 'color';
-        $cases[] = [$customConfig, $expectedBaseConfig];
+        $customConfig['filters']['match']['phrase']['relations']['reset']['exclude'] = 'size';
+        $cases[] = [
+            $customConfig,
+            $expectedBaseConfig,
+        ];
 
         // Case #2 Set choice field name as label if label is missing.
         $customConfig = $expectedBaseConfig;
-        $customConfig['filters']['sort']['sorting']['choices'][0] = [
-            'field' => 'test',
-        ];
+        $customConfig['filters']['sort']['sorting']['choices'][0] = ['field' => 'test'];
         $expectedConfig = $customConfig;
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['label'] = 'test';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['default'] = false;
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';
         unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['choice']);
-        $cases[] = [$customConfig, $expectedConfig];
+        $cases[] = [
+            $customConfig,
+            $expectedConfig,
+        ];
 
         return $cases;
     }
 
     /**
-     * Tests if expected default values are added
+     * Tests if expected default values are added.
      *
      * @param array $config
      * @param array $expected
@@ -121,7 +129,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider for testConfigurationException()
+     * Data provider for testConfigurationException().
      *
      * @return array
      */
@@ -129,7 +137,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $cases = [];
 
-        // #0 Empty configuration
+        // Case #0 Empty configuration.
         $config = $this->getBaseConfiguration();
         unset($config['managers']);
         $cases[] = [
@@ -137,7 +145,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The child node "managers" at path "ongr_filter_manager" must be configured.',
         ];
 
-        // #1 Missing "managers" config
+        // Case #1 Missing "managers" config.
         $config = $this->getBaseConfiguration();
         $config['managers'] = null;
         $cases[] = [
@@ -145,7 +153,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The path "ongr_filter_manager.managers" should have at least 1 element(s) defined.',
         ];
 
-        // #2 Incomplete manager config, missing "filters"
+        // Case #2 Incomplete manager config, missing "filters".
         $config = $this->getBaseConfiguration();
         unset($config['managers']['foo_filters']['filters']);
         $cases[] = [
@@ -153,7 +161,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The child node "filters" at path "ongr_filter_manager.managers.foo_filters" must be configured.',
         ];
 
-        // #3 Incomplete manager config, "filters" is empty
+        // Case #3 Incomplete manager config, "filters" is empty.
         $config = $this->getBaseConfiguration();
         $config['managers']['foo_filters']['filters'] = null;
         $cases[] = [
@@ -161,7 +169,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The path "ongr_filter_manager.managers.foo_filters.filters" should have at least 1 element(s) defined.',
         ];
 
-        // #4 Incomplete manager config, missing "repository"
+        // Case #4 Incomplete manager config, missing "repository".
         $config = $this->getBaseConfiguration();
         unset($config['managers']['foo_filters']['repository']);
         $cases[] = [
@@ -169,7 +177,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The child node "repository" at path "ongr_filter_manager.managers.foo_filters" must be configured.',
         ];
 
-        // #5 Missing "filters" config
+        // Case #5 Missing "filters" config.
         $config = $this->getBaseConfiguration();
         unset($config['filters']);
         $cases[] = [
@@ -177,7 +185,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The child node "filters" at path "ongr_filter_manager" must be configured.',
         ];
 
-        // #6 Empty "filters" config
+        // Case #6 Empty "filters" config.
         $config = $this->getBaseConfiguration();
         $config['filters'] = null;
         $cases[] = [
@@ -185,7 +193,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'Invalid configuration for path "ongr_filter_manager.filters": At least single filter must be configured.',
         ];
 
-        // #7 Incomplete "filters" config, no filters specified under filter type
+        // Case #7 Incomplete "filters" config, no filters specified under filter type.
         $config = $this->getBaseConfiguration();
         $config['filters']['match'] = null;
         $cases[] = [
@@ -193,7 +201,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The path "ongr_filter_manager.filters.match" should have at least 1 element(s) defined.',
         ];
 
-        // #8 Incomplete "filters" config, "request_field" missing
+        // Case #8 Incomplete "filters" config, "request_field" missing.
         $config = $this->getBaseConfiguration();
         unset($config['filters']['match']['phrase']['request_field']);
         $cases[] = [
@@ -201,7 +209,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'The child node "request_field" at path "ongr_filter_manager.filters.match.phrase" must be configured.',
         ];
 
-        // #9 Incomplete relations config
+        // Case #9 Incomplete relations config.
         $config = $this->getBaseConfiguration();
         $config['filters']['match']['phrase']['relations']['search']['include'] = [];
         $cases[] = [
@@ -210,7 +218,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'Relation must have "include" or "exclude" fields specified.',
         ];
 
-        // #10 Incorrect relations specified
+        // Case #10 Incorrect relations specified.
         $config = $this->getBaseConfiguration();
         $config['filters']['match']['phrase']['relations']['search']['exclude'] = ['foo'];
         $cases[] = [
@@ -223,7 +231,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests if expected default values are added
+     * Tests if expected default values are added.
      *
      * @param array  $config
      * @param string $exceptionMessage
