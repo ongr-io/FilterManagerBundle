@@ -46,6 +46,9 @@ class ONGRFilterManagerExtension extends Extension
                 if (isset($filter['count_per_page'])) {
                     $filterDefinition->addMethodCall('setCountPerPage', [$filter['count_per_page']]);
                 }
+                if (isset($filter['max_pages'])) {
+                    $filterDefinition->addMethodCall('setMaxPages', [$filter['max_pages']]);
+                }
                 if (isset($filter['choices'])) {
                     $filterDefinition->addMethodCall('setChoices', [$filter['choices']]);
                 }

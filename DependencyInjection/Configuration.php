@@ -154,7 +154,14 @@ class Configuration implements ConfigurationInterface
             case 'pager':
                 $node
                     ->children()
-                        ->integerNode('count_per_page')->info('Item count per page')->defaultValue(10)->end()
+                        ->integerNode('count_per_page')
+                            ->info('Item count per page')
+                            ->defaultValue(10)
+                        ->end()
+                        ->integerNode('max_pages')
+                            ->info('Max pages displayed in pager at once.')
+                            ->defaultValue(8)
+                        ->end()
                     ->end();
                 break;
         }

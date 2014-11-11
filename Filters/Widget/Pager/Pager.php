@@ -34,6 +34,27 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
     private $countPerPage = 10;
 
     /**
+     * @var int
+     */
+    private $maxPages = 8;
+
+    /**
+     * @return int
+     */
+    public function getMaxPages()
+    {
+        return $this->maxPages;
+    }
+
+    /**
+     * @param int $maxPages
+     */
+    public function setMaxPages($maxPages)
+    {
+        $this->maxPages = $maxPages;
+    }
+
+    /**
      * Sets count per page.
      *
      * @param int $count
@@ -103,6 +124,7 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
         $pagerOptions = [
             'page' => $data->getState()->getValue(),
             'limit' => $this->getCountPerPage(),
+            'max_pages' => $this->getMaxPages(),
         ];
 
         /** @var ViewData\PagerAwareViewData $data */

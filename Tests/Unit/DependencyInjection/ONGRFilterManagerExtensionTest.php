@@ -119,6 +119,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                 'request_field' => 'page',
                 'field' => 'page_field',
                 'count_per_page' => 10,
+                'max_pages' => 8,
             ]
         ];
         $config['ongr_filter_manager']['filters']['pager'] = $pagerConfig;
@@ -132,21 +133,19 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
         $expectedMethods = [
             [
                 'setRequestField',
-                [
-                    'page',
-                ],
+                ['page'],
             ],
             [
                 'setField',
-                [
-                    'page_field',
-                ],
+                ['page_field'],
             ],
             [
                 'setCountPerPage',
-                [
-                    '10',
-                ],
+                ['10'],
+            ],
+            [
+                'setMaxPages',
+                ['8'],
             ],
         ];
 
