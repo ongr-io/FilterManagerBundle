@@ -61,21 +61,31 @@ class PagerTest extends ElasticsearchTestCase
     /**
      * Returns filter manager.
      *
-     * @param int $countPerPage
+     * @param array $options
      *
      * @return FiltersManager
      */
-    protected function getFiltersManager($countPerPage)
+    protected function getFiltersManager(array $options)
     {
         $container = new FiltersContainer();
 
         $choices = [
-            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false]
+            [
+                'label' => 'Stock ASC',
+                'field' => 'stock',
+                'order' => 'asc',
+                'default' => false,
+            ],
         ];
 
         $filter = new Pager();
         $filter->setRequestField('page');
-        $filter->setCountPerPage($countPerPage);
+        if (isset($options['count_per_page'])) {
+            $filter->setCountPerPage($options['count_per_page']);
+        }
+        if (isset($options['max_pages'])) {
+            $filter->setMaxPages($options['max_pages']);
+        }
         $container->set('pager', $filter);
 
         $sort = new Sort();
@@ -98,22 +108,22 @@ class PagerTest extends ElasticsearchTestCase
         // Case #0: page with offset.
         $out[] = [
             new Request(['page' => 2]),
-            2,
-            ['3', '4']
+            ['count_per_page' => 2],
+            ['3', '4'],
         ];
 
         // Case #1: limit bigger than the total results.
         $out[] = [
             new Request(['page' => 2]),
-            5,
-            []
+            ['count_per_page' => 5],
+            [],
         ];
 
         // Case #2: limit bigger than the total results, should return everything.
         $out[] = [
             new Request(['page' => 1]),
-            5,
-            ['1', '2', '3', '4']
+            ['count_per_page' => 5],
+            ['1', '2', '3', '4'],
         ];
 
         return $out;
@@ -128,10 +138,10 @@ class PagerTest extends ElasticsearchTestCase
      *
      * @dataProvider getTestPagerData()
      */
-    public function testPager(Request $request, $countPerPage, $expectedDocs)
+    public function testPager(Request $request, $options, $expectedDocs)
     {
         $request->query->add(['sort' => '0']);
-        $result = $this->getFiltersManager($countPerPage)->execute($request)->getResult();
+        $result = $this->getFiltersManager($options)->execute($request)->getResult();
 
         $actual = [];
         /** @var DocumentInterface $document */
@@ -147,9 +157,72 @@ class PagerTest extends ElasticsearchTestCase
      */
     public function testGetViewData()
     {
-        $manager = $this->getFiltersManager(2);
+        $manager = $this->getFiltersManager(['count_per_page' => 2]);
         $viewData = $manager->execute(new Request(['page' => 3]))->getFilters();
 
         $this->assertEquals(3, $viewData['pager']->getState()->getValue());
+    }
+
+    /**
+     * Data provider for testPageRange.
+     *
+     * @return array
+     */
+    public function getPageRangeData()
+    {
+        $out = [];
+
+        $options = [
+            'count_per_page' => 1,
+            'max_pages' => 3,
+        ];
+
+        $out[] = [
+            $options,
+            1,
+            [1, 2, 3],
+        ];
+
+        $out[] = [
+            $options,
+            2,
+            [1, 2, 3],
+        ];
+
+        $out[] = [
+            $options,
+            3,
+            [2, 3, 4],
+        ];
+
+        $out[] = [
+            $options,
+            4,
+            [3, 4],
+        ];
+
+        return $out;
+    }
+
+    /**
+     * Tests if pages range is generated correctly.
+     *
+     * @param array $options
+     * @param int   $page
+     * @param array $expected
+     *
+     * @dataProvider getPageRangeData
+     */
+    public function testPageRange($options, $page, $expected)
+    {
+        $manager = $this->getFiltersManager($options);
+
+        $range = $manager
+            ->execute(new Request(['page' => $page]))
+            ->getFilters()['pager']
+            ->getPager()
+            ->getPages();
+
+        $this->assertEquals($expected, $range);
     }
 }

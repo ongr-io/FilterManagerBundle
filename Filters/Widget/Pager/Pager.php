@@ -31,12 +31,12 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
     /**
      * @var int
      */
-    private $countPerPage = 10;
+    private $countPerPage;
 
     /**
      * @var int
      */
-    private $maxPages = 8;
+    private $maxPages;
 
     /**
      * @return int
@@ -80,9 +80,9 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
     public function getState(Request $request)
     {
         $state = parent::getState($request);
-        // Reset pager with any filter
+        // Reset pager with any filter.
         $state->setUrlParameters([]);
-        $page = (integer) $state->getValue();
+        $page = (integer)$state->getValue();
         $state->setValue($page < 1 ? 1 : $page);
 
         return $state;
@@ -121,14 +121,19 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
      */
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
-        $pagerOptions = [
-            'page' => $data->getState()->getValue(),
-            'limit' => $this->getCountPerPage(),
-            'max_pages' => $this->getMaxPages(),
-        ];
-
         /** @var ViewData\PagerAwareViewData $data */
-        $data->setPager(new PagerService(new CountAdapter($result->getTotalCount()), $pagerOptions));
+        $data->setPager(
+            new PagerService(
+                new CountAdapter($result->getTotalCount()),
+                array_filter(
+                    [
+                        'page' => $data->getState()->getValue(),
+                        'limit' => $this->getCountPerPage(),
+                        'max_pages' => $this->getMaxPages(),
+                    ]
+                )
+            )
+        );
 
         return $data;
     }
