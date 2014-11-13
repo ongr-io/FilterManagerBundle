@@ -77,6 +77,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $baseConfig = $this->getBaseConfiguration();
         $expectedBaseConfig = $baseConfig;
         $expectedBaseConfig['filters']['pager']['paging']['count_per_page'] = 10;
+        $expectedBaseConfig['filters']['pager']['paging']['max_pages'] = 8;
         $expectedBaseConfig['filters']['document_field'] = [];
         $expectedBaseConfig['filters']['choice'] = [];
         $expectedBaseConfig['es_manager'] = 'default';
