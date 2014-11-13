@@ -30,6 +30,7 @@ $ php composer.phar require ongr/pager-bundle "~1.0"
 |------------------------|--------------------------------------------------------------------------------------|
 | `request_field`        | Request field used to pass the page number (f.e. `www.page.com/?request_field=4`)    |
 | `count_per_page`       | Number of items per page. (default `10`).                                            |
+| `max_pages`            | Maximum number of pages displayed in pager at once (default `8`).                    |
 
 Example:
 ```yaml
@@ -45,6 +46,7 @@ ongr_filter_manager:
             list_pager:
                 request_field: 'page'
                 count_per_page: 9
+                max_pages: 6
 ```
 
 # Twig view data
