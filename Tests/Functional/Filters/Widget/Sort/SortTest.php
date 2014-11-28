@@ -66,7 +66,7 @@ class SortTest extends ElasticsearchTestCase
 
         $choices = [
             ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false],
-            ['label' => 'Stock DESC', 'field' => 'stock', 'order' => 'desc', 'default' => false],
+            ['label' => 'Stock DESC', 'field' => 'stock', 'order' => 'desc', 'default' => true],
             ['label' => 'Stock Keyed', 'field' => 'stock', 'order' => 'desc', 'default' => false, 'key' => 'foo'],
         ];
 
@@ -102,6 +102,12 @@ class SortTest extends ElasticsearchTestCase
         // Case #2: using keyed parameters
         $out[] = [
             new Request(['sort' => 'foo']),
+            ['4', '2', '1', '3']
+        ];
+
+        // Case #3: empty sort, should fallback to default
+        $out[] = [
+            new Request(['sort' => '']),
             ['4', '2', '1', '3']
         ];
 
