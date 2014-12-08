@@ -36,7 +36,7 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
         $state = new FilterState();
         $value = $request->get($this->getRequestField());
 
-        if (isset($value)) {
+        if (isset($value) && $value !== '') {
             $state->setActive(true);
             $state->setValue($value);
             $state->setUrlParameters([$this->getRequestField() => $value]);
