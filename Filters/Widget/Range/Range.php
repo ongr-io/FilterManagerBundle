@@ -43,9 +43,9 @@ class Range extends AbstractSingleRequestValueFilter implements FieldAwareInterf
         $values = explode(';', $state->getValue(), 2);
 
         if (count($values) < 2) {
-            throw new \UnderflowException(
-                "Range request field value must contain from, to values delimited by ';', got {$state->getValue()}."
-            );
+            $state->setActive(false);
+
+            return $state;
         }
 
         $normalized['gt'] = (int)$values[0];

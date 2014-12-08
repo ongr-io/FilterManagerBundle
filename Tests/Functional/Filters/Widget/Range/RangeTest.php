@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\PagerBundle\Tests\Functional\Filters\Range;
+namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Range;
 
 use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
 use ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort;
@@ -76,6 +76,9 @@ class RangeTest extends FilterManagerResultsTest
         // Case #2 no elements.
         $out[] = [new Request(['range' => '2;3', 'sort' => '0']), [], true];
 
+        // Case #3 invalid range specified.
+        $out[] = [new Request(['range' => '2', 'sort' => '0']), ['1', '2', '3', '4'], true];
+
         return $out;
     }
 
@@ -89,7 +92,7 @@ class RangeTest extends FilterManagerResultsTest
         $container = new FiltersContainer();
 
         $choices = [
-            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false]
+            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false],
         ];
 
         $filter = new Range();
