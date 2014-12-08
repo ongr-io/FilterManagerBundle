@@ -21,14 +21,19 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
  */
 class MatchSearch extends AbstractSingleValue
 {
-
     /**
      * {@inheritdoc}
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $search->addQuery(new MatchQuery($state->getValue(), $this->getField()), 'must');
+            if (strpos($this->getField(), ',') !== false) {
+                foreach (explode(',', $this->getField()) as $field) {
+                    $search->addQuery(new MatchQuery($state->getValue(), $field), 'should');
+                }
+            } else {
+                $search->addQuery(new MatchQuery($state->getValue(), $this->getField()), 'must');
+            }
         }
     }
 }

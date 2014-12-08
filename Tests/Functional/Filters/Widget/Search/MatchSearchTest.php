@@ -28,15 +28,16 @@ class MatchSearchTest extends ElasticsearchTestCase
                 'product' => [
                     [
                         '_id' => 1,
-                        'title' => 'Awesome'
+                        'title' => 'Foo'
                     ],
                     [
                         '_id' => 2,
-                        'title' => 'Awesomer'
+                        'title' => 'Baz',
+                        'description' => 'tuna fish'
                     ],
                     [
                         '_id' => 3,
-                        'title' => 'Awesomo bar'
+                        'title' => 'Foo bar'
                     ]
                 ]
             ]
@@ -54,7 +55,7 @@ class MatchSearchTest extends ElasticsearchTestCase
         
         $match = new MatchSearch();
         $match->setRequestField('q');
-        $match->setField('title');
+        $match->setField('title,description');
         
         $container->set('match', $match);
         
@@ -70,8 +71,11 @@ class MatchSearchTest extends ElasticsearchTestCase
     {
         $out = [];
         
-        $out[] = [[1], new Request(['q' => 'Awesome'])];
-        $out[] = [[3], new Request(['q' => 'bar'])];
+        // Case #0: simple from title field
+        $out[] = [[1, 3], new Request(['q' => 'Foo'])];
+        // Case #1: simple from description field
+        $out[] = [[2], new Request(['q' => 'fish'])];
+        // Case #2: empty parameter
         $out[] = [[1, 2, 3], new Request(['q' => ''])];
         
         return $out;
