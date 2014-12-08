@@ -19,14 +19,15 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class holds collection of FilterInterface objects labeled by name
+ * This class holds collection of FilterInterface objects labeled by name.
  */
 class FiltersContainer extends ParameterBag
 {
     /**
-     * Filters accepted
+     * Filters accepted.
      *
      * @param RelationInterface $relation
+     *
      * @return FilterInterface[]
      */
     public function getFiltersByRelation(RelationInterface $relation)
@@ -35,9 +36,10 @@ class FiltersContainer extends ParameterBag
     }
 
     /**
-     * Builds search request according to given filters
+     * Builds search request according to given filters.
      *
      * @param Request $request
+     *
      * @return SearchRequest
      */
     public function buildSearchRequest(Request $request)
@@ -56,10 +58,11 @@ class FiltersContainer extends ParameterBag
     }
 
     /**
-     * Builds elastic search query by given SearchRequest and filters
+     * Builds elastic search query by given SearchRequest and filters.
      *
-     * @param SearchRequest $request
+     * @param SearchRequest          $request
      * @param FilterInterface[]|null $filters
+     *
      * @return \ElasticsearchBundle\DSL\Search
      */
     public function buildSearch(SearchRequest $request, $filters = null)

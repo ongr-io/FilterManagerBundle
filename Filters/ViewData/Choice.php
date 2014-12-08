@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Filters\ViewData;
 
 /**
- * This class holds data for filter choice
+ * This class holds data for filter choice.
  */
 class Choice
 {
@@ -27,7 +27,7 @@ class Choice
     private $default = false;
 
     /**
-     * holds set or unset parameters depending on state
+     * Holds set or unset parameters depending on state.
      *
      * @var array
      */
@@ -39,14 +39,14 @@ class Choice
     private $label;
 
     /**
-     * Represents document count for option
+     * Represents document count for option.
      *
      * @var int
      */
     private $count = 0;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
@@ -54,7 +54,7 @@ class Choice
     }
 
     /**
-     * @param boolean $active
+     * @param bool $active
      */
     public function setActive($active)
     {

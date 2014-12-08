@@ -89,7 +89,7 @@ class RangeTest extends FilterManagerResultsTest
         $container = new FiltersContainer();
 
         $choices = [
-            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false]
+            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false],
         ];
 
         $filter = new Range();

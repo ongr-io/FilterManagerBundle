@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Relations;
 
 /**
- * This class represents "include" relation
+ * This class represents "include" relation.
  */
 class IncludeRelation implements RelationInterface
 {

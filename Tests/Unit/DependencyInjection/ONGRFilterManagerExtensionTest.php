@@ -178,7 +178,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                             'relations' => $relations,
                             'request_field' => 'sort',
                             'choices' => [
-                                ['label' => 'test', 'field' => 'test']
+                                ['label' => 'test', 'field' => 'test'],
                             ]
                         ]
                     ]

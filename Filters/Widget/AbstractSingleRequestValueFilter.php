@@ -17,7 +17,7 @@ use ONGR\FilterManagerBundle\Filters\Relations\RelationsAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class generalises filters using single field value from request
+ * This class generalises filters using single field value from request.
  */
 abstract class AbstractSingleRequestValueFilter implements FilterInterface
 {

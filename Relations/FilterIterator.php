@@ -14,7 +14,7 @@ namespace ONGR\FilterManagerBundle\Relations;
 use Iterator;
 
 /**
- * This class is able to filter out not related stuff by key and given relation
+ * This class is able to filter out not related stuff by key and given relation.
  */
 class FilterIterator extends \FilterIterator
 {
@@ -24,7 +24,7 @@ class FilterIterator extends \FilterIterator
     protected $relation;
 
     /**
-     * @param Iterator $iterator
+     * @param Iterator          $iterator
      * @param RelationInterface $relation
      */
     public function __construct(Iterator $iterator, RelationInterface $relation)

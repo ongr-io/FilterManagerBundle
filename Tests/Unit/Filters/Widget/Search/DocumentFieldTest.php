@@ -16,7 +16,7 @@ use ONGR\FilterManagerBundle\Filters\Widget\Search\DocumentField;
 class DocumentFieldTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test for getField() in case field value was not set
+     * Test for getField() in case field value was not set.
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Field must be set

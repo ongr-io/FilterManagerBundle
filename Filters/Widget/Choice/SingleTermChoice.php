@@ -27,7 +27,7 @@ use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareTrait;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
- * This class provides single terms choice
+ * This class provides single terms choice.
  */
 class SingleTermChoice extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
 {
@@ -53,7 +53,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         $agg->setField($this->getField());
 
         if ($relatedSearch->getPostFilters() && $relatedSearch->getPostFilters()->isRelevant()) {
-            $filterAgg = new FilterAggregation($name.'-filter');
+            $filterAgg = new FilterAggregation($name . '-filter');
             $filterAgg->setFilter($relatedSearch->getPostFilters());
             $filterAgg->aggregations->addAggregation($agg);
             $search->addAggregation($filterAgg);
@@ -76,6 +76,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         /** @var ChoicesAwareViewData $data */
+
         /** @var ValueAggregation $bucket */
         foreach ($this->fetchAggregation($result, $data->getName()) as $bucket) {
             $bucket = $bucket->getValue();
@@ -96,10 +97,11 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     }
 
     /**
-     * Fetches buckets from search results
+     * Fetches buckets from search results.
      *
-     * @param DocumentIterator $result Search results
-     * @param string $name Filter name
+     * @param DocumentIterator $result Search results.
+     * @param string           $name   Filter name.
+     *
      * @return array Buckets
      */
     protected function fetchAggregation(DocumentIterator $result, $name)
@@ -119,14 +121,16 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     }
 
     /**
-     * @param string $key
+     * @param string   $key
      * @param ViewData $data
+     *
      * @return array
      */
     protected function getOptionUrlParameters($key, ViewData $data)
     {
         $parameters = $data->getResetUrlParameters();
         $parameters[$this->getRequestField()] = $key;
+
         return $parameters;
     }
 }

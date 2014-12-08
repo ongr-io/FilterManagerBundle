@@ -14,7 +14,7 @@ namespace ONGR\FilterManagerBundle\Filters\Relations;
 use ONGR\FilterManagerBundle\Relations\RelationInterface;
 
 /**
- * This trait provides properties for standard filter relations
+ * This trait provides properties for standard filter relations.
  */
 trait RelationsAwareTrait
 {

@@ -15,7 +15,7 @@ use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\PagerBundle\Pager\PagerService;
 
 /**
- * This class represents view data with choices
+ * This class represents view data with choices.
  */
 class PagerAwareViewData extends ViewData
 {

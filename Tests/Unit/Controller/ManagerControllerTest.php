@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ManagerControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Tests response action
+     * Tests response action.
      */
     public function testGetResponseAction()
     {

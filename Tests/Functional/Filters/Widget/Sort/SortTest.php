@@ -79,7 +79,7 @@ class SortTest extends ElasticsearchTestCase
     }
 
     /**
-     * Data provider for testSorting()
+     * Data provider for testSorting().
      *
      * @return array
      */
@@ -87,29 +87,29 @@ class SortTest extends ElasticsearchTestCase
     {
         $out = [];
 
-        // Case #0: ascending sorting
+        // Case #0: ascending sorting.
         $out[] = [
             new Request(['sort' => 0]),
-            ['3', '1', '2', '4']
+            ['3', '1', '2', '4'],
         ];
 
-        // Case #1: descending sorting
+        // Case #1: descending sorting.
         $out[] = [
             new Request(['sort' => 1]),
-            ['4', '2', '1', '3']
+            ['4', '2', '1', '3'],
         ];
 
-        // Case #2: using keyed parameters
+        // Case #2: using keyed parameters.
         $out[] = [
             new Request(['sort' => 'foo']),
-            ['4', '2', '1', '3']
+            ['4', '2', '1', '3'],
         ];
 
         return $out;
     }
 
     /**
-     * Test sorting filter
+     * Test sorting filter.
      *
      * @param Request $request
      * @param array   $expectedOrder

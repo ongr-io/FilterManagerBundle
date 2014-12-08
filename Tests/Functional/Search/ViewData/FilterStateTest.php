@@ -53,7 +53,7 @@ class FilterStateTest extends ElasticsearchTestCase
     }
 
     /**
-     * Return any kind of filters manager to test
+     * Return any kind of filters manager to test.
      *
      * @return FiltersManager
      */
@@ -83,36 +83,37 @@ class FilterStateTest extends ElasticsearchTestCase
     {
         $out = [];
 
-        // case #0 title filter, both filters are set
+        // Case #0 title filter, both filters are set.
         $out[] = [
             new Request(['q' => 'cool', 'd' => 'product']),
             'title_match',
             'cool',
             ['q' => 'cool'],
-            []
+            [],
         ];
 
-        // case #1 description filter, both filters are set
+        // Case #1 description filter, both filters are set.
         $out[] = [
             new Request(['q' => 'cool', 'd' => 'product']),
             'description_match',
             'product',
             ['d' => 'product'],
-            ['q' => 'cool']
+            ['q' => 'cool'],
         ];
 
         return $out;
     }
 
     /**
-     * Test if we provide correct filter data
+     * Test if we provide correct filter data.
+     *
+     * @param Request $request
+     * @param string  $filter
+     * @param string  $value
+     * @param array   $urlParameters
+     * @param array   $resetUrlParameters
      *
      * @dataProvider getTestFilterStateData()
-     * @param Request $request
-     * @param string $filter
-     * @param string $value
-     * @param array $urlParameters
-     * @param array $resetUrlParameters
      */
     public function testFilterState(Request $request, $filter, $value, $urlParameters, $resetUrlParameters)
     {

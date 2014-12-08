@@ -17,7 +17,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This is the class that validates and merges configuration from app/config files
+ * This is the class that validates and merges configuration from app/config files.
  */
 class Configuration implements ConfigurationInterface
 {
@@ -77,14 +77,16 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('filters')
                     ->validate()
-                        ->ifTrue(function ($v) {
+                        ->ifTrue(
+                            function ($v) {
                             $v = array_filter($v);
 
                             return empty($v);
-                        })
+                            }
+                        )
                         ->thenInvalid('At least single filter must be configured.')
                     ->end()
-                    // TODO: validate if filter names are unique
+                    // TODO: validate if filter names are unique.
                     ->isRequired()
                     ->append($this->buildFilterTree('choice'))
                     ->append($this->buildFilterTree('match'))
@@ -97,7 +99,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Builds filter config tree for given filter name
+     * Builds filter config tree for given filter name.
      *
      * @param string $filterName
      *
@@ -131,14 +133,18 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('choices')
                             ->prototype('array')
                                 ->beforeNormalization()
-                                    ->ifTrue(function ($v) {
+                                    ->ifTrue(
+                                        function ($v) {
                                         return empty($v['label']);
-                                    })
-                                    ->then(function ($v) {
+                                        }
+                                    )
+                                    ->then(
+                                        function ($v) {
                                         $v['label'] = $v['field'];
 
                                         return $v;
-                                    })
+                                        }
+                                    )
                                 ->end()
                                 ->children()
                                     ->scalarNode('label')->end()
@@ -164,6 +170,9 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end();
                 break;
+            default:
+                // Should not happen.
+                break;
         }
 
         return $filter;
@@ -182,28 +191,36 @@ class Configuration implements ConfigurationInterface
 
         $filter
             ->validate()
-                ->ifTrue(function ($v) {
-                    return empty($v['include']) && empty($v['exclude']);
-                })
+                ->ifTrue(
+                    function ($v) {
+                        return empty($v['include']) && empty($v['exclude']);
+                    }
+                )
                 ->thenInvalid('Relation must have "include" or "exclude" fields specified.')
             ->end()
             ->validate()
-                ->ifTrue(function ($v) {
-                    return !empty($v['include']) && !empty($v['exclude']);
-                })
+                ->ifTrue(
+                    function ($v) {
+                        return !empty($v['include']) && !empty($v['exclude']);
+                    }
+                )
                 ->thenInvalid('Relation must have only "include" or "exclude" fields specified.')
             ->end()
             ->children()
                 ->arrayNode('include')
-                    ->beforeNormalization()->ifString()->then(function ($v) {
-                        return array($v);
-                    })->end()
+                    ->beforeNormalization()->ifString()->then(
+                        function ($v) {
+                            return [$v];
+                        }
+                    )->end()
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('exclude')
-                    ->beforeNormalization()->ifString()->then(function ($v) {
-                        return array($v);
-                    })->end()
+                    ->beforeNormalization()->ifString()->then(
+                        function ($v) {
+                            return [$v];
+                        }
+                    )->end()
                     ->prototype('scalar')->end()
                 ->end()
             ->end();

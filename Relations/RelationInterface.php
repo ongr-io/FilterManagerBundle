@@ -12,12 +12,12 @@
 namespace ONGR\FilterManagerBundle\Relations;
 
 /**
- * this interface defines methods to evaluate relations between filters
+ * This interface defines methods to evaluate relations between filters.
  */
 interface RelationInterface
 {
     /**
-     * Return true if object is related with given name
+     * Return true if object is related with given name.
      *
      * @param string $name
      *

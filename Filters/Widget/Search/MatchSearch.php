@@ -17,11 +17,10 @@ use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
- * This class runs match search
+ * This class runs match search.
  */
 class MatchSearch extends AbstractSingleValue
 {
-
     /**
      * {@inheritdoc}
      */

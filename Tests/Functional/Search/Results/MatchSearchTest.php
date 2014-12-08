@@ -18,7 +18,7 @@ use ONGR\FilterManagerBundle\Test\FilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class checks if we
+ * This class checks if we.
  */
 class MatchSearchTest extends FilterManagerResultsTest
 {
@@ -51,7 +51,7 @@ class MatchSearchTest extends FilterManagerResultsTest
     }
 
     /**
-     * Return any kind of filters manager to test
+     * Return any kind of filters manager to test.
      *
      * @return FiltersManager
      */
@@ -68,7 +68,7 @@ class MatchSearchTest extends FilterManagerResultsTest
     }
 
     /**
-     * Return your test cases here
+     * Return your test cases here.
      *
      * @return array
      */
@@ -76,13 +76,13 @@ class MatchSearchTest extends FilterManagerResultsTest
     {
         $out = [];
 
-        // case #0 empty request
+        // Case #0 empty request.
         $out[] = [new Request(), [1, 2, 3], false];
 
-        // case #1 foo request
+        // Case #1 foo request.
         $out[] = [new Request(['q' => 'foo']), [1, 2], false];
 
-        // case #2 cool request
+        // Case #2 cool request.
         $out[] = [new Request(['q' => 'cool']), [2, 3], false];
 
         return $out;

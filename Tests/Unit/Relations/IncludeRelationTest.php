@@ -17,7 +17,7 @@ use ONGR\FilterManagerBundle\Relations\IncludeRelation;
 class IncludeRelationTest extends ElasticsearchTestCase
 {
     /**
-     * Data provider for testFuzzyQuery()
+     * Data provider for testFuzzyQuery().
      *
      * @return array
      */
@@ -33,13 +33,13 @@ class IncludeRelationTest extends ElasticsearchTestCase
     }
 
     /**
-     * Test Include Relation
+     * Test Include Relation.
+     *
+     * @param array  $relations
+     * @param string $name
+     * @param bool   $expected
      *
      * @dataProvider getTestIncludeRelationData
-     *
-     * @param array     $relations
-     * @param string    $name
-     * @param bool      $expected
      */
     public function testIncludeRelation($relations, $name, $expected)
     {

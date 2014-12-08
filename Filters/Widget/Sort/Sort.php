@@ -24,7 +24,7 @@ use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareTrait;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
- * This class provides sorting filter
+ * This class provides sorting filter.
  */
 class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
 {
@@ -63,7 +63,7 @@ class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterfa
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        // Nothing to do here
+        // Nothing to do here.
     }
 
     /**
@@ -98,7 +98,7 @@ class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterfa
     }
 
     /**
-     * Sets possible choices list
+     * Sets possible choices list.
      *
      * @param array $choices
      */
@@ -112,14 +112,16 @@ class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterfa
     }
 
     /**
-     * @param string $key
+     * @param string   $key
      * @param ViewData $data
+     *
      * @return array
      */
     protected function getOptionUrlParameters($key, ViewData $data)
     {
         $parameters = $data->getResetUrlParameters();
         $parameters[$this->getRequestField()] = $key;
+
         return $parameters;
     }
 }

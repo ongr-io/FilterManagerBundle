@@ -15,7 +15,7 @@ use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 
 /**
- * This class holds full response of documents and filters data
+ * This class holds full response of documents and filters data.
  */
 class SearchResponse
 {
@@ -35,9 +35,9 @@ class SearchResponse
     private $urlParameters;
 
     /**
-     * @param ViewData[] $filters
+     * @param ViewData[]       $filters
      * @param DocumentIterator $result
-     * @param array $urlParameters
+     * @param array            $urlParameters
      */
     public function __construct($filters, $result, $urlParameters)
     {
