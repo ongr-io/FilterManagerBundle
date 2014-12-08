@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\PagerBundle\Tests\Unit\Filters\Range;
+namespace ONGR\FilterManagerBundle\Tests\Unit\Filters\Range;
 
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
@@ -21,16 +21,15 @@ use Symfony\Component\HttpFoundation\Request;
 class RangeTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Check if getState throws expected exception when state is active.
-     *
-     * @expectedException \UnderflowException
-     * @expectedExceptionMessage Range request field value must contain from, to values delimited by ';', got testValue.
+     * Check if getState returns false when parameters are malformed.
      */
     public function testGetState()
     {
         $filter = new Range();
         $filter->setRequestField('range');
-        $filter->getState(new Request(['range' => 'testValue']));
+        $state = $filter->getState(new Request(['range' => 'testValue']));
+
+        $this->assertFalse($state->isActive());
     }
 
     /**
