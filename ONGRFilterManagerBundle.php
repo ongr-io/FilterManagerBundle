@@ -13,6 +13,9 @@ namespace ONGR\FilterManagerBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * Class ONGRFilterManagerBundle.
+ */
 class ONGRFilterManagerBundle extends Bundle
 {
 }

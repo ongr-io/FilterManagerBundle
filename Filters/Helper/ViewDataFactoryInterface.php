@@ -14,12 +14,12 @@ namespace ONGR\FilterManagerBundle\Filters\Helper;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 
 /**
- * This interface allows user to provide custom instance of view data object
+ * This interface allows user to provide custom instance of view data object.
  */
 interface ViewDataFactoryInterface
 {
     /**
-     * Creates instance of specific ViewData
+     * Creates instance of specific ViewData.
      *
      * @return ViewData
      */

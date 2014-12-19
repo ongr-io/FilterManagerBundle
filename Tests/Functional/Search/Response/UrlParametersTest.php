@@ -18,7 +18,7 @@ use ONGR\FilterManagerBundle\Search\FiltersManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class tests if we provide correct url parameters
+ * This class tests if we provide correct url parameters.
  */
 class UrlParametersTest extends ElasticsearchTestCase
 {
@@ -54,7 +54,7 @@ class UrlParametersTest extends ElasticsearchTestCase
     }
 
     /**
-     * Return any kind of filters manager to test
+     * Return any kind of filters manager to test.
      *
      * @return FiltersManager
      */
@@ -82,27 +82,28 @@ class UrlParametersTest extends ElasticsearchTestCase
     {
         $out = [];
 
-        // case #0 not expected parameters
+        // Case #0 not expected parameters.
         $out[] = [new Request(['a' => 1, 'b' => 2]), []];
 
-        // case #1 one expected parameters
+        // Case #1 one expected parameters.
         $out[] = [new Request(['a' => 1, 'b' => 2, 'd' => 'product']), ['d' => 'product']];
 
-        // case #2 two expected parameters
+        // Case #2 two expected parameters.
         $out[] = [
             new Request(['a' => 1, 'b' => 2, 'd' => 'product', 'q' => 'cool']),
-            ['q' => 'cool', 'd' => 'product']
+            ['q' => 'cool', 'd' => 'product'],
         ];
 
         return $out;
     }
 
     /**
-     * Just test if have correct url parameters
+     * Just test if have correct url parameters.
+     *
+     * @param Request $request
+     * @param array   $expected
      *
      * @dataProvider getTestUrlParametersData()
-     * @param Request $request
-     * @param array $expected
      */
     public function testUrlParameters(Request $request, $expected)
     {

@@ -20,7 +20,7 @@ use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Filters\Widget\AbstractSingleRequestValueFilter;
 
 /**
- * This class generalises filters for single value searching
+ * This class generalises filters for single value searching.
  */
 abstract class AbstractSingleValue extends AbstractSingleRequestValueFilter implements FieldAwareInterface
 {
@@ -39,6 +39,6 @@ abstract class AbstractSingleValue extends AbstractSingleRequestValueFilter impl
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        // nothing more to do here
+        // Nothing more to do here.
     }
 }

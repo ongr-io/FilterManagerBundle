@@ -15,7 +15,7 @@ use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class filters results by request document's field value
+ * This class filters results by request document's field value.
  */
 class DocumentField extends MatchSearch
 {
@@ -51,7 +51,7 @@ class DocumentField extends MatchSearch
     }
 
     /**
-     * Extracts document value
+     * Extracts document value.
      *
      * @param Request $request
      *

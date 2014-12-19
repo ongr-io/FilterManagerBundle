@@ -14,7 +14,7 @@ namespace ONGR\FilterManagerBundle\Relations\LogicalJoin;
 use ONGR\FilterManagerBundle\Relations\RelationInterface;
 
 /**
- * This class joins several relations using "and" logical operator
+ * This class joins several relations using "and" logical operator.
  */
 class AndRelation implements RelationInterface
 {
@@ -41,6 +41,7 @@ class AndRelation implements RelationInterface
                 return false;
             }
         }
+
         return true;
     }
 

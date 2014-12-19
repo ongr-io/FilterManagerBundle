@@ -133,7 +133,7 @@ class PagerTest extends ElasticsearchTestCase
      * Test pager filter.
      *
      * @param Request $request
-     * @param int     $countPerPage
+     * @param int     $options
      * @param array   $expectedDocs
      *
      * @dataProvider getTestPagerData()

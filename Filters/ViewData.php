@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Filters;
 
 /**
- * This class defines data structure passed into view by single filter
+ * This class defines data structure passed into view by single filter.
  */
 class ViewData
 {
@@ -22,21 +22,21 @@ class ViewData
     private $state;
 
     /**
-     * Url parameters representing current filter state
+     * Url parameters representing current filter state.
      *
      * @var array
      */
     private $urlParameters;
 
     /**
-     * Url parameters to reset filter
+     * Url parameters to reset filter.
      *
      * @var array
      */
     private $resetUrlParameters;
 
     /**
-     * Filter name
+     * Filter name.
      *
      * @var string
      */

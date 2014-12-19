@@ -43,7 +43,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test for getViewData()
+     * Test for getViewData().
      */
     public function testGetViewData()
     {

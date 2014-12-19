@@ -31,22 +31,22 @@ class SearchInfluenceTest extends ElasticsearchTestCase
                     [
                         '_id' => 1,
                         'color' => 'red',
-                        'manufacturer' => 'a'
+                        'manufacturer' => 'a',
                     ],
                     [
                         '_id' => 2,
                         'color' => 'blue',
-                        'manufacturer' => 'a'
+                        'manufacturer' => 'a',
                     ],
                     [
                         '_id' => 3,
                         'color' => 'red',
-                        'manufacturer' => 'b'
+                        'manufacturer' => 'b',
                     ],
                     [
                         '_id' => 4,
                         'color' => 'blue',
-                        'manufacturer' => 'b'
+                        'manufacturer' => 'b',
                     ],
                 ]
             ]
@@ -80,46 +80,47 @@ class SearchInfluenceTest extends ElasticsearchTestCase
     {
         $out = [];
 
-        // case #0 empty request
+        // Case #0 empty request.
         $out[] = [
             new Request(),
             'color',
             [
                 'red' => 2,
                 'blue' => 2,
-            ]
+            ],
         ];
 
-        // case #1 same value when active
+        // Case #1 same value when active.
         $out[] = [
             new Request(['c' => 'red']),
             'color',
             [
                 'red' => 2,
                 'blue' => 2,
-            ]
+            ],
         ];
 
-        // case #2 different value when other filter is active
+        // Case #2 different value when other filter is active.
         $out[] = [
             new Request(['m' => 'b']),
             'color',
             [
                 'red' => 1,
                 'blue' => 1,
-            ]
+            ],
         ];
 
         return $out;
     }
 
     /**
-     * Test filters influence to each other
+     * Test filters influence to each other.
+     *
+     * @param Request $request
+     * @param string  $filterName
+     * @param array   $expected
      *
      * @dataProvider getTestInfluenceData()
-     * @param Request $request
-     * @param string $filterName
-     * @param array $expected
      */
     public function testInfluence(Request $request, $filterName, $expected)
     {

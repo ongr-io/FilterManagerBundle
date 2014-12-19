@@ -14,7 +14,7 @@ namespace ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 
 /**
- * This class represents view data with choices
+ * This class represents view data with choices.
  */
 class ChoicesAwareViewData extends ViewData
 {

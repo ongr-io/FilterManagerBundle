@@ -64,7 +64,7 @@ class DocumentFieldTest extends ElasticsearchTestCase
     }
 
     /**
-     * Data provider for testFiltering()
+     * Data provider for testFiltering().
      *
      * @return array
      */
@@ -72,7 +72,7 @@ class DocumentFieldTest extends ElasticsearchTestCase
     {
         $out = [];
 
-        // Case #0: Filtered results
+        // Case #0: Filtered results.
         $document = $this->getMock('ONGR\ElasticsearchBundle\Document\DocumentInterface');
         $document->expects($this->once())->method('getId')->willReturn(1);
         $out[] = [
@@ -80,7 +80,7 @@ class DocumentFieldTest extends ElasticsearchTestCase
             ['2', '4'],
         ];
 
-        // Case #1: Filtered results
+        // Case #1: Filtered results.
         $document = $this->getMock('ONGR\ElasticsearchBundle\Document\DocumentInterface');
         $document->expects($this->once())->method('getId')->willReturn(2);
         $out[] = [
@@ -88,7 +88,7 @@ class DocumentFieldTest extends ElasticsearchTestCase
             ['3', '4'],
         ];
 
-        // Case #1: Ignore filter
+        // Case #1: Ignore filter.
         $out[] = [
             new Request([]),
             ['1', '2', '3', '4'],
@@ -98,7 +98,7 @@ class DocumentFieldTest extends ElasticsearchTestCase
     }
 
     /**
-     * Test for DocumentField filter
+     * Test for DocumentField filter.
      *
      * @param Request $request
      * @param array   $expectedOrder

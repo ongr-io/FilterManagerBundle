@@ -16,12 +16,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ManagerController.
+ */
 class ManagerController extends Controller
 {
     /**
      * Renders view with filter manager response.
      *
-     * @param Request $request
+     * @param Request $request     Request.
      * @param string  $managerName Filter manager name.
      * @param string  $template    Template name.
      *
@@ -38,7 +41,7 @@ class ManagerController extends Controller
     /**
      * Returns search response results from filter manager.
      *
-     * @param Request $request
+     * @param Request $request Request.
      * @param string  $name    Filter manager name.
      *
      * @return array

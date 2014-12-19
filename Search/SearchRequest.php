@@ -14,7 +14,7 @@ namespace ONGR\FilterManagerBundle\Search;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * This class simply holds all filter states
+ * This class simply holds all filter states.
  */
 class SearchRequest extends ParameterBag
 {

@@ -17,7 +17,7 @@ use ONGR\FilterManagerBundle\Relations\ExcludeRelation;
 class ExcludeRelationTest extends ElasticsearchTestCase
 {
     /**
-     * Data provider for testFuzzyQuery()
+     * Data provider for testFuzzyQuery().
      *
      * @return array
      */
@@ -33,13 +33,13 @@ class ExcludeRelationTest extends ElasticsearchTestCase
     }
 
     /**
-     * Test Exclude Relation
+     * Test Exclude Relation.
+     *
+     * @param array  $relations
+     * @param string $name
+     * @param bool   $expected
      *
      * @dataProvider getTestExcludeRelationData
-     *
-     * @param array     $relations
-     * @param string    $name
-     * @param bool      $expected
      */
     public function testExcludeRelation($relations, $name, $expected)
     {

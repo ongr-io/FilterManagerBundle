@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Filters\Helper;
 
 /**
- * this interface define structure for elasticsearch field aware filters
+ * This interface define structure for elasticsearch field aware filters.
  */
 interface FieldAwareInterface
 {

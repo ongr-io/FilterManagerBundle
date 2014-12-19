@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Relations;
 
 /**
- * This class represents "exclude" relation
+ * This class represents "exclude" relation.
  */
 class ExcludeRelation implements RelationInterface
 {

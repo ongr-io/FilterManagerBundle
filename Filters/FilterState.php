@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Filters;
 
 /**
- * This class defines data structure to represent filter state
+ * This class defines data structure to represent filter state.
  */
 class FilterState
 {
@@ -37,7 +37,7 @@ class FilterState
     private $name;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
@@ -45,7 +45,7 @@ class FilterState
     }
 
     /**
-     * @param boolean $active
+     * @param bool $active
      */
     public function setActive($active)
     {

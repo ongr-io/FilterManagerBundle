@@ -23,7 +23,7 @@ use ONGR\FilterManagerBundle\Relations\LogicalJoin\AndRelation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class is entry point for search request execution
+ * This class is entry point for search request execution.
  */
 class FiltersManager
 {
@@ -39,7 +39,7 @@ class FiltersManager
 
     /**
      * @param FiltersContainer $container
-     * @param Repository $repository
+     * @param Repository       $repository
      */
     public function __construct(FiltersContainer $container, Repository $repository)
     {
@@ -48,9 +48,10 @@ class FiltersManager
     }
 
     /**
-     * Generates and executes search request
+     * Generates and executes search request.
      *
      * @param Request $request
+     *
      * @return SearchResponse
      */
     public function execute(Request $request)
@@ -59,9 +60,10 @@ class FiltersManager
     }
 
     /**
-     * Executes search
+     * Executes search.
      *
      * @param SearchRequest $request
+     *
      * @return SearchResponse
      */
     public function search(SearchRequest $request)
@@ -71,7 +73,7 @@ class FiltersManager
         /** @var FilterInterface[] $filters */
         $filters = $this->container->all();
         foreach ($filters as $name => $filter) {
-            // we simply exclude not related filters and current filter itself
+            // We simply exclude not related filters and current filter itself.
             $relatedFilters = $this->container->getFiltersByRelation(
                 new AndRelation([$filter->getSearchRelation(), new ExcludeRelation([$name])])
             );
@@ -92,11 +94,12 @@ class FiltersManager
     }
 
     /**
-     * Composes url parameters related to given filter
+     * Composes url parameters related to given filter.
      *
-     * @param SearchRequest $request
-     * @param FilterInterface $filter
-     * @param array $exclude Additional names of filters to exclude
+     * @param SearchRequest   $request Search request.
+     * @param FilterInterface $filter  Filter.
+     * @param array           $exclude Additional names of filters to exclude.
+     *
      * @return array
      */
     protected function composeUrlParameters(SearchRequest $request, FilterInterface $filter = null, $exclude = [])
@@ -124,10 +127,11 @@ class FiltersManager
     }
 
     /**
-     * Creates view data for each filter
+     * Creates view data for each filter.
      *
      * @param DocumentIterator $result
-     * @param SearchRequest $request
+     * @param SearchRequest    $request
+     *
      * @return ViewData[]
      */
     protected function getFiltersViewData(DocumentIterator $result, SearchRequest $request)

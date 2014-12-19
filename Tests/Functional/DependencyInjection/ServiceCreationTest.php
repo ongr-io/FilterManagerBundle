@@ -18,13 +18,13 @@ use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
 class ServiceCreationTest extends ElasticsearchTestCase
 {
     /**
-     * Test for filter services registration
+     * Test for filter services registration.
      */
     public function testServices()
     {
         $container = self::createClient()->getContainer();
 
-        // Test if filter was registered correctly
+        // Test if filter was registered correctly.
         $this->assertTrue($container->has('ongr_filter_manager.filter.phrase'));
         $this->assertInstanceOf(
             'ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch',
@@ -47,7 +47,7 @@ class ServiceCreationTest extends ElasticsearchTestCase
         $this->assertEquals('price', $range->getField());
         $this->assertEquals('range', $range->getRequestField());
 
-        // Test if filter manager was registered correctly
+        // Test if filter manager was registered correctly.
         $this->assertTrue($container->has('ongr_filter_manager.foo_filters'));
         $this->assertInstanceOf(
             'ONGR\FilterManagerBundle\Search\FiltersManager',

@@ -17,7 +17,7 @@ use ONGR\FilterManagerBundle\Relations\LogicalJoin\AndRelation;
 class AndRelationTest extends ElasticsearchTestCase
 {
     /**
-     * Data provider for testFuzzyQuery()
+     * Data provider for testFuzzyQuery().
      *
      * @return array
      */
@@ -34,12 +34,12 @@ class AndRelationTest extends ElasticsearchTestCase
     }
 
     /**
-     * Test And Relation
+     * Test And Relation.
+     *
+     * @param array $relations
+     * @param bool  $expected
      *
      * @dataProvider getTestAndRelationData
-     *
-     * @param array     $relations
-     * @param bool      $expected
      */
     public function testAndRelation($relations, $expected)
     {
