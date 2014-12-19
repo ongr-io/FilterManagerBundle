@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the ONGR package.
  *
@@ -28,17 +29,17 @@ class MatchSearchTest extends ElasticsearchTestCase
                 'product' => [
                     [
                         '_id' => 1,
-                        'title' => 'Foo'
+                        'title' => 'Foo',
                     ],
                     [
                         '_id' => 2,
                         'title' => 'Baz',
-                        'description' => 'tuna fish'
+                        'description' => 'tuna fish',
                     ],
                     [
                         '_id' => 3,
-                        'title' => 'Foo bar'
-                    ]
+                        'title' => 'Foo bar',
+                    ],
                 ]
             ]
         ];
@@ -52,32 +53,32 @@ class MatchSearchTest extends ElasticsearchTestCase
     public function getFilerManger()
     {
         $container = new FiltersContainer();
-        
+
         $match = new MatchSearch();
         $match->setRequestField('q');
         $match->setField('title,description');
-        
+
         $container->set('match', $match);
-        
+
         return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
     }
 
     /**
-     * Data provider for filtering
+     * Data provider for filtering.
      * 
      * @return array
      */
     public function getTestingData()
     {
         $out = [];
-        
-        // Case #0: simple from title field
+
+        // Case #0: simple from title field.
         $out[] = [[1, 3], new Request(['q' => 'Foo'])];
-        // Case #1: simple from description field
+        // Case #1: simple from description field.
         $out[] = [[2], new Request(['q' => 'fish'])];
-        // Case #2: empty parameter
+        // Case #2: empty parameter.
         $out[] = [[1, 2, 3], new Request(['q' => ''])];
-        
+
         return $out;
     }
 
@@ -92,14 +93,14 @@ class MatchSearchTest extends ElasticsearchTestCase
     public function testFiltering($expected, $request)
     {
         $result = $this->getFilerManger()->execute($request);
-        
+
         $actual = [];
         foreach ($result->getResult() as $doc) {
             $actual[] = $doc->getId();
         }
-        
+
         sort($actual);
-        
+
         $this->assertEquals($expected, $actual);
     }
 }
