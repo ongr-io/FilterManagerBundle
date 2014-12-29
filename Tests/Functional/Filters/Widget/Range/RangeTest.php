@@ -55,8 +55,8 @@ class RangeTest extends FilterManagerResultsTest
                         'manufacturer' => 'b',
                         'stock' => 4,
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

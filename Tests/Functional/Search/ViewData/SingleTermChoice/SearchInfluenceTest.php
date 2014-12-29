@@ -48,8 +48,8 @@ class SearchInfluenceTest extends ElasticsearchTestCase
                         'color' => 'blue',
                         'manufacturer' => 'b',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

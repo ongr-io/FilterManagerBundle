@@ -36,7 +36,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
         $relations = [
             'search' => [
                 'include' => ['firstItem', 'secondItem'],
-            ]
+            ],
         ];
         $expectedDefinition = new Definition(
             'ONGR\FilterManagerBundle\Relations\IncludeRelation',
@@ -48,7 +48,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
         $relations = [
             'reset' => [
                 'exclude' => ['firstItem', 'secondItem'],
-            ]
+            ],
         ];
         $expectedDefinition = new Definition(
             'ONGR\FilterManagerBundle\Relations\ExcludeRelation',
@@ -63,7 +63,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
             ],
             'search' => [
                 'exclude' => ['searchItem'],
-            ]
+            ],
         ];
         $expectedResetDefinition = new Definition(
             'ONGR\FilterManagerBundle\Relations\IncludeRelation',
@@ -120,7 +120,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                 'field' => 'page_field',
                 'count_per_page' => 10,
                 'max_pages' => 8,
-            ]
+            ],
         ];
         $config['ongr_filter_manager']['filters']['pager'] = $pagerConfig;
         $containerBuilder = new ContainerBuilder();
@@ -167,9 +167,9 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                     'test' => [
                         'repository' => 'test',
                         'filters' => [
-                            'test_sorting'
-                        ]
-                    ]
+                            'test_sorting',
+                        ],
+                    ],
                 ],
                 'filters' => [
                     'sort' => [
@@ -179,11 +179,11 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                             'request_field' => 'sort',
                             'choices' => [
                                 ['label' => 'test', 'field' => 'test'],
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 }

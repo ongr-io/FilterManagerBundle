@@ -38,8 +38,8 @@ class ManagerControllerTest extends ElasticsearchTestCase
                         'title' => 'Another cool product',
                         'color' => 'red',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

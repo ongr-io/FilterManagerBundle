@@ -47,8 +47,8 @@ class FilterStateTest extends ElasticsearchTestCase
                         'description' => 'Very popular product',
                         'color' => 'red',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

@@ -43,8 +43,8 @@ class DocumentFieldTest extends ElasticsearchTestCase
                         '_id' => 4,
                         'categories' => [1, 2],
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

@@ -20,17 +20,17 @@ use ONGR\FilterManagerBundle\Filters\ViewData;
 class SearchResponse
 {
     /**
-     * @var DocumentIterator Elasticsearch response object
+     * @var DocumentIterator Elasticsearch response object.
      */
     private $result;
 
     /**
-     * @var ViewData[] View data from filters
+     * @var ViewData[] View data from filters.
      */
     private $filters;
 
     /**
-     * @var array Url Parameters represents current link to list state
+     * @var array Url Parameters represents current link to list state.
      */
     private $urlParameters;
 

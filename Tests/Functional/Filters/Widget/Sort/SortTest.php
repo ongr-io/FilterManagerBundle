@@ -52,8 +52,8 @@ class SortTest extends ElasticsearchTestCase
                         'manufacturer' => 'b',
                         'stock' => 7,
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

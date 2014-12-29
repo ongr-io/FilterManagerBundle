@@ -17,22 +17,22 @@ namespace ONGR\FilterManagerBundle\Filters;
 class FilterState
 {
     /**
-     * @var bool True if filter is currently
+     * @var bool True if filter is currently.
      */
     private $active = false;
 
     /**
-     * @var mixed Represents user selected value for filtering
+     * @var mixed Represents user selected value for filtering.
      */
     private $value;
 
     /**
-     * @var array Url parameters related *only* to given filter
+     * @var array Url parameters related *only* to given filter.
      */
     private $urlParameters = [];
 
     /**
-     * @var string Filter name
+     * @var string Filter name.
      */
     private $name;
 

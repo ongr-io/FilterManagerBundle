@@ -45,7 +45,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                             'reset' => [
                                 'include' => [],
                                 'exclude' => ['size'],
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -56,11 +56,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
                 'pager' => [
-                    'paging' => ['request_field' => 'page']
+                    'paging' => ['request_field' => 'page'],
                 ],
                 'range' => [
-                    'range' => ['request_field' => 'range']
-                ]
+                    'range' => ['request_field' => 'range'],
+                ],
             ],
         ];
     }

@@ -45,8 +45,8 @@ class MatchSearchTest extends FilterManagerResultsTest
                         'title' => 'Another cool product',
                         'color' => 'red',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

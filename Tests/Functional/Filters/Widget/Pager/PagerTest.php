@@ -53,8 +53,8 @@ class PagerTest extends ElasticsearchTestCase
                         'manufacturer' => 'b',
                         'stock' => 4,
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 

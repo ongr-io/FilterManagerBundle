@@ -40,14 +40,14 @@ class MatchSearchTest extends ElasticsearchTestCase
                         '_id' => 3,
                         'title' => 'Foo bar',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
     /**
      * Returns filter manager with MatchSearch set.
-     * 
+     *
      * @return FiltersManager
      */
     public function getFilerManger()
@@ -65,7 +65,7 @@ class MatchSearchTest extends ElasticsearchTestCase
 
     /**
      * Data provider for filtering.
-     * 
+     *
      * @return array
      */
     public function getTestingData()
@@ -84,10 +84,10 @@ class MatchSearchTest extends ElasticsearchTestCase
 
     /**
      * Tests if search works.
-     * 
+     *
      * @param array   $expected
      * @param Request $request
-     * 
+     *
      * @dataProvider getTestingData
      */
     public function testFiltering($expected, $request)
