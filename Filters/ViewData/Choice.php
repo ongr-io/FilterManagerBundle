@@ -27,9 +27,7 @@ class Choice
     private $default = false;
 
     /**
-     * Holds set or unset parameters depending on state.
-     *
-     * @var array
+     * @var array Holds set or unset parameters depending on state.
      */
     private $urlParameters = [];
 
@@ -39,9 +37,7 @@ class Choice
     private $label;
 
     /**
-     * Represents document count for option.
-     *
-     * @var int
+     * @var int Represents document count for option.
      */
     private $count = 0;
 

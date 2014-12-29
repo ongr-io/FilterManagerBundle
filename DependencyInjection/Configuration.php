@@ -86,7 +86,6 @@ class Configuration implements ConfigurationInterface
                         )
                         ->thenInvalid('At least single filter must be configured.')
                     ->end()
-                    // TODO: validate if filter names are unique.
                     ->isRequired()
                     ->append($this->buildFilterTree('choice'))
                     ->append($this->buildFilterTree('match'))

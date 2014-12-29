@@ -22,23 +22,17 @@ class ViewData
     private $state;
 
     /**
-     * Url parameters representing current filter state.
-     *
-     * @var array
+     * @var array Url parameters representing current filter state.
      */
     private $urlParameters;
 
     /**
-     * Url parameters to reset filter.
-     *
-     * @var array
+     * @var array Url parameters to reset filter.
      */
     private $resetUrlParameters;
 
     /**
-     * Filter name.
-     *
-     * @var string
+     * @var string Filter name.
      */
     private $name;
 

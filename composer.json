@@ -12,13 +12,14 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/symfony": "~2.3",
+        "symfony/symfony": "~2.6",
         "ongr/elasticsearch-bundle": "~0.1"
     },
     "require-dev": {
         "ongr/pager-bundle": "dev-master",
         "phpunit/phpunit": "~4.1",
-        "squizlabs/php_codesniffer": "~1.5"
+        "squizlabs/php_codesniffer": "~1.5",
+        "ongr/ongr-strict-standard": "~1.0.0-beta"
     },
     "suggest": {
         "ongr/pager-bundle": "Enables pager filter"

@@ -52,8 +52,8 @@ class SortTest extends ElasticsearchTestCase
                         'manufacturer' => 'b',
                         'stock' => 7,
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -105,10 +105,10 @@ class SortTest extends ElasticsearchTestCase
             ['4', '2', '1', '3'],
         ];
 
-        // Case #3: empty sort, should fallback to default
+        // Case #3: empty sort, should fallback to default.
         $out[] = [
             new Request(['sort' => '']),
-            ['4', '2', '1', '3']
+            ['4', '2', '1', '3'],
         ];
 
         return $out;
