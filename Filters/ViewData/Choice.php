@@ -28,6 +28,7 @@ class Choice
 
     /**
      * @var array
+     * Holds set or unset parameters depending on state.
      */
     private $urlParameters = [];
 
@@ -38,6 +39,7 @@ class Choice
 
     /**
      * @var int
+     * Represents document count for option.
      */
     private $count = 0;
 
