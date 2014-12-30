@@ -67,6 +67,7 @@ This configuration would create six filters, which would be used by a single or 
 A detailed explanation and configuration for each type of filter can be found on its documentation page:
 
 * [Choice filter](filter/choice.md)
+* [Multi choice filter](filter/multi_choice.md)
 * [Document field filter](filter/document_field.md)
 * [Match filter](filter/match.md)
 * [Pager filter](filter/pager.md)

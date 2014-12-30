@@ -88,6 +88,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->isRequired()
                     ->append($this->buildFilterTree('choice'))
+                    ->append($this->buildFilterTree('multi_choice'))
                     ->append($this->buildFilterTree('match'))
                     ->append($this->buildFilterTree('sort'))
                     ->append($this->buildFilterTree('pager'))

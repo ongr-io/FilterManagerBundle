@@ -95,6 +95,7 @@ Pager url parameters: {{ filter_manager.filters.pager.getUrlParameters() }}
 A complete list of parameters for each filter can be found in its documentation:
 
 * [Choice filter](filter/choice.md)
+* [Multi choice filter](filter/multi_choice.md)
 * [Document field filter](filter/document_field.md)
 * [Match filter](filter/match.md)
 * [Pager filter](filter/pager.md)

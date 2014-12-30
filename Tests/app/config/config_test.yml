@@ -60,3 +60,7 @@ ongr_filter_manager:
             range:
                 request_field: 'range'
                 field: 'price'
+        multi_choice:
+            choice:
+                request_field: 'choice'
+                field: 'choice'
