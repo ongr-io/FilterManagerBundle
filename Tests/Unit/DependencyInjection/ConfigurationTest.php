@@ -80,6 +80,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['filters']['pager']['paging']['max_pages'] = 8;
         $expectedBaseConfig['filters']['document_field'] = [];
         $expectedBaseConfig['filters']['choice'] = [];
+        $expectedBaseConfig['filters']['multi_choice'] = [];
         $expectedBaseConfig['es_manager'] = 'default';
 
         // Case #0 Base configuration with default values.
@@ -106,6 +107,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';
         unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['choice']);
+        unset($customConfig['filters']['multi_choice']);
         $cases[] = [
             $customConfig,
             $expectedConfig,

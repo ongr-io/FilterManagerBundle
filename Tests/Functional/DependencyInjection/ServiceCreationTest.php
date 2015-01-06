@@ -47,6 +47,14 @@ class ServiceCreationTest extends ElasticsearchTestCase
         $this->assertEquals('price', $range->getField());
         $this->assertEquals('range', $range->getRequestField());
 
+        // Test if multi choice filter was registered correctly.
+        $this->assertTrue($container->has('ongr_filter_manager.filter.choice'));
+        /** @var Range $range */
+        $range = $container->get('ongr_filter_manager.filter.choice');
+        $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice', $range);
+        $this->assertEquals('choice', $range->getField());
+        $this->assertEquals('choice', $range->getRequestField());
+
         // Test if filter manager was registered correctly.
         $this->assertTrue($container->has('ongr_filter_manager.foo_filters'));
         $this->assertInstanceOf(
