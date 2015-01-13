@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Range;
 
+use ONGR\FilterManagerBundle\Filters\ViewData\RangeAwareViewData;
 use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
 use ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
@@ -79,7 +80,28 @@ class RangeTest extends FilterManagerResultsTest
         // Case #3 invalid range specified.
         $out[] = [new Request(['range' => '2', 'sort' => '0']), ['1', '2', '3', '4'], true];
 
+        // Case #4 no range specified.
+        $out[] = [new Request(['sort' => '0']), ['1', '2', '3', '4'], true];
+
         return $out;
+    }
+
+    /**
+     * Check if view data returned is correct.
+     *
+     * @param Request $request        Http request.
+     * @param array   $expectedValues Expected bounds data.
+     *
+     * @dataProvider getTestResultsData()
+     */
+    public function testViewData(Request $request, $expectedValues)
+    {
+        /** @var RangeAwareViewData $viewData */
+        $viewData = $this->getFilterManager()->execute($request)->getFilters()['range'];
+
+        $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\ViewData\RangeAwareViewData', $viewData);
+        $this->assertEquals(1, $viewData->getMinBounds());
+        $this->assertEquals(4, $viewData->getMaxBounds());
     }
 
     /**
