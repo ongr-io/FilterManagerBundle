@@ -34,6 +34,27 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     use FieldAwareTrait;
 
     /**
+     * @var array
+     */
+    private $sortType;
+
+    /**
+     * @param array $sortType
+     */
+    public function setSortType($sortType)
+    {
+        $this->sortType = $sortType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSortType()
+    {
+        return $this->sortType;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
@@ -51,6 +72,10 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         $name = $state ? $state->getName() : $this->getField();
         $agg = new TermsAggregation($name);
         $agg->setField($this->getField());
+
+        if ($this->getSortType()) {
+            $agg->setOrder($this->sortType['type'], $this->sortType['order']);
+        }
 
         if ($relatedSearch->getPostFilters() && $relatedSearch->getPostFilters()->isRelevant()) {
             $filterAgg = new FilterAggregation($name . '-filter');
@@ -77,23 +102,54 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     {
         /** @var ChoicesAwareViewData $data */
 
+        $unsortedChoices = [];
+
         /** @var ValueAggregation $bucket */
         foreach ($this->fetchAggregation($result, $data->getName()) as $bucket) {
             $bucket = $bucket->getValue();
-            $active = $data->getState()->isActive() && $data->getState()->getValue() == $bucket['key'];
+            $active = $this->isChoiceActive($bucket['key'], $data);
             $choice = new ViewData\Choice();
             $choice->setLabel($bucket['key']);
             $choice->setCount($bucket['doc_count']);
             $choice->setActive($active);
             if ($active) {
-                $choice->setUrlParameters($data->getResetUrlParameters());
+                $choice->setUrlParameters($this->getUnsetUrlParameters($bucket['key'], $data));
             } else {
                 $choice->setUrlParameters($this->getOptionUrlParameters($bucket['key'], $data));
             }
+            $unsortedChoices[$bucket['key']] = $choice;
+        }
+
+        // Add the prioritized choices first.
+        if ($this->getSortType()) {
+            $unsortedChoices = $this->addPriorityChoices($unsortedChoices, $data);
+        }
+
+        foreach ($unsortedChoices as $choice) {
             $data->addChoice($choice);
         }
 
         return $data;
+    }
+
+    /**
+     * Adds prioritized choices.
+     *
+     * @param array                $unsortedChoices
+     * @param ChoicesAwareViewData $data
+     *
+     * @return array
+     */
+    protected function addPriorityChoices(array $unsortedChoices, ChoicesAwareViewData $data)
+    {
+        foreach ($this->getSortType()['priorities'] as $name) {
+            if (array_key_exists($name, $unsortedChoices)) {
+                $data->addChoice($unsortedChoices[$name]);
+                unset($unsortedChoices[$name]);
+            }
+        }
+
+        return $unsortedChoices;
     }
 
     /**
@@ -132,5 +188,31 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         $parameters[$this->getRequestField()] = $key;
 
         return $parameters;
+    }
+
+    /**
+     * Returns url with selected term disabled.
+     *
+     * @param string   $key
+     * @param ViewData $data
+     *
+     * @return array
+     */
+    protected function getUnsetUrlParameters($key, ViewData $data)
+    {
+        return $data->getResetUrlParameters();
+    }
+
+    /**
+     * Returns whether choice with the specified key is active.
+     *
+     * @param string   $key
+     * @param ViewData $data
+     *
+     * @return bool
+     */
+    protected function isChoiceActive($key, ViewData $data)
+    {
+        return $data->getState()->isActive() && $data->getState()->getValue() == $key;
     }
 }

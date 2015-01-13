@@ -61,6 +61,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 'range' => [
                     'range' => ['request_field' => 'range'],
                 ],
+                'choice' => [
+                    'single_choice' => ['request_field' => 'choice'],
+                ]
             ],
         ];
     }
@@ -79,7 +82,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['filters']['pager']['paging']['count_per_page'] = 10;
         $expectedBaseConfig['filters']['pager']['paging']['max_pages'] = 8;
         $expectedBaseConfig['filters']['document_field'] = [];
-        $expectedBaseConfig['filters']['choice'] = [];
+        $expectedBaseConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice']];
         $expectedBaseConfig['filters']['multi_choice'] = [];
         $expectedBaseConfig['es_manager'] = 'default';
 
@@ -102,11 +105,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $customConfig = $expectedBaseConfig;
         $customConfig['filters']['sort']['sorting']['choices'][0] = ['field' => 'test'];
         $expectedConfig = $customConfig;
+        $expectedConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice']];
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['label'] = 'test';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['default'] = false;
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';
         unset($customConfig['filters']['document_field']);
-        unset($customConfig['filters']['choice']);
         unset($customConfig['filters']['multi_choice']);
         $cases[] = [
             $customConfig,
@@ -228,6 +231,15 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             $config,
             'Invalid configuration for path "ongr_filter_manager.filters.match.phrase.relations.search": ' .
             'Relation must have only "include" or "exclude" fields specified.',
+        ];
+
+        // Case #11 Incorrect type of sorting specified.
+        $config = $this->getBaseConfiguration();
+        $config['filters']['choice']['single_choice']['sort']['type'] = 'test';
+        $cases[] = [
+            $config,
+            'The value "test" is not allowed for path "ongr_filter_manager.filters.choice.single_choice.sort.type"' .
+            '. Permissible values: "_term", "_count"',
         ];
 
         return $cases;

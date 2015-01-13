@@ -35,30 +35,6 @@ class MultiTermChoice extends SingleTermChoice
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getViewData(DocumentIterator $result, ViewData $data)
-    {
-        /** @var ValueAggregation $bucket */
-        foreach ($this->fetchAggregation($result, $data->getName()) as $bucket) {
-            $bucket = $bucket->getValue();
-            $active = $data->getState()->isActive() && in_array($bucket['key'], $data->getState()->getValue());
-            $choice = new ViewData\Choice();
-            $choice->setLabel($bucket['key']);
-            $choice->setCount($bucket['doc_count']);
-            $choice->setActive($active);
-            if ($active) {
-                $choice->setUrlParameters($this->getUnsetUrlParameters($bucket['key'], $data));
-            } else {
-                $choice->setUrlParameters($this->getOptionUrlParameters($bucket['key'], $data));
-            }
-            $data->addChoice($choice);
-        }
-
-        return $data;
-    }
-
-    /**
      * Returns url with selected term applied.
      *
      * @param string   $key
@@ -81,12 +57,7 @@ class MultiTermChoice extends SingleTermChoice
     }
 
     /**
-     * Returns url with selected term disabled.
-     *
-     * @param string   $key
-     * @param ViewData $data
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getUnsetUrlParameters($key, ViewData $data)
     {
@@ -101,5 +72,13 @@ class MultiTermChoice extends SingleTermChoice
         }
 
         return $parameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function isChoiceActive($key, ViewData $data)
+    {
+        return $data->getState()->isActive() && in_array($key, $data->getState()->getValue());
     }
 }
