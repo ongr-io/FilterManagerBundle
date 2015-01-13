@@ -45,7 +45,7 @@ ongr_elasticsearch:
 ongr_filter_manager:
     managers:
         foo_filters:
-            filters: ['phrase']
+            filters: ['phrase', 'single_choice']
             repository: 'product'
     filters:
         match:
@@ -64,3 +64,13 @@ ongr_filter_manager:
             choice:
                 request_field: 'choice'
                 field: 'choice'
+        choice:
+            single_choice:
+                request_field: 'single_choice'
+                field: 'color'
+                sort:
+                  type: _term
+                  order: asc
+                  priorities:
+                     - red
+

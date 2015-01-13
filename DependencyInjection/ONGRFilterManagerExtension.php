@@ -52,6 +52,9 @@ class ONGRFilterManagerExtension extends Extension
                 if (isset($filter['choices'])) {
                     $filterDefinition->addMethodCall('setChoices', [$filter['choices']]);
                 }
+                if (isset($filter['sort']) && count($filter['sort']) > 0) {
+                    $filterDefinition->addMethodCall('setSortType', [$filter['sort']]);
+                }
 
                 $this->addRelation($filterDefinition, $filter, 'search', 'include');
                 $this->addRelation($filterDefinition, $filter, 'search', 'exclude');

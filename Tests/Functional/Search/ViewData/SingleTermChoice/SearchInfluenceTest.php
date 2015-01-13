@@ -63,11 +63,13 @@ class SearchInfluenceTest extends ElasticsearchTestCase
         $filter = new SingleTermChoice();
         $filter->setRequestField('c');
         $filter->setField('color');
+        $filter->setSortType(['type' => '_term', 'order' => 'asc', 'priorities' => []]);
         $container->set('color', $filter);
 
         $filter = new SingleTermChoice();
         $filter->setRequestField('m');
         $filter->setField('manufacturer');
+        $filter->setSortType(['type' => '_term', 'order' => 'asc', 'priorities' => []]);
         $container->set('manufacturer', $filter);
 
         return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));

@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\DependencyInjection;
 
+use ONGR\ElasticsearchBundle\DSL\Aggregation\TermsAggregation;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\ParentNodeDefinitionInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -127,6 +128,25 @@ class Configuration implements ConfigurationInterface
                 ->end();
 
         switch ($filterName) {
+            case 'choice':
+            case 'multi_choice':
+                $node
+                    ->children()
+                        ->arrayNode('sort')
+                        ->children()
+                            ->enumNode('type')
+                                ->values([TermsAggregation::MODE_TERM, TermsAggregation::MODE_COUNT])
+                                ->defaultValue(TermsAggregation::MODE_TERM)
+                            ->end()
+                            ->enumNode('order')
+                                ->values([TermsAggregation::DIRECTION_ASC, TermsAggregation::DIRECTION_DESC])
+                                ->defaultValue(TermsAggregation::DIRECTION_ASC)
+                            ->end()
+                            ->arrayNode('priorities')->prototype('scalar')->end()
+                            ->end()
+                        ->end()
+                    ->end();
+                break;
             case 'sort':
                 $node
                     ->children()
