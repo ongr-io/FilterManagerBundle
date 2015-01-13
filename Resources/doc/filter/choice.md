@@ -34,6 +34,16 @@ We can then select a value from this list and get all items for it, lets say we 
 |------------------------|--------------------------------------------------------------------------------------|
 | `request_field`        | Request field used to view the selected page. (f.e. `www.page.com/?request_field=4`) |
 | `field`                | Specifies the field in repository to apply this filter on. (f.e. `item_color`)       |
+| `sort`                 | Sorts the choices based on your configuration.                                        |
+
+
+## Sorting configuration
+
+| Setting name           | Meaning                                                                              |
+|------------------------|--------------------------------------------------------------------------------------|
+| `type`                 | You can sort either by the `_term` which was aggregated or by the `_count` of the terms. |
+| `order`                | Specifies the ordering direction. Either ascending or descending.                       |
+| `priority`                 | Highest priority term names, the first terms to be shown in choices list.           |
 
 Example:
 ```yaml
@@ -49,6 +59,12 @@ ongr_filter_manager:
             colors:
                 request_field: 'colors'
                 field: item_colors
+                sort:
+                  type: _term
+                  order: asc
+                  priorities:
+                     - red
+                
 ```
 
 # Twig view data

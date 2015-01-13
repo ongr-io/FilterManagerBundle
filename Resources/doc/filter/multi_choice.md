@@ -36,6 +36,7 @@ We can then select multiple values from this list and get all items for it, lets
 |------------------------|--------------------------------------------------------------------------------------|
 | `request_field`        | Request field used to view the selected page. (f.e. `www.page.com/?request_field=4`) |
 | `field`                | Specifies the field in repository to apply this filter on. (f.e. `item_color`)       |
+| `sort`                 | Choices can also be sorted. You can read more about this [here](choice.md#sorting-configuration).|
 
 Example:
 ```yaml
