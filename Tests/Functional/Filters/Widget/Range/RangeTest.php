@@ -36,25 +36,31 @@ class RangeTest extends FilterManagerResultsTest
                         '_id' => 1,
                         'color' => 'red',
                         'manufacturer' => 'a',
-                        'stock' => 1,
+                        'price' => 1,
                     ],
                     [
                         '_id' => 2,
                         'color' => 'blue',
                         'manufacturer' => 'a',
-                        'stock' => 2,
+                        'price' => 2,
                     ],
                     [
                         '_id' => 3,
                         'color' => 'red',
                         'manufacturer' => 'b',
-                        'stock' => 3,
+                        'price' => 3,
                     ],
                     [
                         '_id' => 4,
                         'color' => 'blue',
                         'manufacturer' => 'b',
-                        'stock' => 4,
+                        'price' => 4,
+                    ],
+                    [
+                        '_id' => 5,
+                        'color' => 'blue',
+                        'manufacturer' => 'b',
+                        'price' => 4.2,
                     ],
                 ],
             ],
@@ -69,7 +75,7 @@ class RangeTest extends FilterManagerResultsTest
         $out = [];
 
         // Case #0 range includes everything.
-        $out[] = [new Request(['range' => '0;50', 'sort' => '0']), ['1', '2', '3', '4'], true];
+        $out[] = [new Request(['range' => '0;50', 'sort' => '0']), ['1', '2', '3', '4', '5'], true];
 
         // Case #1 two elements.
         $out[] = [new Request(['range' => '1;4', 'sort' => '0']), ['2', '3'], true];
@@ -78,10 +84,16 @@ class RangeTest extends FilterManagerResultsTest
         $out[] = [new Request(['range' => '2;3', 'sort' => '0']), [], true];
 
         // Case #3 invalid range specified.
-        $out[] = [new Request(['range' => '2', 'sort' => '0']), ['1', '2', '3', '4'], true];
+        $out[] = [new Request(['range' => '2', 'sort' => '0']), ['1', '2', '3', '4', '5'], true];
 
         // Case #4 no range specified.
-        $out[] = [new Request(['sort' => '0']), ['1', '2', '3', '4'], true];
+        $out[] = [new Request(['sort' => '0']), ['1', '2', '3', '4', '5'], true];
+
+        // Case #5 test with float shouldn't list anything.
+        $out[] = [new Request(['range' => '4.3;50', 'sort' => '0']), [], true];
+
+        // Case #6 test with float should list.
+        $out[] = [new Request(['range' => '4.1;50', 'sort' => '0']), ['5'], true];
 
         return $out;
     }
@@ -89,19 +101,18 @@ class RangeTest extends FilterManagerResultsTest
     /**
      * Check if view data returned is correct.
      *
-     * @param Request $request        Http request.
-     * @param array   $expectedValues Expected bounds data.
+     * @param Request $request Http request.
      *
      * @dataProvider getTestResultsData()
      */
-    public function testViewData(Request $request, $expectedValues)
+    public function testViewData(Request $request)
     {
         /** @var RangeAwareViewData $viewData */
         $viewData = $this->getFilterManager()->execute($request)->getFilters()['range'];
 
         $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\ViewData\RangeAwareViewData', $viewData);
         $this->assertEquals(1, $viewData->getMinBounds());
-        $this->assertEquals(4, $viewData->getMaxBounds());
+        $this->assertEquals(4.2, $viewData->getMaxBounds(), '', 0.0001);
     }
 
     /**
@@ -114,12 +125,12 @@ class RangeTest extends FilterManagerResultsTest
         $container = new FiltersContainer();
 
         $choices = [
-            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false],
+            ['label' => 'Stock ASC', 'field' => 'price', 'order' => 'asc', 'default' => false],
         ];
 
         $filter = new Range();
         $filter->setRequestField('range');
-        $filter->setField('stock');
+        $filter->setField('price');
         $container->set('range', $filter);
 
         $sort = new Sort();

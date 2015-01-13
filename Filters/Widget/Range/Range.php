@@ -50,8 +50,8 @@ class Range extends AbstractSingleRequestValueFilter implements FieldAwareInterf
             return $state;
         }
 
-        $normalized['gt'] = (int)$values[0];
-        $normalized['lt'] = (int)$values[1];
+        $normalized['gt'] = floatval($values[0]);
+        $normalized['lt'] = floatval($values[1]);
 
         $state->setValue($normalized);
 

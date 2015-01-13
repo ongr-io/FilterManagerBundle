@@ -39,8 +39,6 @@
 
     <logging>
         <log type="coverage-text" target="php://stdout" showOnlySummary="true"/>
-        <log type="coverage-html" target="Tests/app/build/coverage" title="Coverage" charset="UTF-8" yui="true"
-        ighlight="true"/>
     </logging>
 
 </phpunit>
