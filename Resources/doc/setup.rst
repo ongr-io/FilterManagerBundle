@@ -14,9 +14,7 @@ FilterManager bundle is installed using `Composer <https://getcomposer.org>`_.
 
 ..
 
-    --------------------
-    Elasticsearch bundle
-    --------------------
+    NOTE: Elasticsearch bundle
     Please note that filter manager requires Elasticsearch bundle, guide on how to install it
      can be found `here <https://github.com/ongr-io/ElasticsearchBundle/tree/master/Resources/doc/setup.rst>`_.
 
