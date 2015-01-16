@@ -29,7 +29,7 @@ Example:
 ..
 
 This specific example will render template `AcmeDemoBundle:List:results.html.twig`,
-with [SearchResponse][1] from [FiltersManager][2] named `item_list`.
+with :ref:`SearchResponse` from :ref:`FiltersManager` named `item_list`.
 
 ------------------------
 Using custom controller.
@@ -97,10 +97,10 @@ Example:
 Template variables
 ------------------
 
-If you're using default controller, [SearchResponse][1] from [FiltersManager][2] will be named `filter_manager` in template,
+If you're using default controller, :ref:`SearchResponse` from :ref:`FiltersManager` will be named `filter_manager` in template,
 otherwise it's whatever you call it in your controller.
 
-You can use [SearchResponse][1] to get results in your template.
+You can use :ref:`SearchResponse` to get results in your template.
 Example:
 
 .. code-block:: twig
@@ -129,6 +129,8 @@ A complete list of parameters for each filter can be found in its documentation:
 * `Pager filter <filter/pager.rst>`_
 * `Sort filter <filter/sort.rst>`_
 
-[1]:`SearchResponse <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php>`_
 
-[2]:`FiltersManager <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FiltersManager.php>`_
+
+.. _[SearchResponse]:`SearchResponse <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php>`_
+
+.. _[FiltersManager]:`FiltersManager <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FiltersManager.php>`_
