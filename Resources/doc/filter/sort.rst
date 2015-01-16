@@ -1,6 +1,6 @@
 ===========
 Sort filter
-============
+===========
 
 Filter used for sorting the documents.
 
