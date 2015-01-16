@@ -130,4 +130,5 @@ A complete list of parameters for each filter can be found in its documentation:
 * `Sort filter <filter/sort.rst>`_
 
 [1]:`SearchResponse <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php>`_
+
 [2]:`FiltersManager <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FiltersManager.php>`_
