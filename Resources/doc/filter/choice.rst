@@ -1,6 +1,6 @@
-==============
+=============
 Choice filter
-==============
+=============
 
 This filter groups values of repository in a specified field, and returns available options.
 If you select one of the options,  *choice filter* will return item list filtered by it.
@@ -130,4 +130,3 @@ Each choice has its own data:
 +--------------------+--------------------------------------------+
 | getUrlParameters() | Returns a list of available choices        |
 +--------------------+--------------------------------------------+
-
