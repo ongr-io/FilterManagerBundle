@@ -6,9 +6,9 @@ Using filter manager
 Using controller
 ================
 
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 Using default controller
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once you set up your `*managers* <manager.rst>`_ you don't need to create a controller for each one,
 you can just use default manager controller `ONGRFilterManagerBundle:Manager:manager`.
