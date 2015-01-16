@@ -92,8 +92,8 @@ View data returned by this filter to be used in template:
 | getPagerService()       | Returns pager service to be used in template     |
 +-------------------------+--------------------------------------------------+
 
-* `Choice filter <filter/choice.rst>`_
-* `Multi choice filter <filter/multi_choice.rst>`_
-* `Document field filter <filter/document_field.rst>`_
-* `Match filter <filter/match.rst>`_
-* `Sort filter <filter/sort.rst>`_
+* `Choice filter <choice.rst>`_
+* `Multi choice filter <multi_choice.rst>`_
+* `Document field filter <document_field.rst>`_
+* `Match filter <match.rst>`_
+* `Sort filter <sort.rst>`_
