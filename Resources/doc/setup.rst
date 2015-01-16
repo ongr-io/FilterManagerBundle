@@ -15,6 +15,7 @@ FilterManager bundle is installed using `Composer <https://getcomposer.org>`_.
 ..
 
     NOTE: Elasticsearch bundle
+
     Please note that filter manager requires Elasticsearch bundle, guide on how to install it
  can be found `here <https://github.com/ongr-io/ElasticsearchBundle/tree/master/Resources/doc/setup.rst>`_.
 
@@ -68,8 +69,7 @@ Add minimal configuration for FilterManager bundle.
 
 ..
 
-    This is the basic example only, for more information about manager configuration, please take a look at
- `manager <manager.rst>`_ chapter.
+    This is the basic example only, for more information about manager configuration, please take a look at `manager <manager.rst>`_ chapter.
 
 In this particular example, we defined a single manager named `item_list` to filter documents from `item` repository,
 and we'll be using the filter named `sorting` to sort the item list with title either descending or ascending.
