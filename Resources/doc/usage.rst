@@ -29,7 +29,7 @@ Example:
 ..
 
 This specific example will render template `AcmeDemoBundle:List:results.html.twig`,
-with :ref:`SearchResponse` from :ref:`FiltersManager` named `item_list`.
+with `SearchResponse` from `FiltersManager` named `item_list`.
 
 ------------------------
 Using custom controller.
@@ -97,10 +97,10 @@ Example:
 Template variables
 ------------------
 
-If you're using default controller, :ref:`SearchResponse` from :ref:`FiltersManager` will be named `filter_manager` in template,
+If you're using default controller, `SearchResponse` from `FiltersManager` will be named `filter_manager` in template,
 otherwise it's whatever you call it in your controller.
 
-You can use :ref:`SearchResponse` to get results in your template.
+You can use `SearchResponse` to get results in your template.
 Example:
 
 .. code-block:: twig

@@ -2,6 +2,10 @@
 FilterManager setup
 ===================
 
+    Note: Documentation about bundle configuration is `here <manager.rst>`_.
+
+    Note: Documentation on bundle usage is `here <usage.rst>`_.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Step 1: Install FilterManager bundle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

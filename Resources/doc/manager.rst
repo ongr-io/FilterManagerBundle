@@ -2,7 +2,10 @@
 Manager configuration
 =====================
 
-    Note: How to setup the bundle documentation is `here <setup.rst>`_.
+    Note: Documentation about bundle setup is `here <manager.rst>`_.
+
+    Note: Documentation on bundle usage is `here <usage.rst>`_.
+
 
 FilterManager is used for retrieving filtered entities from database. It provides ties between commonly used filtering options and UI elements with Elasticsearch repositories.
 You can use it from a single controller.
