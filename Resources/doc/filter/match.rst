@@ -20,7 +20,7 @@ For example, lets say we have `item` repository which contains the following dat
 | 5       | blue       |
 +---------+------------+
 
-If we apply *match filter* on item_colors field with a value of `red`, we will get.
+If we apply *match filter* on item_colors field with a value of `red`, we will get:
 
 +---------+------------+
 | item_id | item_color |
@@ -37,9 +37,9 @@ Configuration
 +------------------------+--------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                              |
 +========================+======================================================================================+
-| `request_field`        | Request field used to specify filter value. (f.e. `www.page.com/?request_field=4`)   |
+| `request_field`        | Request field used to specify filter value. (e.g. `www.page.com/?request_field=4`)   |
 +------------------------+--------------------------------------------------------------------------------------+
-| `field`                | Specifies the field in repository to apply this filter on. (f.e. `item_color`)       |
+| `field`                | Specifies the field in repository to apply this filter on. (e.g. `item_color`)       |
 +------------------------+--------------------------------------------------------------------------------------+
 
 Example:

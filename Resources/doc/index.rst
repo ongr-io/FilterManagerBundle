@@ -13,7 +13,7 @@ Documentation for ONGR Filter Manager Bundle can be found `here <setup.rst>`_.
 License
 -------
 
-This bundle is under the MIT license. Please, see the complete license in the bundle `LICENSE` file.
+This bundle is covered by the MIT license. Please see the complete license in the bundle `LICENSE </LICENSE>`_ file.
 
 .. toctree::
     :maxdepth: 1

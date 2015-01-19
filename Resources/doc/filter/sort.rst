@@ -4,7 +4,7 @@ Sort filter
 
 Filter used for sorting the documents.
 
-For example, lets say we have `item` repository which contains the following data:
+For example, let's say we have `item` repository which contains the following data:
 
 +---------+------------+
 | item_id | item_color |
@@ -20,7 +20,7 @@ For example, lets say we have `item` repository which contains the following dat
 | 5       | blue       |
 +---------+------------+
 
-If we have a sort filter with choice to sort on `item_color` in descending order and this choice is selected we will get:
+If we have a sort filter with choice to sort on `item_color` in descending order and this choice is selected, we will get:
 
 +---------+------------+
 | item_id | item_color |
@@ -45,7 +45,7 @@ First, you have to specify the request field:
 +------------------------+--------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                              |
 +========================+======================================================================================+
-| `request_field`        | Request field used to pass the sort choice id (f.e. `www.page.com/?request_field=4`) |
+| `request_field`        | Request field used to pass the sort choice id (e.g. `www.page.com/?request_field=4`) |
 +------------------------+--------------------------------------------------------------------------------------+
 
 After which you can specify multiple sort options/choices:
@@ -53,9 +53,9 @@ After which you can specify multiple sort options/choices:
 +------------------------+--------------------------------------------------------------------+
 | Setting name           | Meaning                                                            |
 +========================+====================================================================+
-| `label`                | Choice name to be used in templates. (f.e. `Title descending`)     |
+| `label`                | Choice name to be used in templates. (e.g. `Title descending`)     |
 +------------------------+--------------------------------------------------------------------+
-| `field`                | Specifies the field in repository to sort on. (f.e. `item_color`)  |
+| `field`                | Specifies the field in repository to sort on. (e.g. `item_color`)  |
 +------------------------+--------------------------------------------------------------------+
 | `order`                | Order to sort by. Default `asc`. Valid values: `asc`,  `desc`.     |
 +------------------------+--------------------------------------------------------------------+

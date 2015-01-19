@@ -53,14 +53,14 @@ Example:
 
 .. code-block:: php
 
-    //src/Acme/DemoBundle/Controller/ListController.php
+    // File location:  src/Acme/DemoBundle/Controller/ListController.php
     /**
      * Controller for list pages.
      */
     class ListController extends Controller
     {
         /**
-         * Renders my list page
+         * Renders my list page.
          *
          * @param Request $request
          *
@@ -78,15 +78,15 @@ Example:
         }
 
         /**
-         * Returns item list
+         * Returns item list.
          *
          * @param Request $request
          *
          * @return array
          */
-        private function getProductsData($request)
+        private function getProductsData(Request $request)
         {
-            //here we get our filter manager
+            // Here we get our filter manager.
             return $this->get('ongr_filter_manager.item_list')->execute($request);
         }
     }
@@ -100,8 +100,7 @@ Template variables
 If you're using default controller, `SearchResponse` from `FiltersManager` will be named `filter_manager` in template,
 otherwise it's whatever you call it in your controller.
 
-You can use `SearchResponse` to get results in your template.
-Example:
+You can use `SearchResponse` to get results in your template:
 
 .. code-block:: twig
 
@@ -111,8 +110,7 @@ Example:
 
 ..
 
-You can also use it to get data about your filter.
-Example:
+You can also use it to get data about your filter:
 
 .. code-block:: twig
 

@@ -14,7 +14,7 @@ It requires *managers* and *filters* configured to work.
 
 *Managers* are used to specify repository which will be filtered and which *filters* will be available for the given repository.
 
-*Filters* are a set of rules, by which the documents will be filtered.
+*Filters* is a set of rules, by which the documents will be filtered.
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 A more complex example:
@@ -65,7 +65,7 @@ A more complex example:
 
 ..
 
-This configuration would create six filters, which would be used by a single or both managers, the resulting structure can be seen as a table:
+This configuration would create six filters, which would be used by a single or both managers. The resulting structure can be seen as a table:
 
 +----------------+---------------+-----------------------------+
 | Filter name    | Filter type   | Manager names               |

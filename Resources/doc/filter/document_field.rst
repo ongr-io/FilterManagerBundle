@@ -36,9 +36,9 @@ Configuration
 +------------------------+--------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                              |
 +========================+======================================================================================+
-| `request_field`        | Request field used to specify filter value. (f.e. `www.page.com/?request_field=3`)   |
+| `request_field`        | Request field used to specify filter value. (e.g. `www.page.com/?request_field=3`)   |
 +------------------------+--------------------------------------------------------------------------------------+
-| `field`                | Specifies the field in repository to apply this filter on. (f.e. `category_id`)      |
+| `field`                | Specifies the field in repository to apply this filter on. (e.g. `category_id`)      |
 +------------------------+--------------------------------------------------------------------------------------+
 
 Example:

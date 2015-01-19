@@ -3,7 +3,7 @@ Choice filter
 =============
 
 This filter groups values of repository in a specified field, and returns available options.
-If you select one of the options,  *choice filter* will return item list filtered by it.
+If you select one of the options, *choice filter* will return item list filtered by it.
 
 For example, lets say we have `item` repository which contains the following data:
 
@@ -50,9 +50,9 @@ Configuration
 +------------------------+--------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                              |
 +========================+======================================================================================+
-| `request_field`        | Request field used to view the selected page. (f.e. `www.page.com/?request_field=4`) |
+| `request_field`        | Request field used to view the selected page. (e.g. `www.page.com/?request_field=4`) |
 +------------------------+--------------------------------------------------------------------------------------+
-| `field`                | Specifies the field in repository to apply this filter on. (f.e. `item_color`)       |
+| `field`                | Specifies the field in repository to apply this filter on. (e.g. `item_color`)       |
 +------------------------+--------------------------------------------------------------------------------------+
 | `sort`                 | Sorts the choices based on your configuration.                                       |
 +------------------------+--------------------------------------------------------------------------------------+
