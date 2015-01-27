@@ -48,7 +48,6 @@ class MultiTermChoice extends SingleTermChoice
 
         if (isset($parameters[$this->getRequestField()])) {
             $parameters[$this->getRequestField()][] = $key;
-
         } else {
             $parameters[$this->getRequestField()] = [$key];
         }

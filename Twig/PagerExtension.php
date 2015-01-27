@@ -59,10 +59,10 @@ class PagerExtension extends \Twig_Extension
     /**
      * Renders pagination element.
      *
-     * @param PagerService  $pager
-     * @param string        $route
-     * @param array         $parameters
-     * @param string        $template
+     * @param PagerService $pager
+     * @param string       $route
+     * @param array        $parameters
+     * @param string       $template
      *
      * @return string
      */
@@ -81,9 +81,9 @@ class PagerExtension extends \Twig_Extension
     /**
      * Generates url to certain page.
      *
-     * @param string    $route
-     * @param string    $page
-     * @param array     $parameters
+     * @param string $route
+     * @param string $page
+     * @param array  $parameters
      *
      * @return string
      */

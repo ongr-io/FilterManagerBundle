@@ -11,6 +11,11 @@
 
 namespace ONGR\FilterManagerBundle\Pager;
 
+/**
+ * Interface PagerAdapterInterface.
+ *
+ * @package ONGR\FilterManagerBundle\Pager
+ */
 interface PagerAdapterInterface
 {
     /**

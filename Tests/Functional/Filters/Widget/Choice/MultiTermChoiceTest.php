@@ -115,7 +115,7 @@ class MultiTermChoiceTest extends FilterManagerResultsTest
                     'blue',
                 ],
                 [
-                    'green'
+                    'green',
                 ],
                 [
                     'red',
@@ -131,7 +131,7 @@ class MultiTermChoiceTest extends FilterManagerResultsTest
                     'blue',
                 ],
                 [
-                    'red'
+                    'red',
                 ],
                 [
                     'green',
