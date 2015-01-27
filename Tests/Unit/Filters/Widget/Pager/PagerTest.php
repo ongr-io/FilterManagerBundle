@@ -59,7 +59,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
         $viewData = $filter->getViewData($result, $viewData);
 
         $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\ViewData\PagerAwareViewData', $viewData);
-        $this->assertInstanceOf('ONGR\PagerBundle\Pager\PagerService', $viewData->getPager());
+        $this->assertInstanceOf('ONGR\FilterManagerBundle\Pager\PagerService', $viewData->getPager());
 
         $this->assertEquals(55, $viewData->getPager()->getAdapter()->getTotalResults());
     }
