@@ -20,9 +20,6 @@
         "squizlabs/php_codesniffer": "~1.5",
         "ongr/ongr-strict-standard": "~1.0.0-beta"
     },
-    "suggest": {
-        "ongr/pager-bundle": "Enables pager filter"
-    },
     "autoload": {
         "psr-4": { "ONGR\\FilterManagerBundle\\": "" }
     }

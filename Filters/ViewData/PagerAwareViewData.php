@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Filters\ViewData;
 
 use ONGR\FilterManagerBundle\Filters\ViewData;
-use ONGR\PagerBundle\Pager\PagerService;
+use ONGR\FilterManagerBundle\Pager\PagerService;
 
 /**
  * This class represents view data with choices.

@@ -11,8 +11,6 @@
 
 namespace ONGR\FilterManagerBundle\Pager;
 
-use ONGR\FilterManagerBundle\Pager\PagerAdapterInterface;
-
 /**
  * Returns all the required data to paginate.
  */
@@ -207,7 +205,6 @@ class PagerService
         $tmp = $this->page - floor($pages / 2);
         $begin = $tmp > $this->getFirstPage() ? $tmp : $this->getFirstPage();
         $end = min($begin + $pages - 1, $this->getLastPage());
-        $dd = range($begin, $end, 1);
 
         return range($begin, $end, 1);
     }
