@@ -11,32 +11,24 @@
 
 namespace ONGR\FilterManagerBundle\Pager;
 
-use ONGR\FilterManagerBundle\Pager\PagerAdapterInterface;
-
 /**
  * Returns all the required data to paginate.
  */
 class PagerService
 {
     /**
-     * Current page.
-     *
-     * @var int
+     * @var int Current page.
      */
     private $page = 1;
 
     /**
-     * Number of items per page.
-     *
-     * @var int
+     * @var int Number of items per page.
      */
     private $limit;
 
     /**
- * Maximum number of pages.
- *
- * @var int
- */
+     * @var int Maximum number of pages.
+     */
     private $maxPages;
 
     /**
@@ -107,7 +99,7 @@ class PagerService
     /**
      * Sets the number of pages shown.
      *
-     * @param $maxPages
+     * @param int $maxPages
      */
     public function setMaxPages($maxPages)
     {
@@ -207,7 +199,7 @@ class PagerService
         $tmp = $this->page - floor($pages / 2);
         $begin = $tmp > $this->getFirstPage() ? $tmp : $this->getFirstPage();
         $end = min($begin + $pages - 1, $this->getLastPage());
-        $dd = range($begin, $end, 1);
+
         return range($begin, $end, 1);
     }
 
