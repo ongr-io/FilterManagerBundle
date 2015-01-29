@@ -17,23 +17,17 @@ namespace ONGR\FilterManagerBundle\Pager;
 class PagerService
 {
     /**
-     * @var int
-     *
-     * Current page.
+     * @var int Current page.
      */
     private $page = 1;
 
     /**
-     * @var int
-     *
-     * Number of items per page.
+     * @var int Number of items per page.
      */
     private $limit;
 
     /**
-     * @var int
-     *
-     * Maximum number of pages.
+     * @var int Maximum number of pages.
      */
     private $maxPages;
 
