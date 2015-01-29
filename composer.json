@@ -18,7 +18,7 @@
     "require-dev": {
         "phpunit/phpunit": "~4.1",
         "squizlabs/php_codesniffer": "~1.5",
-        "ongr/ongr-strict-standard": "~1.0.0-beta"
+        "ongr/ongr-strict-standard": "~1.0"
     },
     "autoload": {
         "psr-4": { "ONGR\\FilterManagerBundle\\": "" }
