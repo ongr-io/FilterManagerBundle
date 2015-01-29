@@ -80,7 +80,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         if ($relatedSearch->getPostFilters() && $relatedSearch->getPostFilters()->isRelevant()) {
             $filterAgg = new FilterAggregation($name . '-filter');
             $filterAgg->setFilter($relatedSearch->getPostFilters());
-            $filterAgg->aggregations->addAggregation($agg);
+            $filterAgg->addAggregation($agg);
             $search->addAggregation($filterAgg);
         } else {
             $search->addAggregation($agg);
