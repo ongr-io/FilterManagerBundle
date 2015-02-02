@@ -1,15 +1,31 @@
-==============
-Filter manager
-==============
+ONGR FilterManagerBundle
+========================
 
-Filter manager for product lists. It provides ties between commonly used filtering options and UI elements with Elasticsearch repositories.
+Filter manager is used for listing documents. It provides ties between commonly used filtering options and UI elements with Elasticsearch repositories.
 You can use it from a single controller.
+
+.. image:: https://travis-ci.org/ongr-io/FilterManagerBundle.svg?branch=master
+    :target: https://travis-ci.org/ongr-io/FilterManagerBundle
+
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/downloads.svg
+    :target: https://packagist.org/packages/ongr/filter-manager-bundle
+
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/v/stable.svg
+    :target: https://packagist.org/packages/ongr/filter-manager-bundle
+
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/v/unstable.svg
+    :target: https://packagist.org/packages/ongr/filter-manager-bundle
+
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/license.svg
+    :target: https://packagist.org/packages/ongr/filter-manager-bundle
+
+Documentation
+-------------
 
 Documentation for ONGR Filter Manager Bundle can be found `here <Resources/doc/setup.rst>`_.
 
-`Read the documentation for 0.1.x (master) <https://github.com/ongr-io/FilterManagerBundle/blob/master/Resources/doc/index.rst>`_
+`Read the documentation for (master) <https://github.com/ongr-io/FilterManagerBundle/blob/master/Resources/doc/index.rst>`_
 
--------
 License
 -------
 
