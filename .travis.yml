@@ -1,13 +1,22 @@
 language: php
+
 php:
   - 5.4
   - 5.5
   - 5.6
+  - hhvm
+
+matrix:
+  allow_failures:
+    - php: hhvm
+
 services:
   - elasticsearch
+
 before_script:
   - echo "USE mysql;\nUPDATE user SET password=PASSWORD('root') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
   - composer update --prefer-dist
+
 script:
-  - vendor/bin/phpunit
-  - vendor/bin/phpcs -p --standard=PSR2 --ignore=vendor/,Tests/app/ ./
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+  - vendor/bin/phpcs -p --standard=$TRAVIS_BUILD_DIR/vendor/ongr/ongr-strict-standard/ONGR --ignore=vendor/,Tests/app/ ./
