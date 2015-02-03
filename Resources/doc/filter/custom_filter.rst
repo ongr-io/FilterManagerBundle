@@ -102,4 +102,4 @@ Services `configuration <https://github.com/ongr-io/FilterManagerBundle/blob/mas
 3. Using filter
 ~~~~~~~~~~~~~~~
 
-Filter can be used as other filters trough ``FilterManager``, see FilterManager bundle usage `documentation <usage.rst>`_.
+Filter can be used as other filters trough ``FilterManager``, see FilterManager bundle usage `documentation <usage.html>`_.

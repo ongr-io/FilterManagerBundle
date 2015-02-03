@@ -2,9 +2,9 @@
 Manager configuration
 =====================
 
-    Note: Documentation about bundle setup is `here <manager.rst>`_.
+    Note: Documentation about bundle setup is `here <setup.html>`_.
 
-    Note: Documentation on bundle usage is `here <usage.rst>`_.
+    Note: Documentation on bundle `usage <usage.html>`_.
 
 
 FilterManager is used for retrieving filtered entities from database. It provides ties between commonly used filtering options and UI elements with Elasticsearch repositories.
@@ -89,9 +89,9 @@ Configuration for different filters
 
 A detailed explanation and configuration for each type of filter can be found on its documentation page:
 
-* `Choice filter <filter/choice.rst>`_
-* `Multi choice filter <filter/multi_choice.rst>`_
-* `Document field filter <filter/document_field.rst>`_
-* `Match filter <filter/match.rst>`_
-* `Pager filter <filter/pager.rst>`_
-* `Sort filter <filter/sort.rst>`_
+* `Choice filter <filter/choice.html>`_
+* `Multi choice filter <filter/multi_choice.html>`_
+* `Document field filter <filter/document_field.html>`_
+* `Match filter <filter/match.html>`_
+* `Pager filter <filter/pager.html>`_
+* `Sort filter <filter/sort.html>`_

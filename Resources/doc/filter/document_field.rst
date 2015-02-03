@@ -78,8 +78,8 @@ View data returned by this filter to be used in template:
 | getUrlParameters()      | Url parameters representing current filter state |
 +-------------------------+--------------------------------------------------+
 
-* `Choice filter <choice.rst>`_
-* `Multi choice filter <multi_choice.rst>`_
-* `Match filter <match.rst>`_
-* `Pager filter <pager.rst>`_
-* `Sort filter <sort.rst>`_
+* `Choice filter <choice.html>`_
+* `Multi choice filter <multi_choice.html>`_
+* `Match filter <match.html>`_
+* `Pager filter <pager.html>`_
+* `Sort filter <sort.html>`_

@@ -117,8 +117,8 @@ Each choice has its own data:
 | getUrlParameters() | Returns a list of available choices        |
 +--------------------+--------------------------------------------+
 
-* `Choice filter <choice.rst>`_
-* `Multi choice filter <multi_choice.rst>`_
-* `Document field filter <document_field.rst>`_
-* `Match filter <match.rst>`_
-* `Pager filter <pager.rst>`_
+* `Choice filter <choice.html>`_
+* `Multi choice filter <multi_choice.html>`_
+* `Document field filter <document_field.html>`_
+* `Match filter <match.html>`_
+* `Pager filter <pager.html>`_
