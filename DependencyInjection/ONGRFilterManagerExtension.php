@@ -82,6 +82,7 @@ class ONGRFilterManagerExtension extends Extension
                     new Reference(sprintf('es.manager.%s.%s', $config['es_manager'], $manager['repository'])),
                 ]
             );
+            $managerDefinition->addTag('es.filter_manager');
 
             $container->setDefinition(sprintf('ongr_filter_manager.%s', $name), $managerDefinition);
         }

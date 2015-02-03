@@ -58,8 +58,6 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('name')->end()
                             ->arrayNode('filters')
-                                ->requiresAtLeastOneElement()
-                                ->isRequired()
                                 ->prototype('scalar')->end()
                             ->end()
                             ->scalarNode('repository')->isRequired()->end()
