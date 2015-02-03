@@ -47,6 +47,9 @@ ongr_filter_manager:
         foo_filters:
             filters: ['phrase', 'single_choice']
             repository: 'product'
+        bar_filters:
+            filters: ['sort']
+            repository: 'product'
     filters:
         match:
             phrase:
@@ -73,4 +76,8 @@ ongr_filter_manager:
                   order: asc
                   priorities:
                      - red
-
+        sort:
+            sort:
+                request_field: 'sort'
+                choices:
+                    - { label: foo, field: price, default: true, order: asc }

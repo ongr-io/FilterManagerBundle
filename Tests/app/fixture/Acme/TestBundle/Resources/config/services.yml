@@ -1,3 +1,21 @@
 parameters:
+  ongr_filter_manager.filter.bar_range.class: ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filters\FooRange\FooRange
+  ongr_filter_manager.filter.foo_range.class: ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filters\FooRange\FooRange
+
 
 services:
+  ongr_filter_manager.filter.foo_range:
+    class: %ongr_filter_manager.filter.foo_range.class%
+    arguments:
+      - 'price'
+      - 'price'
+    tags:
+        - { name: ongr_filter_manager.filter, manager: foo_filters, filter_name: foo_range }
+
+  ongr_filter_manager.filter.bar_range:
+      class: %ongr_filter_manager.filter.bar_range.class%
+      arguments:
+        - 'range'
+        - 'price'
+      tags:
+          - { name: ongr_filter_manager.filter, manager: bar_filters, filter_name: bar_range }
