@@ -108,21 +108,21 @@ class PagerTest extends ElasticsearchTestCase
         // Case #0: page with offset.
         $out[] = [
             new Request(['page' => 2]),
-            ['count_per_page' => 2],
+            ['count_per_page' => 2, 'max_pages' => 2],
             ['3', '4'],
         ];
 
         // Case #1: limit bigger than the total results.
         $out[] = [
             new Request(['page' => 2]),
-            ['count_per_page' => 5],
+            ['count_per_page' => 5, 'max_pages' => 2],
             [],
         ];
 
         // Case #2: limit bigger than the total results, should return everything.
         $out[] = [
             new Request(['page' => 1]),
-            ['count_per_page' => 5],
+            ['count_per_page' => 5, 'max_pages' => 2],
             ['1', '2', '3', '4'],
         ];
 
@@ -157,7 +157,7 @@ class PagerTest extends ElasticsearchTestCase
      */
     public function testGetViewData()
     {
-        $manager = $this->getFiltersManager(['count_per_page' => 2]);
+        $manager = $this->getFiltersManager(['count_per_page' => 2, 'max_pages' => 3]);
         $viewData = $manager->execute(new Request(['page' => 3]))->getFilters();
 
         $this->assertEquals(3, $viewData['pager']->getState()->getValue());

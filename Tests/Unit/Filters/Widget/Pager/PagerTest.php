@@ -47,15 +47,18 @@ class PagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetViewData()
     {
+        $filterStateMock = $this->getMockBuilder('ONGR\FilterManagerBundle\Filters\FilterState')->getMock();
+        $filterStateMock->expects($this->any())->method('getValue')->willReturn(1);
         $filter = new Pager();
-
+        $filter->setMaxPages(1);
+        $filter->setCountPerPage(2);
         $result = $this->getMockBuilder('ONGR\ElasticsearchBundle\Result\DocumentIterator')
             ->disableOriginalConstructor()
             ->getMock();
         $result->expects($this->once())->method('getTotalCount')->willReturn(55);
 
         $viewData = $filter->createViewData();
-        $viewData->setState(new FilterState());
+        $viewData->setState($filterStateMock);
         $viewData = $filter->getViewData($result, $viewData);
 
         $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\ViewData\PagerAwareViewData', $viewData);
