@@ -44,6 +44,7 @@ class PagerService
         $this->adapter = $adapter;
         $resolver = new OptionsResolver();
         $this->setRequiredOptions($resolver);
+        $options = $resolver->resolve($options);
         $this->setLimit($options['limit']);
         $this->setPage($options['page']);
         $this->setMaxPages($options['max_pages']);
