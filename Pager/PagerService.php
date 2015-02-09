@@ -11,6 +11,8 @@
 
 namespace ONGR\FilterManagerBundle\Pager;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 /**
  * Returns all the required data to paginate.
  */
@@ -19,7 +21,7 @@ class PagerService
     /**
      * @var int Current page.
      */
-    private $page = 1;
+    private $page;
 
     /**
      * @var int Number of items per page.
@@ -40,18 +42,22 @@ class PagerService
     public function __construct(PagerAdapterInterface $adapter, array $options = [])
     {
         $this->adapter = $adapter;
+        $resolver = new OptionsResolver();
+        $this->setRequiredOptions($resolver);
+        $options = $resolver->resolve($options);
+        $this->setLimit($options['limit']);
+        $this->setPage($options['page']);
+        $this->setMaxPages($options['max_pages']);
+    }
 
-        if (isset($options['limit'])) {
-            $this->setLimit($options['limit']);
-        }
-
-        if (isset($options['page'])) {
-            $this->setPage($options['page']);
-        }
-
-        if (isset($options['max_pages'])) {
-            $this->setMaxPages($options['max_pages']);
-        }
+    /**
+     * Sets the required options.
+     *
+     * @param OptionsResolver $resolver
+     */
+    private function setRequiredOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired(['limit', 'page', 'max_pages']);
     }
 
     /**
