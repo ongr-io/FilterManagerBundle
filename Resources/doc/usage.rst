@@ -10,7 +10,7 @@ Using controller
 Using default controller
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once you set up your `*managers* <manager.rst>`_ you don't need to create a controller for each one,
+Once you set up your `*managers* <manager.html>`_ you don't need to create a controller for each one,
 you can just use default manager controller `ONGRFilterManagerBundle:Manager:manager`.
 
 Example:
@@ -29,7 +29,7 @@ Example:
 ..
 
 This specific example will render template `AcmeDemoBundle:List:results.html.twig`,
-with `SearchResponse` from `FiltersManager` named `item_list`.
+with SearchResponse_ from `FiltersManager` named `item_list`.
 
 ------------------------
 Using custom controller.
@@ -97,10 +97,10 @@ Example:
 Template variables
 ------------------
 
-If you're using default controller, `SearchResponse` from `FiltersManager` will be named `filter_manager` in template,
+If you're using default controller, SearchResponse_ from FiltersManager_ will be named `filter_manager` in template,
 otherwise it's whatever you call it in your controller.
 
-You can use `SearchResponse` to get results in your template:
+You can use SearchResponse_ to get results in your template:
 
 .. code-block:: twig
 
@@ -120,15 +120,15 @@ You can also use it to get data about your filter:
 
 A complete list of parameters for each filter can be found in its documentation:
 
-* `Choice filter <filter/choice.rst>`_
-* `Multi choice filter <filter/multi_choice.rst>`_
-* `Document field filter <filter/document_field.rst>`_
-* `Match filter <filter/match.rst>`_
-* `Pager filter <filter/pager.rst>`_
-* `Sort filter <filter/sort.rst>`_
+* `Choice filter <filter/choice.html>`_
+* `Multi choice filter <filter/multi_choice.html>`_
+* `Document field filter <filter/document_field.html>`_
+* `Match filter <filter/match.html>`_
+* `Pager filter <filter/pager.html>`_
+* `Sort filter <filter/sort.html>`_
 
 
 
-.. _[SearchResponse]:`SearchResponse <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php>`_
+.. _SearchResponse: https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php
 
-.. _[FiltersManager]:`FiltersManager <https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FiltersManager.php>`_
+.. _FiltersManager: https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FiltersManager.php

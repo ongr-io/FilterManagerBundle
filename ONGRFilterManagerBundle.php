@@ -11,6 +11,8 @@
 
 namespace ONGR\FilterManagerBundle;
 
+use ONGR\FilterManagerBundle\DependencyInjection\Compiler\FilterPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -18,4 +20,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class ONGRFilterManagerBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new FilterPass());
+    }
 }
