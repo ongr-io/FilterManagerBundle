@@ -57,7 +57,9 @@ class PagerService
      */
     private function setRequiredOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired(['limit', 'page', 'max_pages']);
+        $resolver
+            ->setRequired(['limit', 'page', 'max_pages'])
+            ->setDefaults(['max_pages' => 8, 'limit' => 10]);
     }
 
     /**
