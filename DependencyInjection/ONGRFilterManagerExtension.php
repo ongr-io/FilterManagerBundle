@@ -34,6 +34,22 @@ class ONGRFilterManagerExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
+        $this->addFilters($config, $container);
+        $this->addFiltersManagers($config, $container);
+    }
+
+    /**
+     * Adds filters based on configuration.
+     *
+     * @param array            $config    Configuration.
+     * @param ContainerBuilder $container Service container.
+     */
+    private function addFilters(array $config, ContainerBuilder $container)
+    {
+        if (!array_key_exists('filters', $config)) {
+            return;
+        }
+
         $filterMap = $container->getParameter('ongr_filter_manager.filter_map');
 
         foreach ($config['filters'] as $type => $filters) {
@@ -61,8 +77,21 @@ class ONGRFilterManagerExtension extends Extension
                 $this->addRelation($filterDefinition, $filter, 'reset', 'include');
                 $this->addRelation($filterDefinition, $filter, 'reset', 'exclude');
 
-                $container->setDefinition(sprintf('ongr_filter_manager.filter.%s', $name), $filterDefinition);
+                $container->setDefinition($this->getFilterServiceId($name), $filterDefinition);
             }
+        }
+    }
+
+    /**
+     * Adds filters managers based on configuration.
+     *
+     * @param array            $config    Configuration array.
+     * @param ContainerBuilder $container Service container.
+     */
+    private function addFiltersManagers(array $config, ContainerBuilder $container)
+    {
+        if (!array_key_exists('managers', $config)) {
+            return;
         }
 
         foreach ($config['managers'] as $name => $manager) {
@@ -71,7 +100,7 @@ class ONGRFilterManagerExtension extends Extension
             foreach ($manager['filters'] as $filter) {
                 $filtersContainer->addMethodCall(
                     'set',
-                    [$filter, new Reference(sprintf('ongr_filter_manager.filter.%s', $filter))]
+                    [$filter, new Reference($this->getFilterServiceId($filter))]
                 );
             }
 
@@ -96,7 +125,7 @@ class ONGRFilterManagerExtension extends Extension
      * @param string     $urlType
      * @param string     $relationType
      */
-    protected function addRelation(Definition $definition, $filter, $urlType, $relationType)
+    private function addRelation(Definition $definition, $filter, $urlType, $relationType)
     {
         if (!empty($filter['relations'][$urlType][$relationType])) {
             $definition->addMethodCall(
@@ -114,11 +143,23 @@ class ONGRFilterManagerExtension extends Extension
      *
      * @return Definition
      */
-    protected function getRelation($type, $relations)
+    private function getRelation($type, $relations)
     {
         return new Definition(
             sprintf('ONGR\FilterManagerBundle\Relations\%sRelation', ucfirst($type)),
             [$relations]
         );
+    }
+
+    /**
+     * Formats filter service id from given name.
+     *
+     * @param string $filterName Filter name.
+     *
+     * @return string
+     */
+    private function getFilterServiceId($filterName)
+    {
+        return sprintf('ongr_filter_manager.filter.%s', $filterName);
     }
 }
