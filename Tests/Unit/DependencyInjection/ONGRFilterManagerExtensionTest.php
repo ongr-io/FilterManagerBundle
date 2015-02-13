@@ -153,6 +153,21 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests if extension runs with empty configuration without exceptions.
+     */
+    public function testWithEmptyConfiguration()
+    {
+        $config = [];
+        $container = new ContainerBuilder();
+        $extension = new ONGRFilterManagerExtension();
+        $extension->load($config, $container);
+
+        foreach ($container->getDefinitions() as $id => $definition) {
+            $this->assertNotRegExp('/^ongr_filter_manager\.filter\.(\D+)/', $id);
+        }
+    }
+
+    /**
      * Returns dummy configuration for testing.
      *
      * @param array $relations
