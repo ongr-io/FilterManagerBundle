@@ -46,10 +46,10 @@ ongr_filter_manager:
     managers:
         foo_filters:
             filters: ['phrase', 'single_choice']
-            repository: 'product'
+            repository: 'es.manager.default.product'
         bar_filters:
             filters: ['sort']
-            repository: 'product'
+            repository: 'es.manager.default.product'
     filters:
         match:
             phrase:
