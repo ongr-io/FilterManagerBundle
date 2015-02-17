@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class is able to test results from filters manager.
  */
-abstract class FilterManagerResultsTest extends ElasticsearchTestCase
+abstract class AbstractFilterManagerResultsTest extends ElasticsearchTestCase
 {
     /**
      * Return any kind of filters manager to test.
