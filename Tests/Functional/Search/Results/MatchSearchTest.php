@@ -14,13 +14,13 @@ namespace ONGR\FilterManagerBundle\Tests\Functional\Search\Results;
 use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
-use ONGR\FilterManagerBundle\Test\FilterManagerResultsTest;
+use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class checks if we.
  */
-class MatchSearchTest extends FilterManagerResultsTest
+class MatchSearchTest extends AbstractFilterManagerResultsTest
 {
     /**
      * @return array

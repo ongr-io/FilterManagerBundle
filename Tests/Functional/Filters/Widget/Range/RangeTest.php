@@ -16,13 +16,13 @@ use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
 use ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
-use ONGR\FilterManagerBundle\Test\FilterManagerResultsTest;
+use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Functional test for range filter.
  */
-class RangeTest extends FilterManagerResultsTest
+class RangeTest extends AbstractFilterManagerResultsTest
 {
     /**
      * @return array

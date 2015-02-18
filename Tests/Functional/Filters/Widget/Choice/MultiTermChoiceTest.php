@@ -19,10 +19,10 @@ use ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice;
 use ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
-use ONGR\FilterManagerBundle\Test\FilterManagerResultsTest;
+use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
-class MultiTermChoiceTest extends FilterManagerResultsTest
+class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
 {
     /**
      * @return array
