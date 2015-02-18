@@ -108,7 +108,7 @@ class ONGRFilterManagerExtension extends Extension
                 'ONGR\FilterManagerBundle\Search\FiltersManager',
                 [
                     $filtersContainer,
-                    new Reference(sprintf('es.manager.%s.%s', $config['es_manager'], $manager['repository'])),
+                    new Reference($manager['repository']),
                 ]
             );
             $managerDefinition->addTag('es.filter_manager');

@@ -30,7 +30,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'managers' => [
                 'foo_filters' => [
                     'filters' => ['bar'],
-                    'repository' => 'baz',
+                    'repository' => 'es.manager.default.baz',
                 ],
             ],
             'filters' => [
@@ -84,7 +84,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['filters']['document_field'] = [];
         $expectedBaseConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice']];
         $expectedBaseConfig['filters']['multi_choice'] = [];
-        $expectedBaseConfig['es_manager'] = 'default';
 
         // Case #0 Base configuration with default values.
         $cases[] = [

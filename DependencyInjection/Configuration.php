@@ -30,13 +30,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ongr_filter_manager');
 
-        $rootNode
-            ->children()
-                ->scalarNode('es_manager')
-                    ->defaultValue('default')
-                ->end()
-            ->end();
-
         $this->addManagersSection($rootNode);
         $this->addFiltersSection($rootNode);
 
@@ -62,7 +55,10 @@ class Configuration implements ConfigurationInterface
                                 ->info('Filter names to include in manager.')
                                 ->prototype('scalar')->end()
                             ->end()
-                            ->scalarNode('repository')->isRequired()->end()
+                            ->scalarNode('repository')
+                                ->isRequired()
+                                ->info('ElasticsearchBundle repository used for fetching data.')
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
