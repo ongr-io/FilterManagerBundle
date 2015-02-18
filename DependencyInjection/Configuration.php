@@ -53,11 +53,13 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('managers')
                     ->requiresAtLeastOneElement()
                     ->useAttributeAsKey('name')
-                    ->isRequired()
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('name')->end()
+                            ->scalarNode('name')
+                                ->info('Filter manager name')
+                            ->end()
                             ->arrayNode('filters')
+                                ->info('Filter names to include in manager.')
                                 ->prototype('scalar')->end()
                             ->end()
                             ->scalarNode('repository')->isRequired()->end()
@@ -78,21 +80,22 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(
                             function ($v) {
-                            $v = array_filter($v);
+                                $v = array_filter($v);
 
-                            return empty($v);
+                                return empty($v);
                             }
                         )
                         ->thenInvalid('At least single filter must be configured.')
                     ->end()
-                    ->isRequired()
-                    ->append($this->buildFilterTree('choice'))
-                    ->append($this->buildFilterTree('multi_choice'))
-                    ->append($this->buildFilterTree('match'))
-                    ->append($this->buildFilterTree('sort'))
-                    ->append($this->buildFilterTree('pager'))
-                    ->append($this->buildFilterTree('document_field'))
-                    ->append($this->buildFilterTree('range'))
+                    ->children()
+                        ->append($this->buildFilterTree('choice'))
+                        ->append($this->buildFilterTree('multi_choice'))
+                        ->append($this->buildFilterTree('match'))
+                        ->append($this->buildFilterTree('sort'))
+                        ->append($this->buildFilterTree('pager'))
+                        ->append($this->buildFilterTree('document_field'))
+                        ->append($this->buildFilterTree('range'))
+                    ->end()
                 ->end()
             ->end();
     }

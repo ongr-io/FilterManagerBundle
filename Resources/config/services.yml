@@ -1,5 +1,5 @@
 parameters:
-    ongr_filter_manager.pager_extension.class: ONGR\FilterManagerBundle\Twig\PagerExtension
+    ongr_filter_manager.twig.pager_extension.class: ONGR\FilterManagerBundle\Twig\PagerExtension
     ongr_filter_manager.filter_map:
         choice: ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice
         multi_choice: ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice
@@ -10,8 +10,8 @@ parameters:
         range: ONGR\FilterManagerBundle\Filters\Widget\Range\Range
 
 services:
-    ongr_filter_manager.pager_extension:
-            class: %ongr_filter_manager.pager_extension.class%
+    ongr_filter_manager.twig.pager_extension:
+            class: %ongr_filter_manager.twig.pager_extension.class%
             arguments:
                 - @router
             tags:
