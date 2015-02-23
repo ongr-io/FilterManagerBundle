@@ -168,6 +168,35 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests if exception is thrown when filter names are duplicated.
+     *
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Found duplicate filter name `test_sorting` in `match` filter
+     */
+    public function testConfigWithDuplicateNameException()
+    {
+        $config = array_replace_recursive(
+            $this->getDummyConfig(),
+            [
+                'ongr_filter_manager' => [
+                    'filters' => [
+                        'match' => [
+                            'test_sorting' => [
+                                'request_field' => 'test_q',
+                                'field' => 'test_title',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = new ContainerBuilder();
+        $extension = new ONGRFilterManagerExtension();
+        $extension->load($config, $container);
+    }
+
+    /**
      * Returns dummy configuration for testing.
      *
      * @param array $relations
@@ -188,8 +217,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                 ],
                 'filters' => [
                     'sort' => [
-                        'test_sorting' =>
-                        [
+                        'test_sorting' => [
                             'relations' => $relations,
                             'request_field' => 'sort',
                             'choices' => [

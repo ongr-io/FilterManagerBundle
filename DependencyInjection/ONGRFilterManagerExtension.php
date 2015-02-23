@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
@@ -51,6 +52,7 @@ class ONGRFilterManagerExtension extends Extension
         }
 
         $filterMap = $container->getParameter('ongr_filter_manager.filter_map');
+        $this->validateFilterNames($config['filters']);
 
         foreach ($config['filters'] as $type => $filters) {
             foreach ($filters as $name => $filter) {
@@ -78,6 +80,30 @@ class ONGRFilterManagerExtension extends Extension
                 $this->addRelation($filterDefinition, $filter, 'reset', 'exclude');
 
                 $container->setDefinition($this->getFilterServiceId($name), $filterDefinition);
+            }
+        }
+    }
+
+    /**
+     * Checks if filter names are valid.
+     *
+     * @param array $filters Filters to validate.
+     *
+     * @throws InvalidConfigurationException
+     */
+    private function validateFilterNames(array $filters)
+    {
+        $existing = [];
+
+        foreach ($filters as $type => $filters) {
+            foreach ($filters as $name => $data) {
+                if (in_array($name, $existing)) {
+                    throw new InvalidConfigurationException(
+                        "Found duplicate filter name `{$name}` in `{$type}` filter"
+                    );
+                }
+
+                $existing[] = $name;
             }
         }
     }
