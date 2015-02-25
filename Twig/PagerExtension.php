@@ -67,7 +67,7 @@ class PagerExtension extends \Twig_Extension
      * @return string
      */
     public function paginate(
-        PagerService $pager,
+        $pager,
         $route,
         array $parameters = [],
         $template = 'ONGRFilterManagerBundle:Pager:paginate.html.twig'
