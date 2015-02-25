@@ -26,11 +26,15 @@ class CountAdapter implements PagerAdapterInterface
     /**
      * Constructor.
      *
-     * @param int $count
+     * @param array|\Countable|int $value
      */
-    public function __construct($count)
+    public function __construct($value)
     {
-        $this->count = $count;
+        if (is_array($value)) {
+            $value = count($value);
+        }
+
+        $this->count = $value;
     }
 
     /**
