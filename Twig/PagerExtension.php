@@ -22,7 +22,7 @@ class PagerExtension extends \Twig_Extension
     /**
      * Twig extension name.
      */
-    const NAME = 'ongr.pager';
+    const NAME = 'ongr_pager';
 
     /**
      * @var RouterInterface
@@ -56,8 +56,8 @@ class PagerExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('paginate', [$this, 'paginate'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('paginate_path', [$this, 'path'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ongr_paginate', [$this, 'paginate'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ongr_paginate_path', [$this, 'path'], ['is_safe' => ['html']]),
         ];
     }
 
