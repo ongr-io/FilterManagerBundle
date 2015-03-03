@@ -20,6 +20,11 @@ use Symfony\Component\Routing\RouterInterface;
 class PagerExtension extends \Twig_Extension
 {
     /**
+     * Twig extension name.
+     */
+    const NAME = 'ongr.pager';
+
+    /**
      * @var RouterInterface
      */
     protected $router;
@@ -111,6 +116,6 @@ class PagerExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'pager';
+        return self::NAME;
     }
 }
