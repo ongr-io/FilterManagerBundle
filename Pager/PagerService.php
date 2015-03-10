@@ -43,7 +43,7 @@ class PagerService
     {
         $this->adapter = $adapter;
         $resolver = new OptionsResolver();
-        $this->setRequiredOptions($resolver);
+        $this->setDefaultOptions($resolver);
         $options = $resolver->resolve($options);
         $this->setLimit($options['limit']);
         $this->setPage($options['page']);
@@ -51,15 +51,20 @@ class PagerService
     }
 
     /**
-     * Sets the required options.
+     * Sets the default options.
      *
      * @param OptionsResolver $resolver
      */
-    private function setRequiredOptions(OptionsResolver $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired(['limit', 'page', 'max_pages'])
-            ->setDefaults(['max_pages' => 8, 'limit' => 10]);
+            ->setDefaults(
+                [
+                    'max_pages' => 8,
+                    'limit' => 10,
+                    'page' => 1,
+                ]
+            );
     }
 
     /**
