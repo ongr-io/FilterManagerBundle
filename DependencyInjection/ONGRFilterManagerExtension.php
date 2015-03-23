@@ -70,6 +70,11 @@ class ONGRFilterManagerExtension extends Extension
                 if (isset($filter['choices'])) {
                     $filterDefinition->addMethodCall('setChoices', [$filter['choices']]);
                 }
+                if (isset($filter['fuzzy'])) {
+                    $filterDefinition->addMethodCall('setFuzziness', [$filter['fuzziness']]);
+                    $filterDefinition->addMethodCall('setPrefixLength', [$filter['prefix_length']]);
+                    $filterDefinition->addMethodCall('setMaxExpansions', [$filter['max_expansions']]);
+                }
                 if (isset($filter['sort']) && count($filter['sort']) > 0) {
                     $filterDefinition->addMethodCall('setSortType', [$filter['sort']]);
                 }

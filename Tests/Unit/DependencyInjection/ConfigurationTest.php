@@ -84,6 +84,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['filters']['document_field'] = [];
         $expectedBaseConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice']];
         $expectedBaseConfig['filters']['multi_choice'] = [];
+        $expectedBaseConfig['filters']['fuzzy'] = [];
 
         // Case #0 Base configuration with default values.
         $cases[] = [
@@ -110,6 +111,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';
         unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['multi_choice']);
+        unset($customConfig['filters']['fuzzy']);
         $cases[] = [
             $customConfig,
             $expectedConfig,
