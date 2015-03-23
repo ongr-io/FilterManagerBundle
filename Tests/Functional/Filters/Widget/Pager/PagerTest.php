@@ -198,7 +198,7 @@ class PagerTest extends ElasticsearchTestCase
         $out[] = [
             $options,
             4,
-            [3, 4],
+            [2, 3, 4],
         ];
 
         return $out;
