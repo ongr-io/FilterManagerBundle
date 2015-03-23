@@ -76,6 +76,13 @@ ongr_filter_manager:
                   order: asc
                   priorities:
                      - red
+        fuzzy:
+            fuzzy:
+                request_field: 'fuzzy'
+                field: 'color'
+                fuzziness: 5
+                prefix_length: 0
+                max_expansions: 50
         sort:
             sort:
                 request_field: 'sort'

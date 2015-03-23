@@ -87,6 +87,7 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('choice'))
                         ->append($this->buildFilterTree('multi_choice'))
                         ->append($this->buildFilterTree('match'))
+                        ->append($this->buildFilterTree('fuzzy'))
                         ->append($this->buildFilterTree('sort'))
                         ->append($this->buildFilterTree('pager'))
                         ->append($this->buildFilterTree('document_field'))
@@ -141,6 +142,23 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->arrayNode('priorities')->prototype('scalar')->end()
                             ->end()
+                        ->end()
+                    ->end();
+                break;
+            case 'fuzzy':
+                $node
+                    ->children()
+                        ->scalarNode('fuzziness')
+                            ->info('The maximum edit distance.')
+                        ->end()
+                        ->integerNode('prefix_length')
+                            ->info(
+                                'The number of initial characters which will not be “fuzzified”.
+                                This helps to reduce the number of terms which must be examined.'
+                            )
+                        ->end()
+                        ->integerNode('max_expansions')
+                            ->info('The maximum number of terms that the fuzzy query will expand to.')
                         ->end()
                     ->end();
                 break;
