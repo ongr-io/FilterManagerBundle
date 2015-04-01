@@ -209,14 +209,12 @@ class PagerService
         $tmpEnd = $tmpBegin + $pages - 1;
 
         if ($tmpBegin < $this->getFirstPage()) {
-            $overleft = $this->getFirstPage() - $tmpBegin;
-            $tmpEnd += $overleft;
+            $tmpEnd += $this->getFirstPage() - $tmpBegin;
             $tmpBegin = $this->getFirstPage();
         }
 
         if ($tmpEnd > $this->getLastPage()) {
-            $overleft = $tmpEnd - $this->getLastPage();
-            $tmpBegin -= $overleft;
+            $tmpBegin -= $tmpEnd - $this->getLastPage();
             $tmpEnd = $this->getLastPage();
         }
 
