@@ -1,5 +1,4 @@
-======================
-Multiple choice filter
+Multiple Choice Filter
 ======================
 
 This filter is very similar to choice filter, but you can select multiple options.
@@ -48,9 +47,8 @@ We can then select multiple values from this list and get all items for it, let'
 | 5       | blue       |
 +---------+------------+
 
-~~~~~~~~~~~~~
 Configuration
-~~~~~~~~~~~~~
+-------------
 
 +------------------------+--------------------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                                          |
@@ -66,7 +64,8 @@ Example:
 
 .. code-block:: yaml
 
-    #app/config/config.yml
+    # app/config/config.yml
+    
     ongr_filter_manager:
         managers:
             item_list:
@@ -81,9 +80,8 @@ Example:
 
 ..
 
-~~~~~~~~~~~~~~
 Twig view data
-~~~~~~~~~~~~~~
+--------------
 
 View data returned by this filter to be used in template:
 
@@ -116,9 +114,3 @@ Each choice has its own data:
 +--------------------+--------------------------------------------+
 | getUrlParameters() | Returns a list of available choices        |
 +--------------------+--------------------------------------------+
-
-* `Choice filter <choice.html>`_
-* `Document field filter <document_field.html>`_
-* `Match filter <match.html>`_
-* `Pager filter <pager.html>`_
-* `Sort filter <sort.html>`_

@@ -1,28 +1,37 @@
-==============
-Filter manager
-==============
+Filter Manager Bundle
+=====================
 
-Filter manager for product lists. It provides ties between commonly used filtering options and UI elements with Elasticsearch repositories.
-You can use it from a single controller.
+Installation
+------------
 
-Documentation for ONGR Filter Manager Bundle can be found `here <setup.html>`_.
-
-`Read the documentation for master <https://github.com/ongr-io/FilterManagerBundle/blob/master/Resources/doc/index.rst>`_
-
-Contents:
-~~~~~~~~~
+Installation is a quick 5 step process:
 
 .. toctree::
-    :maxdepth: 1
-    :glob:
+        :maxdepth: 1
+        :titlesonly:
 
-    setup
-    usage
-    manager
-    filter/*
+        setup
 
+Bundle documentation
+--------------------
 
-License
-~~~~~~~
+Main things you should know while working with this bundle.
 
-This bundle is covered by the MIT license. Please see the complete license in the bundle `LICENSE </LICENSE>`_ file.
+.. toctree::
+        :maxdepth: 1
+        :titlesonly:
+
+        usage
+        configuration
+
+Filters
+-------
+
+Filters provided by this bundle.
+
+.. toctree::
+        :maxdepth: 2
+        :titlesonly:
+        :glob:
+        
+        filter/*

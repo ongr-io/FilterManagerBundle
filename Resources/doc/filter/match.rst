@@ -1,5 +1,4 @@
-============
-Match filter
+Match Filter
 ============
 
 This filter searches for a matching value in the specified field.
@@ -46,7 +45,8 @@ Example:
 
 .. code-block:: yaml
 
-    #app/config/config.yml
+    # app/config/config.yml
+    
     ongr_filter_manager:
         managers:
             item_list:

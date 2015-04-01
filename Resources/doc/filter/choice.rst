@@ -1,5 +1,4 @@
-=============
-Choice filter
+Choice Filter
 =============
 
 This filter groups values of repository in a specified field, and returns available options.
@@ -43,9 +42,8 @@ We can then select a value from this list and get all items for it, lets say we 
 | 5       | blue       |
 +---------+------------+
 
-~~~~~~~~~~~~~
 Configuration
-~~~~~~~~~~~~~
+-------------
 
 +------------------------+--------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                              |
@@ -57,9 +55,8 @@ Configuration
 | `sort`                 | Sorts the choices based on your configuration.                                       |
 +------------------------+--------------------------------------------------------------------------------------+
 
-~~~~~~~~~~~~~~~~~~~~~
 Sorting configuration
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 +------------------------+------------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                                  |
@@ -75,7 +72,8 @@ Example:
 
 .. code-block:: yaml
 
-    #app/config/config.yml
+    # app/config/config.yml
+    
     ongr_filter_manager:
         managers:
             item_list:
@@ -95,9 +93,8 @@ Example:
 
 ..
 
-~~~~~~~~~~~~~~
 Twig view data
-~~~~~~~~~~~~~~
+--------------
 
 View data returned by this filter to be used in template:
 
@@ -131,8 +128,3 @@ Each choice has its own data:
 | getUrlParameters() | Returns a list of available choices        |
 +--------------------+--------------------------------------------+
 
-* `Multi choice filter <multi_choice.html>`_
-* `Document field filter <document_field.html>`_
-* `Match filter <match.html>`_
-* `Pager filter <pager.html>`_
-* `Sort filter <sort.html>`_

@@ -1,24 +1,12 @@
-=====================
-Manager configuration
-=====================
+Configuration
+=============
 
-    Note: Documentation about bundle setup is `here <setup.html>`_.
+FilterManager is used for retrieving filtered entities from database. It provides ties between commonly used filtering options and UI elements with Elasticsearch repositories. You can use it from a single controller.
 
-    Note: Documentation on bundle `usage <usage.html>`_.
+It requires *managers* and *filters* to be configured to work. *Managers* are used to specify repository which will be used to fetch data and *filters* that will be used to filter fetched data.
 
-
-FilterManager is used for retrieving filtered entities from database. It provides ties between commonly used filtering options and UI elements with Elasticsearch repositories.
-You can use it from a single controller.
-
-It requires *managers* and *filters* configured to work.
-
-*Managers* are used to specify repository which will be filtered and which *filters* will be available for the given repository.
-
-*Filters* is a set of rules, by which the documents will be filtered.
-
-~~~~~~~~~~~~~~~~~~~~~~~
 A more complex example:
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 .. code-block:: yaml
 
@@ -83,15 +71,7 @@ This configuration would create six filters, which would be used by a single or 
 | category_pager | pager         | category_list               |
 +----------------+---------------+-----------------------------+
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Configuration for different filters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------
 
-A detailed explanation and configuration for each type of filter can be found on its documentation page:
-
-* `Choice filter <filter/choice.html>`_
-* `Multi choice filter <filter/multi_choice.html>`_
-* `Document field filter <filter/document_field.html>`_
-* `Match filter <filter/match.html>`_
-* `Pager filter <filter/pager.html>`_
-* `Sort filter <filter/sort.html>`_
+A detailed explanation and configuration for each type of filter can be found on `main page <index.html#filters>`__.

@@ -1,5 +1,4 @@
-============
-Pager filter
+Pager Filter
 ============
 
 Filter which provides pagination functionality by returning documents for the selected page.
@@ -38,9 +37,8 @@ If we have a pager filter with `count_per_page` set to `2` and we request for th
 
 ..
 
-~~~~~~~~~~~~~
 Configuration
-~~~~~~~~~~~~~
+-------------
 
 +------------------------+--------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                              |
@@ -56,7 +54,8 @@ Example:
 
 .. code-block:: yaml
 
-    #app/config/config.yml
+    # app/config/config.yml
+    
     ongr_filter_manager:
         managers:
             item_list:
@@ -72,9 +71,8 @@ Example:
 
 ..
 
-~~~~~~~~~~~~~~
 Twig view data
-~~~~~~~~~~~~~~
+--------------
 
 View data returned by this filter to be used in template:
 
@@ -91,9 +89,3 @@ View data returned by this filter to be used in template:
 +-------------------------+--------------------------------------------------+
 | getPagerService()       | Returns pager service to be used in template     |
 +-------------------------+--------------------------------------------------+
-
-* `Choice filter <choice.html>`_
-* `Multi choice filter <multi_choice.html>`_
-* `Document field filter <document_field.html>`_
-* `Match filter <match.html>`_
-* `Sort filter <sort.html>`_
