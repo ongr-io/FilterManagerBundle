@@ -2,13 +2,13 @@
 FilterManager setup
 ===================
 
-    Note: Documentation on bundle `usage <usage.html>`_.
+    Note: Documentation on bundle `usage <usage.html>`__.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Step 1: Install FilterManager bundle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FilterManager bundle is installed using `Composer <https://getcomposer.org>`_.
+FilterManager bundle is installed using `Composer <https://getcomposer.org>`__.
 
 .. code-block:: bash
 
@@ -18,7 +18,7 @@ FilterManager bundle is installed using `Composer <https://getcomposer.org>`_.
 
     NOTE: Elasticsearch bundle !!!
 
-    Please note that filter manager requires Elasticsearch bundle, guide on how to install it can be found `here <http://ongr.readthedocs.org/en/latest/components/ElasticsearchBundle/setup.html>`_.
+    Please note that filter manager requires Elasticsearch bundle, guide on how to install it can be found `here <http://ongr.readthedocs.org/en/latest/components/ElasticsearchBundle/setup.html>`__.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Step 2: Enable FilterManager bundle
@@ -70,7 +70,7 @@ Add minimal configuration for FilterManager bundle.
 ..
 
 
-    This is the basic example only, for more information about manager configuration, please take a look at `manager <manager.html>`_ chapter.
+    This is the basic example only, for more information about manager configuration, please take a look at `manager <manager.html>`__ chapter.
 
 In this particular example, we defined a single manager named `item_list` to filter documents from `item` repository,
 and we'll be using the filter named `sorting` to sort the item list with title either descending or ascending.
@@ -97,10 +97,10 @@ Add a simple route:
 This example will handle `www.mypage.com/list` route, rendering template `AcmeDemoBundle:List:results.html.twig`
 with the filtered manager data.
 
-    You can also use your own custom controller specifying a route if needed (example can be found at `usage <usage.html>`_ chapter).
+    You can also use your own custom controller specifying a route if needed (example can be found at `usage <usage.html>`__ chapter).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Step 5: Use your new bundle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Usage documentation for the FilterManager bundle is available `here <usage.html>`_.
+Usage documentation for the FilterManager bundle is available `here <usage.html>`__.
