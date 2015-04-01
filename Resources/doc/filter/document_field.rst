@@ -1,5 +1,4 @@
-=====================
-Document field filter
+Document Field Filter
 =====================
 
 This filter gets a document from request and filters results by its id on the specified field.
@@ -29,9 +28,8 @@ Lets say we apply *document filter* and send a request with a category item, whi
 | red   | 3           |
 +-------+-------------+
 
-~~~~~~~~~~~~~
 Configuration
-~~~~~~~~~~~~~
+-------------
 
 +------------------------+--------------------------------------------------------------------------------------+
 | Setting name           | Meaning                                                                              |
@@ -45,7 +43,8 @@ Example:
 
 .. code-block:: yaml
 
-    #app/config/config.yml
+    # app/config/config.yml
+    
     ongr_filter_manager:
         managers:
             item_list:
@@ -60,9 +59,8 @@ Example:
 
 ..
 
-~~~~~~~~~~~~~~
 Twig view data
-~~~~~~~~~~~~~~
+--------------
 
 View data returned by this filter to be used in template:
 
@@ -78,8 +76,3 @@ View data returned by this filter to be used in template:
 | getUrlParameters()      | Url parameters representing current filter state |
 +-------------------------+--------------------------------------------------+
 
-* `Choice filter <choice.html>`_
-* `Multi choice filter <multi_choice.html>`_
-* `Match filter <match.html>`_
-* `Pager filter <pager.html>`_
-* `Sort filter <sort.html>`_

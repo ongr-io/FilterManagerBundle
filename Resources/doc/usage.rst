@@ -1,14 +1,8 @@
-####################
-Using filter manager
-####################
+Usage
+=====
 
-================
-Using controller
-================
-
-~~~~~~~~~~~~~~~~~~~~~~~~
-Using default controller
-~~~~~~~~~~~~~~~~~~~~~~~~
+Default controller
+------------------
 
 Once you set up your `*managers* <manager.html>`_ you don't need to create a controller for each one,
 you can just use default manager controller `ONGRFilterManagerBundle:Manager:manager`.
@@ -29,11 +23,10 @@ Example:
 ..
 
 This specific example will render template `AcmeDemoBundle:List:results.html.twig`,
-with SearchResponse_ from `FiltersManager` named `item_list`.
+with SearchResponse_ object from `FiltersManager` named `item_list`.
 
-------------------------
-Using custom controller.
-------------------------
+Custom controller
+-----------------
 
 You can still use custom controller by getting your needed manager from the container.
 This way you can add your custom variables if needed.
@@ -43,6 +36,7 @@ Example:
 .. code-block:: yaml
 
     #src/Acme/DemoBundle/Resources/config/routing.yml
+    
     ongr_search_page:
         pattern: /list
         methods:  [GET]
@@ -53,7 +47,8 @@ Example:
 
 .. code-block:: php
 
-    // File location:  src/Acme/DemoBundle/Controller/ListController.php
+    #src/Acme/DemoBundle/Controller/ListController.php
+    
     /**
      * Controller for list pages.
      */
@@ -68,32 +63,20 @@ Example:
          */
         public function indexAction(Request $request)
         {
+            $results = $this->get('ongr_filter_manager.item_list')->execute($request)
+        
             return $this->render(
                 'AcmeDemoBundle:List:results.html.twig',
                 [
-                    'filter_manager' => $this->getProductsData($request),
+                    'filter_manager' => $results,
                     'my_custom_variable' => $var,
                 ]
             );
-        }
-
-        /**
-         * Returns item list.
-         *
-         * @param Request $request
-         *
-         * @return array
-         */
-        private function getProductsData(Request $request)
-        {
-            // Here we get our filter manager.
-            return $this->get('ongr_filter_manager.item_list')->execute($request);
         }
     }
 
 ..
 
-------------------
 Template variables
 ------------------
 
@@ -118,16 +101,7 @@ You can also use it to get data about your filter:
 
 ..
 
-A complete list of parameters for each filter can be found in its documentation:
-
-* `Choice filter <filter/choice.html>`_
-* `Multi choice filter <filter/multi_choice.html>`_
-* `Document field filter <filter/document_field.html>`_
-* `Match filter <filter/match.html>`_
-* `Pager filter <filter/pager.html>`_
-* `Sort filter <filter/sort.html>`_
-
-
+A complete list of parameters for each filter can be found can be found on `main page <index.html#filters>`__.
 
 .. _SearchResponse: https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php
 

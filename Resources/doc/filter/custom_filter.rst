@@ -1,18 +1,17 @@
-=============
-Custom filter
+Custom Filter
 =============
 
 There is possibility to add custom filters to filter managers via tagged filter service.
 You must create filter class, define it as a service with ``ongr_filter_manager.filter`` tag.
 
 1. Create filter class
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 Class must implement ``FilterInterface``.
 
 .. code-block:: php
 
-   // File location: ONGR\FilterManagerBundle\Filters\FilterInterface.pnp
+   # File location: ONGR\FilterManagerBundle\Filters\FilterInterface.pnp
 
    /**
      * Resolves filter state by given request.
@@ -59,7 +58,7 @@ Class must implement ``FilterInterface``.
 
 
 2. Defining service
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Filter service must be tagged with ``ongr_filter_manager.filter`` tag, ``manager`` and ``filter_name`` nodes are required.
 Filter will be added to specified ``manager``  ``FilterContainer``.
@@ -82,7 +81,7 @@ Arguments from service definition can be passed to filters constructor.
 
 .. code-block:: php
 
-    // File location: ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filters\FooRange\FooRange.php;
+    # File location: ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filters\FooRange\FooRange.php;
 
     /**
      * @param string $requestField
@@ -100,6 +99,6 @@ Services `configuration <https://github.com/ongr-io/FilterManagerBundle/blob/mas
 
 
 3. Using filter
-~~~~~~~~~~~~~~~
+---------------
 
-Filter can be used as other filters trough ``FilterManager``, see FilterManager bundle usage `documentation <usage.html>`_.
+Filter can be used as other filters trough ``FilterManager``, see FilterManager bundle usage `documentation <../usage.html>`_.

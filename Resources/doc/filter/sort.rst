@@ -1,5 +1,4 @@
-===========
-Sort filter
+Sort Filter
 ===========
 
 Filter used for sorting the documents.
@@ -36,9 +35,8 @@ If we have a sort filter with choice to sort on `item_color` in descending order
 | 5       | blue       |
 +---------+------------+
 
-~~~~~~~~~~~~~
 Configuration
-~~~~~~~~~~~~~
+-------------
 
 First, you have to specify the request field:
 
@@ -66,7 +64,8 @@ Example:
 
 .. code-block:: yaml
 
-    #app/config/config.yml
+    # app/config/config.yml
+    
     ongr_filter_manager:
         managers:
             item_list:
@@ -83,9 +82,8 @@ Example:
 
 ..
 
-~~~~~~~~~~~~~~
 Twig view data
-~~~~~~~~~~~~~~
+--------------
 
 View data returned by this filter to be used in template:
 
@@ -116,9 +114,3 @@ Each choice has its own data:
 +--------------------+--------------------------------------------+
 | getUrlParameters() | Returns a list of available choices        |
 +--------------------+--------------------------------------------+
-
-* `Choice filter <choice.html>`_
-* `Multi choice filter <multi_choice.html>`_
-* `Document field filter <document_field.html>`_
-* `Match filter <match.html>`_
-* `Pager filter <pager.html>`_
