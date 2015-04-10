@@ -204,9 +204,22 @@ class PagerService
     public function getPages()
     {
         $pages = $this->getMaxPages();
-        $tmp = $this->page - floor($pages / 2);
-        $begin = $tmp > $this->getFirstPage() ? $tmp : $this->getFirstPage();
-        $end = min($begin + $pages - 1, $this->getLastPage());
+
+        $tmpBegin = $this->page - floor($pages / 2);
+        $tmpEnd = $tmpBegin + $pages - 1;
+
+        if ($tmpBegin < $this->getFirstPage()) {
+            $tmpEnd += $this->getFirstPage() - $tmpBegin;
+            $tmpBegin = $this->getFirstPage();
+        }
+
+        if ($tmpEnd > $this->getLastPage()) {
+            $tmpBegin -= $tmpEnd - $this->getLastPage();
+            $tmpEnd = $this->getLastPage();
+        }
+
+        $begin = max($tmpBegin, $this->getFirstPage());
+        $end = $tmpEnd;
 
         return range($begin, $end, 1);
     }
