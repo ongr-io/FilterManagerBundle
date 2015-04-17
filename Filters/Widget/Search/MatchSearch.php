@@ -29,10 +29,10 @@ class MatchSearch extends AbstractSingleValue
         if ($state && $state->isActive()) {
             if (strpos($this->getField(), ',') !== false) {
                 foreach (explode(',', $this->getField()) as $field) {
-                    $search->addQuery(new MatchQuery($state->getValue(), $field), 'should');
+                    $search->addQuery(new MatchQuery($field, $state->getValue()), 'should');
                 }
             } else {
-                $search->addQuery(new MatchQuery($state->getValue(), $this->getField()), 'must');
+                $search->addQuery(new MatchQuery($this->getField(), $state->getValue()), 'must');
             }
         }
     }
