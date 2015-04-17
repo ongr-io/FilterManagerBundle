@@ -109,6 +109,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['label'] = 'test';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['default'] = false;
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['mode'] = null;
         unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['multi_choice']);
         unset($customConfig['filters']['fuzzy']);

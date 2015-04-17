@@ -37,6 +37,11 @@ class Choice
     private $label;
 
     /**
+     * @var string Sorting any arrays: "min", "max", for only numeric arrays: "avg", "sum".
+     */
+    private $mode = null;
+
+    /**
      * @var int Represents document count for option.
      */
     private $count = 0;
@@ -119,5 +124,21 @@ class Choice
     public function setUrlParameters($urlParameters)
     {
         $this->urlParameters = $urlParameters;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMode()
+    {
+        return $this->mode;
+    }
+
+    /**
+     * @param string $mode
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
     }
 }

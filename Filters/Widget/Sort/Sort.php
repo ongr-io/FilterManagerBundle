@@ -44,7 +44,9 @@ class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterfa
             $search->addSort(
                 new EsSort(
                     $this->choices[$state->getValue()]['field'],
-                    $this->choices[$state->getValue()]['order']
+                    $this->choices[$state->getValue()]['order'],
+                    null,
+                    $this->choices[$state->getValue()]['mode']
                 )
             );
         } else {
@@ -85,6 +87,7 @@ class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterfa
             $viewChoice = new ViewData\Choice();
             $viewChoice->setLabel($choice['label']);
             $viewChoice->setDefault($choice['default']);
+            $viewChoice->setMode($choice['mode']);
             $viewChoice->setActive($active);
             if ($active) {
                 $viewChoice->setUrlParameters($data->getResetUrlParameters());
@@ -104,8 +107,6 @@ class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterfa
      */
     public function setChoices($choices)
     {
-        $this->choices = [];
-
         foreach ($choices as $key => $choice) {
             $this->choices[isset($choice['key']) ? $choice['key'] : $key] = $choice;
         }

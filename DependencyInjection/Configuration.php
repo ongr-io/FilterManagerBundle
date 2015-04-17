@@ -181,10 +181,12 @@ class Configuration implements ConfigurationInterface
                                         }
                                     )
                                 ->end()
+                                ->addDefaultsIfNotSet()
                                 ->children()
                                     ->scalarNode('label')->end()
                                     ->scalarNode('field')->isRequired()->end()
                                     ->scalarNode('order')->defaultValue('asc')->end()
+                                    ->scalarNode('mode')->defaultNull()->end()
                                     ->scalarNode('key')->info('Custom parameter value')->end()
                                     ->booleanNode('default')->defaultFalse()->end()
                                 ->end()

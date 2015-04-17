@@ -105,4 +105,18 @@ class Product implements DocumentInterface
      * @ES\Property(type="string", name="size", index="not_analyzed")
      */
     public $size;
+
+    /**
+     * @var int
+     *
+     * @ES\Property(type="integer", name="items", index="not_analyzed")
+     */
+    public $items;
+
+    /**
+     * @var string
+     *
+     * @ES\Property(type="string", name="words", index="not_analyzed")
+     */
+    public $words;
 }
