@@ -158,7 +158,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
      * @param DocumentIterator $result Search results.
      * @param string           $name   Filter name.
      *
-     * @return array Buckets
+     * @return array Buckets.
      */
     protected function fetchAggregation(DocumentIterator $result, $name)
     {

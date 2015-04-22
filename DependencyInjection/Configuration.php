@@ -170,14 +170,14 @@ class Configuration implements ConfigurationInterface
                                 ->beforeNormalization()
                                     ->ifTrue(
                                         function ($v) {
-                                        return empty($v['label']);
+                                            return empty($v['label']);
                                         }
                                     )
                                     ->then(
                                         function ($v) {
-                                        $v['label'] = $v['field'];
+                                            $v['label'] = $v['field'];
 
-                                        return $v;
+                                            return $v;
                                         }
                                     )
                                 ->end()

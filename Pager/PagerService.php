@@ -199,7 +199,7 @@ class PagerService
     /**
      * Generates a page list.
      *
-     * @return array   The page list
+     * @return array The page list.
      */
     public function getPages()
     {
