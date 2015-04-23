@@ -33,24 +33,36 @@ class SortTest extends ElasticsearchTestCase
                         'color' => 'red',
                         'manufacturer' => 'a',
                         'stock' => 5,
+                        // Average = 3, sum = 15.
+                        'items' => [1, 2, 3, 4, 5],
+                        'words' => ['one', 'two', 'three', 'alfa', 'beta'],
                     ],
                     [
                         '_id' => 2,
                         'color' => 'blue',
                         'manufacturer' => 'a',
                         'stock' => 6,
+                        // Average = 7.2, sum = 36.
+                        'items' => [2, 12, 3, 14, 5],
+                        'words' => ['eta', 'geta', 'zeta', 'beta', 'deta'],
                     ],
                     [
                         '_id' => 3,
                         'color' => 'red',
                         'manufacturer' => 'b',
                         'stock' => 2,
+                        // Average = 3.2, sum = 16.
+                        'items' => [5, 4, 3, -12, 16],
+                        'words' => ['vienas', 'du', 'trys', 'keturi', 'penki'],
                     ],
                     [
                         '_id' => 4,
                         'color' => 'blue',
                         'manufacturer' => 'b',
                         'stock' => 7,
+                        // Average = 6, sum = 30.
+                        'items' => [1, -2, 30, -4, 5],
+                        'words' => ['eins', 'zwei', 'drei', 'fier', 'funf'],
                     ],
                 ],
             ],
@@ -65,9 +77,24 @@ class SortTest extends ElasticsearchTestCase
         $container = new FiltersContainer();
 
         $choices = [
-            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false],
-            ['label' => 'Stock DESC', 'field' => 'stock', 'order' => 'desc', 'default' => true],
-            ['label' => 'Stock Keyed', 'field' => 'stock', 'order' => 'desc', 'default' => false, 'key' => 'foo'],
+            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false, 'mode' => null],
+            ['label' => 'Stock DESC', 'field' => 'stock', 'order' => 'desc', 'default' => true, 'mode' => null],
+            [
+                'label' => 'Stock Keyed',
+                'field' => 'stock',
+                'order' => 'desc',
+                'default' => false,
+                'key' => 'foo',
+                'mode' => null,
+            ],
+            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'asc', 'default' => false, 'mode' => 'min'],
+            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'desc', 'default' => false, 'mode' => 'max'],
+            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'asc', 'default' => false, 'mode' => 'avg'],
+            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'asc', 'default' => false, 'mode' => 'sum'],
+            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'min'],
+            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'max'],
+            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'avg'],
+            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'sum'],
         ];
 
         $filter = new Sort();
@@ -109,6 +136,54 @@ class SortTest extends ElasticsearchTestCase
         $out[] = [
             new Request(['sort' => '']),
             ['4', '2', '1', '3'],
+        ];
+
+        // Case #4: mode set to min on integer array.
+        $out[] = [
+            new Request(['sort' => 3]),
+            ['3', '4', '1', '2'],
+        ];
+
+        // Case #5: mode set to max on integer array.
+        $out[] = [
+            new Request(['sort' => 4]),
+            ['4', '3', '2', '1'],
+        ];
+
+        // Case #6: mode set to avg on integer array.
+        $out[] = [
+            new Request(['sort' => 5]),
+            ['1', '3', '4', '2'],
+        ];
+
+        // Case #7: mode set to sum on integer array.
+        $out[] = [
+            new Request(['sort' => 6]),
+            ['1', '3', '4', '2'],
+        ];
+
+        // Case #8: mode set to min on string array.
+        $out[] = [
+            new Request(['sort' => 7]),
+            ['1', '2', '4', '3'],
+        ];
+
+        // Case #9: mode set to max on string array.
+        $out[] = [
+            new Request(['sort' => 8]),
+            ['1', '3', '2', '4'],
+        ];
+
+        // Case #10: mode set to avg on string array changes to mode min.
+        $out[] = [
+            new Request(['sort' => 9]),
+            ['1', '2', '4', '3'],
+        ];
+
+        // Case #11: mode set to sum on string array changes to mode min.
+        $out[] = [
+            new Request(['sort' => 10]),
+            ['1', '2', '4', '3'],
         ];
 
         return $out;

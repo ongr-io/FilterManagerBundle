@@ -75,6 +75,7 @@ class PagerTest extends ElasticsearchTestCase
                 'field' => 'stock',
                 'order' => 'asc',
                 'default' => false,
+                'mode' => null,
             ],
         ];
 

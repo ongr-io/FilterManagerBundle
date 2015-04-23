@@ -59,6 +59,8 @@ After which you can specify multiple sort options/choices:
 +------------------------+--------------------------------------------------------------------+
 | `default`              | Specifies whether this choice is the default one. Default `false`. |
 +------------------------+--------------------------------------------------------------------+
+| `mode`                 | For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
++------------------------+--------------------------------------------------------------------+
 
 Example:
 
@@ -101,6 +103,7 @@ View data returned by this filter to be used in template:
 | getChoices()            | Returns a list of available sort choices         |
 +-------------------------+--------------------------------------------------+
 
+
 Each choice has its own data:
 
 +--------------------+--------------------------------------------+
@@ -113,4 +116,6 @@ Each choice has its own data:
 | getLabel()         | Choice label                               |
 +--------------------+--------------------------------------------+
 | getUrlParameters() | Returns a list of available choices        |
++--------------------+--------------------------------------------+
+| getMode()          | Returns a mode value if is set             |
 +--------------------+--------------------------------------------+
