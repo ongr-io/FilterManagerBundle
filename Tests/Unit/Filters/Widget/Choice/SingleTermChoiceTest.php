@@ -28,7 +28,7 @@ class SingleTermChoiceTest extends \PHPUnit_Framework_TestCase
         $mockSearch = $this->getMockBuilder('ONGR\ElasticsearchBundle\DSL\Search')->getMock();
         $mockSearch->expects($this->once())
             ->method('addPostFilter')
-            ->with($this->isInstanceOf('ONGR\ElasticsearchBundle\DSL\Filter\TermFilter'), $this->equalTo('must'));
+            ->with($this->isInstanceOf('ONGR\ElasticsearchBundle\DSL\Filter\TermFilter'));
 
         $stc = new SingleTermChoice();
         $stc->modifySearch($mockSearch, $mockFilterState);
@@ -44,11 +44,6 @@ class SingleTermChoiceTest extends \PHPUnit_Framework_TestCase
             ->method('getName')
             ->will($this->returnValue('name'));
 
-        $mockBool = $this->getMockBuilder('ONGR\ElasticsearchBundle\DSL\Bool\Bool')->getMock();
-        $mockBool->expects($this->once())
-            ->method('isRelevant')
-            ->will($this->returnValue(true));
-
         $mockSearch = $this->getMockBuilder('ONGR\ElasticsearchBundle\DSL\Search')->getMock();
         $mockSearch->expects($this->at(0))
             ->method('addAggregation')
@@ -60,9 +55,15 @@ class SingleTermChoiceTest extends \PHPUnit_Framework_TestCase
             ->method('addAggregation');
 
         $mockRelatedSearch = $this->getMockBuilder('ONGR\ElasticsearchBundle\DSL\Search')->getMock();
-        $mockRelatedSearch->expects($this->exactly(3))
+        $mockRelatedSearch->expects($this->exactly(2))
             ->method('getPostFilters')
-            ->will($this->returnValue($mockBool));
+            ->will(
+                $this->returnValue(
+                    $this
+                        ->getMockBuilder('ONGR\ElasticsearchBundle\DSL\BuilderInterface')
+                        ->getMock()
+                )
+            );
 
         $stc = new SingleTermChoice();
         $stc->preProcessSearch($mockSearch, $mockRelatedSearch, $mockFilterState);
