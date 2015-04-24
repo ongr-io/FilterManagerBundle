@@ -19,17 +19,13 @@ use ONGR\FilterManagerBundle\Filters\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filters\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Filters\Widget\AbstractSingleRequestValueFilter;
-use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareInterface;
-use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareTrait;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
  * This class provides sorting filter.
  */
-class Sort extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
+class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryInterface
 {
-    use FieldAwareTrait;
-
     /**
      * @var array
      */
