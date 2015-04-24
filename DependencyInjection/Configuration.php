@@ -245,19 +245,24 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->children()
                 ->arrayNode('include')
-                    ->beforeNormalization()->ifString()->then(
-                        function ($v) {
-                            return [$v];
-                        }
-                    )->end()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(
+                            function ($v) {
+                                return [$v];
+                            }
+                        )->end()
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('exclude')
-                    ->beforeNormalization()->ifString()->then(
-                        function ($v) {
-                            return [$v];
-                        }
-                    )->end()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(
+                            function ($v) {
+                                return [$v];
+                            }
+                        )
+                    ->end()
                     ->prototype('scalar')->end()
                 ->end()
             ->end();
