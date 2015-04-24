@@ -11,14 +11,13 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Widget\Search;
 
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\Widget\Search\DocumentField;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
-class DocumentFieldTest extends ElasticsearchTestCase
+class DocumentFieldTest extends AbstractFilterManagerResultsTest
 {
     /**
      * @return array
@@ -49,9 +48,9 @@ class DocumentFieldTest extends ElasticsearchTestCase
     }
 
     /**
-     * @return FiltersManager
+     * {@inheritdoc}
      */
-    protected function getFiltersManager()
+    protected function getFilterManager()
     {
         $container = new FiltersContainer();
 
@@ -64,11 +63,9 @@ class DocumentFieldTest extends ElasticsearchTestCase
     }
 
     /**
-     * Data provider for testFiltering().
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getTestFilteringData()
+    public function getTestResultsData()
     {
         $out = [];
 
@@ -95,28 +92,5 @@ class DocumentFieldTest extends ElasticsearchTestCase
         ];
 
         return $out;
-    }
-
-    /**
-     * Test for DocumentField filter.
-     *
-     * @param Request $request
-     * @param array   $expectedOrder
-     *
-     * @dataProvider getTestFilteringData()
-     */
-    public function testFiltering(Request $request, $expectedOrder)
-    {
-        $result = $this->getFiltersManager()->execute($request)->getResult();
-
-        $actual = [];
-        /** @var DocumentInterface $document */
-        foreach ($result as $document) {
-            $actual[] = $document->getId();
-        }
-
-        sort($actual);
-
-        $this->assertEquals($expectedOrder, $actual);
     }
 }

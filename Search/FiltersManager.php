@@ -71,8 +71,7 @@ class FiltersManager
         $search = $this->container->buildSearch($request);
 
         /** @var FilterInterface[] $filters */
-        $filters = $this->container->all();
-        foreach ($filters as $name => $filter) {
+        foreach ($this->container->all() as $name => $filter) {
             // We simply exclude not related filters and current filter itself.
             $relatedFilters = $this->container->getFiltersByRelation(
                 new AndRelation([$filter->getSearchRelation(), new ExcludeRelation([$name])])
