@@ -13,16 +13,16 @@ You can use it from a single controller.
 .. image:: https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/badges/coverage.png?b=master
     :target: https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/?branch=master
 
-.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/downloads.svg
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/downloads
     :target: https://packagist.org/packages/ongr/filter-manager-bundle
 
-.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/v/stable.svg
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/v/stable
     :target: https://packagist.org/packages/ongr/filter-manager-bundle
 
-.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/v/unstable.svg
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/v/unstable
     :target: https://packagist.org/packages/ongr/filter-manager-bundle
 
-.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/license.svg
+.. image:: https://poser.pugx.org/ongr/filter-manager-bundle/license
     :target: https://packagist.org/packages/ongr/filter-manager-bundle
 
 Documentation
