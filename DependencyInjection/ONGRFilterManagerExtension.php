@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\DependencyInjection;
 
+use ONGR\FilterManagerBundle\DependencyInjection\Filter\AbstractFilterFactory;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -25,6 +26,11 @@ use Symfony\Component\DependencyInjection\Loader;
 class ONGRFilterManagerExtension extends Extension
 {
     /**
+     * @var AbstractFilterFactory[]
+     */
+    protected $factories = [];
+    
+    /**
      * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
@@ -35,8 +41,18 @@ class ONGRFilterManagerExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        $this->addFilters($config, $container);
-        $this->addFiltersManagers($config, $container);
+        !isset($config['filters']) ? : $this->addFilters($config['filters'], $container);
+        !isset($config['managers']) ? : $this->addFiltersManagers($config, $container);
+    }
+
+    /**
+     * Adds filter factory.
+     *
+     * @param AbstractFilterFactory $factory
+     */
+    public function addFilterFactory(AbstractFilterFactory $factory)
+    {
+        $this->factories[$factory->getName()] = $factory;
     }
 
     /**
@@ -47,42 +63,19 @@ class ONGRFilterManagerExtension extends Extension
      */
     private function addFilters(array $config, ContainerBuilder $container)
     {
-        if (!array_key_exists('filters', $config)) {
-            return;
-        }
+        $this->validateFilterNames($config);
 
-        $filterMap = $container->getParameter('ongr_filter_manager.filter_map');
-        $this->validateFilterNames($config['filters']);
+        foreach ($config as $type => $filters) {
+            foreach ($filters as $name => $config) {
+                $filterDefinition = $this
+                    ->getFilterFactory($type)
+                    ->setConfiguration($config)
+                    ->getDefinition();
 
-        foreach ($config['filters'] as $type => $filters) {
-            foreach ($filters as $name => $filter) {
-                $filterDefinition = new Definition($filterMap[$type]);
-                $filterDefinition->addMethodCall('setRequestField', [$filter['request_field']]);
-                if (isset($filter['field'])) {
-                    $filterDefinition->addMethodCall('setField', [$filter['field']]);
-                }
-                if (isset($filter['count_per_page'])) {
-                    $filterDefinition->addMethodCall('setCountPerPage', [$filter['count_per_page']]);
-                }
-                if (isset($filter['max_pages'])) {
-                    $filterDefinition->addMethodCall('setMaxPages', [$filter['max_pages']]);
-                }
-                if (isset($filter['choices'])) {
-                    $filterDefinition->addMethodCall('setChoices', [$filter['choices']]);
-                }
-                if (isset($filter['fuzzy'])) {
-                    $filterDefinition->addMethodCall('setFuzziness', [$filter['fuzziness']]);
-                    $filterDefinition->addMethodCall('setPrefixLength', [$filter['prefix_length']]);
-                    $filterDefinition->addMethodCall('setMaxExpansions', [$filter['max_expansions']]);
-                }
-                if (isset($filter['sort']) && count($filter['sort']) > 0) {
-                    $filterDefinition->addMethodCall('setSortType', [$filter['sort']]);
-                }
-
-                $this->addRelation($filterDefinition, $filter, 'search', 'include');
-                $this->addRelation($filterDefinition, $filter, 'search', 'exclude');
-                $this->addRelation($filterDefinition, $filter, 'reset', 'include');
-                $this->addRelation($filterDefinition, $filter, 'reset', 'exclude');
+                $this->addRelation($filterDefinition, $config, 'search', 'include');
+                $this->addRelation($filterDefinition, $config, 'search', 'exclude');
+                $this->addRelation($filterDefinition, $config, 'reset', 'include');
+                $this->addRelation($filterDefinition, $config, 'reset', 'exclude');
 
                 $container->setDefinition($this->getFilterServiceId($name), $filterDefinition);
             }
@@ -121,10 +114,6 @@ class ONGRFilterManagerExtension extends Extension
      */
     private function addFiltersManagers(array $config, ContainerBuilder $container)
     {
-        if (!array_key_exists('managers', $config)) {
-            return;
-        }
-
         foreach ($config['managers'] as $name => $manager) {
             $filtersContainer = new Definition('ONGR\FilterManagerBundle\Search\FiltersContainer');
 
@@ -192,5 +181,29 @@ class ONGRFilterManagerExtension extends Extension
     private function getFilterServiceId($filterName)
     {
         return sprintf('ongr_filter_manager.filter.%s', $filterName);
+    }
+
+    /**
+     * Returns filter factory.
+     *
+     * @param string $name Factory name.
+     *
+     * @return AbstractFilterFactory
+     *
+     * @throws InvalidConfigurationException Invaid filter name request.
+     */
+    private function getFilterFactory($name)
+    {
+        if (array_key_exists($name, $this->factories)) {
+            return $this->factories[$name];
+        }
+        
+        throw new InvalidConfigurationException(
+            sprintf(
+                "Invalid filter name provided in configuration. Got '%s', available: %s",
+                $name,
+                implode(', ', array_keys($this->factories))
+            )
+        );
     }
 }

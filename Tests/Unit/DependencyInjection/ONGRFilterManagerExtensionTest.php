@@ -25,24 +25,50 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public function testRelationsData()
+    public function getTestRelationsData()
     {
         $out = [];
+        
+        $mock0 = $this->getMock('Symfony\Component\DependencyInjection\Definition');
 
         // Case #0 no relations set.
-        $out[] = [$this->getDummyConfig(), []];
-
+        $out[] = [$this->getDummyConfig(), $mock0];
+        
         // Case #1, single search include relation.
         $relations = [
             'search' => [
                 'include' => ['firstItem', 'secondItem'],
             ],
         ];
-        $expectedDefinition = new Definition(
-            'ONGR\FilterManagerBundle\Relations\IncludeRelation',
-            [['firstItem', 'secondItem']]
-        );
-        $out[] = [$this->getDummyConfig($relations), [['setSearchRelation', [$expectedDefinition]]]];
+        
+        $mock1 = $this->getMock('Symfony\Component\DependencyInjection\Definition');
+        $mock1
+            ->expects($this->once())
+            ->method('addMethodCall')
+            ->with(
+                'setSearchRelation',
+                $this->callback(
+                    function ($definition) {
+                        $definition = reset($definition);
+                        
+                        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
+                        $this->assertEquals(
+                            'ONGR\FilterManagerBundle\Relations\IncludeRelation',
+                            $definition->getClass()
+                        );
+                        $this->assertEquals(
+                            [
+                                ['firstItem', 'secondItem'],
+                            ],
+                            $definition->getArguments()
+                        );
+                        
+                        return true;
+                    }
+                )
+            );
+        
+        $out[] = [$this->getDummyConfig($relations), $mock1];
 
         // Case #2, single reset exclude relation.
         $relations = [
@@ -50,11 +76,33 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                 'exclude' => ['firstItem', 'secondItem'],
             ],
         ];
-        $expectedDefinition = new Definition(
-            'ONGR\FilterManagerBundle\Relations\ExcludeRelation',
-            [['firstItem', 'secondItem']]
-        );
-        $out[] = [$this->getDummyConfig($relations), [['setResetRelation', [$expectedDefinition]]]];
+        $mock2 = $this->getMock('Symfony\Component\DependencyInjection\Definition');
+        $mock2
+            ->expects($this->once())
+            ->method('addMethodCall')
+            ->with(
+                'setResetRelation',
+                $this->callback(
+                    function ($definition) {
+                        $definition = reset($definition);
+
+                        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
+                        $this->assertEquals(
+                            'ONGR\FilterManagerBundle\Relations\ExcludeRelation',
+                            $definition->getClass()
+                        );
+                        $this->assertEquals(
+                            [
+                                ['firstItem', 'secondItem'],
+                            ],
+                            $definition->getArguments()
+                        );
+
+                        return true;
+                    }
+                )
+            );
+        $out[] = [$this->getDummyConfig($relations), $mock2];
 
         // Case #3, reset include and search exclude relation.
         $relations = [
@@ -65,17 +113,61 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                 'exclude' => ['searchItem'],
             ],
         ];
-        $expectedResetDefinition = new Definition(
-            'ONGR\FilterManagerBundle\Relations\IncludeRelation',
-            [['resetItem']]
-        );
-        $resetCall = ['setResetRelation', [$expectedResetDefinition]];
-        $expectedSearchDefinition = new Definition(
-            'ONGR\FilterManagerBundle\Relations\ExcludeRelation',
-            [['searchItem']]
-        );
-        $searchCall = ['setSearchRelation', [$expectedSearchDefinition]];
-        $out[] = [$this->getDummyConfig($relations), [$searchCall, $resetCall]];
+
+        $mock3 = $this->getMock('Symfony\Component\DependencyInjection\Definition');
+        $mock3
+            ->expects($this->at(0))
+            ->method('addMethodCall')
+            ->with(
+                'setSearchRelation',
+                $this->callback(
+                    function ($definition) {
+                        $definition = reset($definition);
+
+                        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
+                        $this->assertEquals(
+                            'ONGR\FilterManagerBundle\Relations\ExcludeRelation',
+                            $definition->getClass()
+                        );
+                        $this->assertEquals(
+                            [
+                                ['searchItem'],
+                            ],
+                            $definition->getArguments()
+                        );
+
+                        return true;
+                    }
+                )
+            );
+        $mock3
+            ->expects($this->at(1))
+            ->method('addMethodCall')
+            ->with(
+                'setResetRelation',
+                $this->callback(
+                    function ($definition) {
+                        $definition = reset($definition);
+
+                        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
+                        $this->assertEquals(
+                            'ONGR\FilterManagerBundle\Relations\IncludeRelation',
+                            $definition->getClass()
+                        );
+                        $this->assertEquals(
+                            [
+                                ['resetItem'],
+                            ],
+                            $definition->getArguments()
+                        );
+
+                        return true;
+                    }
+                )
+            );
+        
+        
+        $out[] = [$this->getDummyConfig($relations), $mock3];
 
         return $out;
     }
@@ -84,28 +176,32 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
      * Check if relations are set as expected.
      *
      * @param array $configuration
-     * @param array $expectedDefinitions
+     * @param array $definitionMock
      *
-     * @dataProvider testRelationsData()
+     * @dataProvider getTestRelationsData()
      */
-    public function testRelations(array $configuration, array $expectedDefinitions)
+    public function testRelations(array $configuration, $definitionMock)
     {
+        $factoryMock = $this->getMock('ONGR\FilterManagerBundle\DependencyInjection\Filter\PagerFilterFactory');
+        $factoryMock
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn('sort');
+        $factoryMock
+            ->expects($this->once())
+            ->method('setConfiguration')
+            ->willReturnSelf();
+        $factoryMock
+            ->expects($this->once())
+            ->method('getDefinition')
+            ->willReturn($definitionMock);
+
         $containerBuilder = new ContainerBuilder();
         $extension = new ONGRFilterManagerExtension();
+        $extension->addFilterFactory($factoryMock);
         $extension->load($configuration, $containerBuilder);
 
         $this->assertTrue($containerBuilder->hasDefinition('ongr_filter_manager.filter.test_sorting'));
-
-        $definition = $containerBuilder->getDefinition('ongr_filter_manager.filter.test_sorting');
-
-        if (!empty($expectedDefinitions)) {
-            $methodCalls = $definition->getMethodCalls();
-            $relationCalls = array_splice($methodCalls, 2);
-            $this->assertEquals(count($expectedDefinitions), count($relationCalls));
-            $this->assertEquals($expectedDefinitions, $relationCalls);
-        } else {
-            $this->assertEquals(2, count($definition->getMethodCalls()));
-        }
     }
 
     /**
@@ -113,43 +209,41 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMethodCalls()
     {
-        $config = $this->getDummyConfig([]);
-        $pagerConfig = [
-            'test_pager' => [
-                'request_field' => 'page',
-                'field' => 'page_field',
-                'count_per_page' => 10,
-                'max_pages' => 8,
+        $config = $this->getDummyConfig();
+        $filterConfig = [
+            'request_field' => 'page',
+            'field' => 'page_field',
+            'count_per_page' => 10,
+            'max_pages' => 8,
+        ];
+
+        $config['ongr_filter_manager']['filters'] = [
+            'pager' => [
+                'test_pager' => $filterConfig,
             ],
         ];
-        $config['ongr_filter_manager']['filters']['pager'] = $pagerConfig;
         $containerBuilder = new ContainerBuilder();
         $extension = new ONGRFilterManagerExtension();
+        
+        $factoryMock = $this->getMock('ONGR\FilterManagerBundle\DependencyInjection\Filter\PagerFilterFactory');
+        $factoryMock
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn('pager');
+        $factoryMock
+            ->expects($this->once())
+            ->method('setConfiguration')
+            ->with($filterConfig)
+            ->willReturnSelf();
+        $factoryMock
+            ->expects($this->once())
+            ->method('getDefinition')
+            ->willReturn($this->getMock('Symfony\Component\DependencyInjection\Definition'));
+        
+        $extension->addFilterFactory($factoryMock);
         $extension->load($config, $containerBuilder);
 
         $this->assertTrue($containerBuilder->hasDefinition('ongr_filter_manager.filter.test_pager'));
-        $definition = $containerBuilder->getDefinition('ongr_filter_manager.filter.test_pager');
-
-        $expectedMethods = [
-            [
-                'setRequestField',
-                ['page'],
-            ],
-            [
-                'setField',
-                ['page_field'],
-            ],
-            [
-                'setCountPerPage',
-                ['10'],
-            ],
-            [
-                'setMaxPages',
-                ['8'],
-            ],
-        ];
-
-        $this->assertEquals($expectedMethods, $definition->getMethodCalls());
     }
 
     /**

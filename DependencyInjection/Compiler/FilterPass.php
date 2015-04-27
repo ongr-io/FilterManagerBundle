@@ -67,7 +67,5 @@ class FilterPass implements CompilerPassInterface
                 throw new InvalidArgumentException("Manager '{$managerId}' does not have any filters.");
             }
         }
-        $filtersMap = $container->getParameter('ongr_filter_manager.filter_map');
-        $container->setParameter('ongr_filter_manager.filter_map', array_merge_recursive($filtersMap, $filters));
     }
 }

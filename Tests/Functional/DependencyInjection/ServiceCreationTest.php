@@ -18,48 +18,67 @@ use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
 class ServiceCreationTest extends ElasticsearchTestCase
 {
     /**
-     * Test for filter services registration.
+     * Data provider for testing service creation.
+     *
+     * @return array
      */
-    public function testServices()
+    public function getTestServicesData()
+    {
+        return [
+            [
+                'ongr_filter_manager.filter.phrase',
+                'ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch',
+            ],
+            [
+                'ongr_filter_manager.filter.pager',
+                'ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager',
+                [
+                    'getCountPerPage' => 12,
+                    'getRequestField' => 'page',
+                ],
+            ],
+            [
+                'ongr_filter_manager.filter.range',
+                'ONGR\FilterManagerBundle\Filters\Widget\Range\Range',
+                [
+                    'getField' => 'price',
+                    'getRequestField' => 'range',
+                ],
+            ],
+            [
+                'ongr_filter_manager.filter.choice',
+                'ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice',
+                [
+                    'getField' => 'choice',
+                    'getRequestField' => 'choice',
+                ],
+            ],
+            [
+                'ongr_filter_manager.foo_filters',
+                'ONGR\FilterManagerBundle\Search\FiltersManager',
+            ],
+        ];
+    }
+
+    /**
+     * Test for filter services registration.
+     *
+     * @param string $id
+     * @param string $instance
+     * @param array  $params
+     *
+     * @dataProvider getTestServicesData()
+     */
+    public function testServices($id, $instance, $params = [])
     {
         $container = self::createClient()->getContainer();
 
-        // Test if filter was registered correctly.
-        $this->assertTrue($container->has('ongr_filter_manager.filter.phrase'));
-        $this->assertInstanceOf(
-            'ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch',
-            $container->get('ongr_filter_manager.filter.phrase')
-        );
-
-        // Test if pager filter was registered correctly.
-        $this->assertTrue($container->has('ongr_filter_manager.filter.pager'));
-        /** @var Pager $pager */
-        $pager = $container->get('ongr_filter_manager.filter.pager');
-        $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager', $pager);
-        $this->assertEquals(12, $pager->getCountPerPage());
-        $this->assertEquals('page', $pager->getRequestField());
-
-        // Test if range filter was registered correctly.
-        $this->assertTrue($container->has('ongr_filter_manager.filter.range'));
-        /** @var Range $range */
-        $range = $container->get('ongr_filter_manager.filter.range');
-        $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\Widget\Range\Range', $range);
-        $this->assertEquals('price', $range->getField());
-        $this->assertEquals('range', $range->getRequestField());
-
-        // Test if multi choice filter was registered correctly.
-        $this->assertTrue($container->has('ongr_filter_manager.filter.choice'));
-        /** @var Range $range */
-        $range = $container->get('ongr_filter_manager.filter.choice');
-        $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice', $range);
-        $this->assertEquals('choice', $range->getField());
-        $this->assertEquals('choice', $range->getRequestField());
-
-        // Test if filter manager was registered correctly.
-        $this->assertTrue($container->has('ongr_filter_manager.foo_filters'));
-        $this->assertInstanceOf(
-            'ONGR\FilterManagerBundle\Search\FiltersManager',
-            $container->get('ongr_filter_manager.foo_filters')
-        );
+        $this->assertTrue($container->has($id));
+        $service = $container->get($id);
+        $this->assertInstanceOf($instance, $service);
+        
+        foreach ($params as $method => $value) {
+            $this->assertEquals($value, $service->$method());
+        }
     }
 }
