@@ -1,5 +1,4 @@
 /.idea/
-.DS_Store
 /vendor/
 /Tests/app/cache/
 /Tests/app/logs/
