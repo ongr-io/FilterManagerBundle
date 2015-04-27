@@ -13,8 +13,6 @@ namespace ONGR\FilterManagerBundle\Filters\Widget\Choice;
 
 use ONGR\ElasticsearchBundle\DSL\Filter\TermsFilter;
 use ONGR\ElasticsearchBundle\DSL\Search;
-use ONGR\ElasticsearchBundle\Result\Aggregation\ValueAggregation;
-use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
