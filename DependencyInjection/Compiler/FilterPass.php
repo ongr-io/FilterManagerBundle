@@ -11,7 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\DependencyInjection\Compiler;
 
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filters\FilterInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -28,44 +30,64 @@ class FilterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $filters = [];
         foreach ($container->findTaggedServiceIds('es.filter_manager') as $managerId => $managerTags) {
             $managerDefinition = $container->getDefinition($managerId);
+            
             foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
-                if (array_key_exists('manager', $filterTags[0])
-                    && strrpos(
-                        $managerId,
-                        $filterTags[0]['manager'],
-                        strlen($filterTags[0]['manager'])
-                    )
-                ) {
-                    if (!array_key_exists('filter_name', $filterTags[0])) {
-                        throw new InvalidArgumentException(
-                            "Filters tagged with 'ongr_filter_manager.filter' must have 'filter_name' parameter."
+                foreach ($filterTags as $tag) {
+                    if (!array_key_exists('manager', $tag)
+                        && $managerId != ONGRFilterManagerExtension::getFilterServiceId($tag['manager'])
+                    ) {
+                        continue;
+                    }
+                    
+                    if (!array_key_exists('filter_name', $tag)) {
+                        throw new InvalidConfigurationException(
+                            sprintf('Filter tagged with `%s` must have `filter_name` parameter set.', $filterId)
                         );
                     }
 
-                    if (($container->get($filterId) instanceof FilterInterface) === false) {
-                        throw new InvalidArgumentException("Service {$filterId} must implement FilterInterface.");
-                    }
-
-                    $filters[] = $filterId;
-                    $filterName = $filterTags[0]['filter_name'];
-
-                    $filtersContainer = $managerDefinition->getArgument(0);
-                    $filtersContainer->addMethodCall(
-                        'set',
-                        [$filterName, new Reference($filterId)]
-                    );
-                    $managerDefinition->replaceArgument(0, $filtersContainer);
+                    $this->addFilter($managerDefinition, $tag['filter_name'], $filterId);
                     $container->setDefinition($managerId, $managerDefinition);
                 }
             }
-            /** @var Definition $filtersContainer */
-            $filtersContainer = $managerDefinition->getArgument(0);
-            if (!$filtersContainer->hasMethodCall('set')) {
-                throw new InvalidArgumentException("Manager '{$managerId}' does not have any filters.");
-            }
+            $this->checkManager($managerDefinition, "Manager '{$managerId}' does not have any filters.");
+        }
+    }
+
+    /**
+     * Adds filter to manager definition by id and name.
+     *
+     * @param Definition $manager
+     * @param string     $filterName
+     * @param string     $filterId
+     */
+    private function addFilter($manager, $filterName, $filterId)
+    {
+        $filtersContainer = $manager->getArgument(0);
+        $filtersContainer->addMethodCall(
+            'set',
+            [
+                $filterName,
+                new Reference($filterId),
+            ]
+        );
+        $manager->replaceArgument(0, $filtersContainer);
+    }
+    
+    /**
+     * Checks if manager definition has any filters set.
+     *
+     * @param Definition $filtersManager
+     * @param string     $message
+     *
+     * @throws InvalidArgumentException
+     */
+    private function checkManager(Definition $filtersManager, $message = '')
+    {
+        $filtersContainer = $filtersManager->getArgument(0);
+        if (!$filtersContainer->hasMethodCall('set')) {
+            throw new InvalidArgumentException($message);
         }
     }
 }

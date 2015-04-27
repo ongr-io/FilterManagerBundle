@@ -56,6 +56,18 @@ class ONGRFilterManagerExtension extends Extension
     }
 
     /**
+     * Formats filter service id from given name.
+     *
+     * @param string $name Filter manager name.
+     *
+     * @return string
+     */
+    public static function getFilterServiceId($name)
+    {
+        return sprintf('ongr_filter_manager.filter.%s', $name);
+    }
+
+    /**
      * Adds filters based on configuration.
      *
      * @param array            $config    Configuration.
@@ -77,7 +89,7 @@ class ONGRFilterManagerExtension extends Extension
                 $this->addRelation($filterDefinition, $config, 'reset', 'include');
                 $this->addRelation($filterDefinition, $config, 'reset', 'exclude');
 
-                $container->setDefinition($this->getFilterServiceId($name), $filterDefinition);
+                $container->setDefinition(self::getFilterServiceId($name), $filterDefinition);
             }
         }
     }
@@ -120,7 +132,7 @@ class ONGRFilterManagerExtension extends Extension
             foreach ($manager['filters'] as $filter) {
                 $filtersContainer->addMethodCall(
                     'set',
-                    [$filter, new Reference($this->getFilterServiceId($filter))]
+                    [$filter, new Reference(self::getFilterServiceId($filter))]
                 );
             }
 
@@ -169,18 +181,6 @@ class ONGRFilterManagerExtension extends Extension
             sprintf('ONGR\FilterManagerBundle\Relations\%sRelation', ucfirst($type)),
             [$relations]
         );
-    }
-
-    /**
-     * Formats filter service id from given name.
-     *
-     * @param string $filterName Filter name.
-     *
-     * @return string
-     */
-    private function getFilterServiceId($filterName)
-    {
-        return sprintf('ongr_filter_manager.filter.%s', $filterName);
     }
 
     /**
