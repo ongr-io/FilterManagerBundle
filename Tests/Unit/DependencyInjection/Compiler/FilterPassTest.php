@@ -74,8 +74,7 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests filter name tag not set exception.
      *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Filters tagged with 'ongr_filter_manager.filter' must have 'filter_name' parameter.
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function testFilterNameTagNotSet()
     {
@@ -109,32 +108,6 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
                 'ongr_filter_manager.foo_filters' => [],
             ],
             []
-        );
-
-        $compilerPass = new FilterPass();
-        $compilerPass->process($this->container);
-    }
-
-    /**
-     * Tests if filter implements FilterInterface.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Service ongr_filter_manager.filter.bar_filter must implement FilterInterface.
-     */
-    public function testFilterInterface()
-    {
-        $this->setContainerConfig(
-            [
-                'ongr_filter_manager.bar_filters' => [],
-            ],
-            [
-                'ongr_filter_manager.filter.bar_filter' => [
-                    [
-                        'manager' => 'bar_filters',
-                        'filter_name' => 'bar_filter',
-                    ],
-                ],
-            ]
         );
 
         $compilerPass = new FilterPass();
