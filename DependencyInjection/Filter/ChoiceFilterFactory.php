@@ -26,7 +26,11 @@ class ChoiceFilterFactory extends AbstractFilterFactory
         parent::configure($definition, $configuration);
 
         $definition->addMethodCall('setField', [$configuration['field']]);
-
+        
+        if (isset($configuration['size'])) {
+            $definition->addMethodCall('setSize', [$configuration['size']]);
+        }
+        
         if (isset($configuration['sort']) && count($configuration['sort']) > 0) {
             $definition->addMethodCall('setSortType', [$configuration['sort']]);
         }
