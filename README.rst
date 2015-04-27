@@ -13,6 +13,9 @@ You can use it from a single controller.
 .. image:: https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/badges/coverage.png?b=master
     :target: https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/?branch=master
 
+.. image:: https://insight.sensiolabs.com/projects/44c0f05e-a9a8-41ab-9acf-1225cef2887c/mini.png
+    :target: https://insight.sensiolabs.com/projects/44c0f05e-a9a8-41ab-9acf-1225cef2887c
+
 .. image:: https://poser.pugx.org/ongr/filter-manager-bundle/downloads
     :target: https://packagist.org/packages/ongr/filter-manager-bundle
 
