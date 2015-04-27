@@ -4,3 +4,6 @@ foo_list:
         _controller: ONGRFilterManagerBundle:Manager:manager
         managerName: "foo_filters"
         template: "AcmeTestBundle:Manager:default.html.twig"
+
+test_page:
+    path: /
