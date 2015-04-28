@@ -73,6 +73,7 @@ ongr_filter_manager:
                 request_field: 'single_choice'
                 field: 'color'
                 size: 3
+                min_doc_count: 2
                 sort:
                   type: _term
                   order: asc
