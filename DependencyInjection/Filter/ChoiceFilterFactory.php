@@ -30,6 +30,10 @@ class ChoiceFilterFactory extends AbstractFilterFactory
         if (isset($configuration['size'])) {
             $definition->addMethodCall('setSize', [$configuration['size']]);
         }
+
+        if (isset($configuration['min_doc_count'])) {
+            $definition->addMethodCall('setMinDocCount', [$configuration['min_doc_count']]);
+        }
         
         if (isset($configuration['sort']) && count($configuration['sort']) > 0) {
             $definition->addMethodCall('setSortType', [$configuration['sort']]);
