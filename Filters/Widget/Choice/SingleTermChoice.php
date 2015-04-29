@@ -18,6 +18,7 @@ use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\ElasticsearchBundle\Result\Aggregation\ValueAggregation;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
+use ONGR\FilterManagerBundle\Filters\Helper\SizeAwareTrait;
 use ONGR\FilterManagerBundle\Filters\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filters\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filters\ViewData;
@@ -31,7 +32,7 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
  */
 class SingleTermChoice extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
 {
-    use FieldAwareTrait;
+    use FieldAwareTrait, SizeAwareTrait;
 
     /**
      * @var array
@@ -70,20 +71,24 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
         $name = $state ? $state->getName() : $this->getField();
-        $agg = new TermsAggregation($name);
-        $agg->setField($this->getField());
+        $aggregation = new TermsAggregation($name);
+        $aggregation->setField($this->getField());
 
         if ($this->getSortType()) {
-            $agg->setOrder($this->sortType['type'], $this->sortType['order']);
+            $aggregation->setOrder($this->getSortType()['type'], $this->getSortType()['order']);
+        }
+        
+        if ($this->getSize()) {
+            $aggregation->setSize($this->getSize());
         }
 
         if ($relatedSearch->getPostFilters()) {
-            $filterAgg = new FilterAggregation($name . '-filter');
-            $filterAgg->setFilter($relatedSearch->getPostFilters());
-            $filterAgg->addAggregation($agg);
-            $search->addAggregation($filterAgg);
+            $filterAggregation = new FilterAggregation($name . '-filter');
+            $filterAggregation->setFilter($relatedSearch->getPostFilters());
+            $filterAggregation->addAggregation($aggregation);
+            $search->addAggregation($filterAggregation);
         } else {
-            $search->addAggregation($agg);
+            $search->addAggregation($aggregation);
         }
     }
 

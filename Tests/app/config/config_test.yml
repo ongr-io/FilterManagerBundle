@@ -67,10 +67,12 @@ ongr_filter_manager:
             choice:
                 request_field: 'choice'
                 field: 'choice'
+                size: 2
         choice:
             single_choice:
                 request_field: 'single_choice'
                 field: 'color'
+                size: 3
                 sort:
                   type: _term
                   order: asc

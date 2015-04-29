@@ -121,8 +121,13 @@ class Configuration implements ConfigurationInterface
                             ->append($this->buildRelationsTree('reset'))
                         ->end()
                     ->end()
-                    ->scalarNode('request_field')->info('URL parameter name.')->isRequired()->end()
-                    ->scalarNode('field')->info('Document field name.')->end()
+                    ->scalarNode('request_field')
+                        ->info('URL parameter name.')
+                        ->isRequired()
+                    ->end()
+                    ->scalarNode('field')
+                        ->info('Document field name.')
+                    ->end()
                 ->end();
 
         switch ($filterName) {
@@ -130,6 +135,9 @@ class Configuration implements ConfigurationInterface
             case 'multi_choice':
                 $node
                     ->children()
+                        ->integerNode('size')
+                            ->info('Result size to return.')
+                        ->end()
                         ->arrayNode('sort')
                         ->children()
                             ->enumNode('type')

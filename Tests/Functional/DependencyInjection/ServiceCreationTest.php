@@ -38,6 +38,13 @@ class ServiceCreationTest extends ElasticsearchTestCase
                 ],
             ],
             [
+                'ongr_filter_manager.filter.choice',
+                'ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice',
+                [
+                    'getSize' => 2,
+                ],
+            ],
+            [
                 'ongr_filter_manager.filter.range',
                 'ONGR\FilterManagerBundle\Filters\Widget\Range\Range',
                 [

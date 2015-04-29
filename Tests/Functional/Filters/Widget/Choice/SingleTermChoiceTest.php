@@ -59,6 +59,11 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
                         'color' => 'blue',
                         'manufacturer' => 'a',
                     ],
+                    [
+                        '_id' => 7,
+                        'color' => 'yellow',
+                        'manufacturer' => 'a',
+                    ],
                 ],
             ],
         ];
@@ -99,23 +104,23 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
 
         // Case #0, sorted in ascending order by term, nothing is prioritized.
         $sortParams = ['type' => '_term', 'order' => 'asc', 'priorities' => []];
-        $out[] = ['sortParams' => $sortParams, ['blue', 'green', 'red']];
+        $out[] = ['sortParams' => $sortParams, ['blue', 'green', 'red', 'yellow']];
 
         // Case #1, sorted in descending order by term, blue is prioritized.
         $sortParams = ['type' => '_term', 'order' => 'desc', 'priorities' => ['blue']];
-        $out[] = ['sortParams' => $sortParams, ['blue', 'red', 'green']];
+        $out[] = ['sortParams' => $sortParams, ['blue', 'yellow', 'red', 'green']];
 
         // Case #2, all items prioritized, so sorting shouldn't matter.
         $sortParams = ['type' => '_term', 'order' => 'desc', 'priorities' => ['blue', 'green', 'red']];
-        $out[] = ['sortParams' => $sortParams, ['blue', 'green', 'red']];
+        $out[] = ['sortParams' => $sortParams, ['blue', 'green', 'red', 'yellow']];
 
         // Case #3, sort items by count, red prioritized.
         $sortParams = ['type' => '_count', 'order' => 'desc', 'priorities' => ['red']];
-        $out[] = ['sortParams' => $sortParams, ['red', 'blue', 'green']];
+        $out[] = ['sortParams' => $sortParams, ['red', 'blue', 'green', 'yellow']];
 
         // Case #3, sort items by count.
         $sortParams = ['type' => '_count', 'order' => 'asc', 'priorities' => []];
-        $out[] = ['sortParams' => $sortParams, ['green', 'red', 'blue']];
+        $out[] = ['sortParams' => $sortParams, ['green', 'yellow', 'red', 'blue']];
 
         return $out;
     }

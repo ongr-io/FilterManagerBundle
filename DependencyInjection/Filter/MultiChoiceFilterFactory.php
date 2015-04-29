@@ -11,23 +11,11 @@
 
 namespace ONGR\FilterManagerBundle\DependencyInjection\Filter;
 
-use Symfony\Component\DependencyInjection\Definition;
-
 /**
  * Factory for multi choice filter.
  */
-class MultiChoiceFilterFactory extends AbstractFilterFactory
+class MultiChoiceFilterFactory extends ChoiceFilterFactory
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure(Definition $definition, array $configuration)
-    {
-        parent::configure($definition, $configuration);
-
-        $definition->addMethodCall('setField', [$configuration['field']]);
-    }
-
     /**
      * {@inheritdoc}
      */
