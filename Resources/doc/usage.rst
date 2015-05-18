@@ -63,7 +63,7 @@ Example:
          */
         public function indexAction(Request $request)
         {
-            $results = $this->get('ongr_filter_manager.item_list')->execute($request)
+            $results = $this->get('ongr_filter_manager.item_list')->execute($request);
         
             return $this->render(
                 'AcmeDemoBundle:List:results.html.twig',
