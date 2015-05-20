@@ -35,7 +35,7 @@ class FilterPass implements CompilerPassInterface
             
             foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
                 foreach ($filterTags as $tag) {
-                    if (!array_key_exists('manager', $tag)
+                    if (array_key_exists('manager', $tag)
                         && $managerId != ONGRFilterManagerExtension::getFilterServiceId($tag['manager'])
                     ) {
                         continue;
@@ -74,7 +74,7 @@ class FilterPass implements CompilerPassInterface
         );
         $manager->replaceArgument(0, $filtersContainer);
     }
-    
+
     /**
      * Checks if manager definition has any filters set.
      *
