@@ -40,6 +40,11 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     private $sortType;
 
     /**
+     * @var int
+     */
+    private $minDocCount;
+
+    /**
      * @param array $sortType
      */
     public function setSortType($sortType)
@@ -53,6 +58,22 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     public function getSortType()
     {
         return $this->sortType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinDocCount()
+    {
+        return $this->minDocCount;
+    }
+
+    /**
+     * @param int $minDocCount
+     */
+    public function setMinDocCount($minDocCount)
+    {
+        $this->minDocCount = $minDocCount;
     }
 
     /**
@@ -80,6 +101,10 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         
         if ($this->getSize()) {
             $aggregation->setSize($this->getSize());
+        }
+        
+        if ($this->getMinDocCount()) {
+            $aggregation->setMinDocumentCount($this->getMinDocCount());
         }
 
         if ($relatedSearch->getPostFilters()) {

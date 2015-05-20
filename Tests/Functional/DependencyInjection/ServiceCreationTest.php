@@ -64,6 +64,13 @@ class ServiceCreationTest extends ElasticsearchTestCase
                 'ongr_filter_manager.foo_filters',
                 'ONGR\FilterManagerBundle\Search\FiltersManager',
             ],
+            [
+                'ongr_filter_manager.filter.single_choice',
+                'ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice',
+                [
+                    'getMinDocCount' => 2,
+                ],
+            ],
         ];
     }
 

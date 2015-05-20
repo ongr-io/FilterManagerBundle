@@ -81,7 +81,6 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
         $expectedChoices = [
             'red',
             'blue',
-            'green',
         ];
 
         $actualChoices = [];
@@ -156,5 +155,27 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
         }
 
         $this->assertEquals($expectedChoices, $actualChoices);
+    }
+
+    /**
+     * Check if choices min match is working.
+     */
+    public function testChoicesMinMatch()
+    {
+        $container = new FiltersContainer();
+
+        $filter = new SingleTermChoice();
+        $filter->setRequestField('choice');
+        $filter->setField('color');
+        $filter->setMinDocCount(4);
+
+        $container->set('choice', $filter);
+
+        $manager = new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+
+        /** @var ChoicesAwareViewData $result */
+        $result = $manager->execute(new Request())->getFilters()['choice'];
+        
+        $this->assertEmpty($result->getChoices());
     }
 }
