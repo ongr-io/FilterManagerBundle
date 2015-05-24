@@ -92,6 +92,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
 
         $filter = new MultiTermChoice();
         $filter->setRequestField('choice');
+        $filter->setTags(['badged']);
         $filter->setField('color');
         $container->set('choice', $filter);
 
@@ -182,6 +183,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
             }
         }
 
+        $this->assertTrue($viewData->hasTag('badged'));
         $this->assertEquals($expectedUrlParams, $actualUrls);
     }
 }

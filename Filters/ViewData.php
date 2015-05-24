@@ -22,6 +22,11 @@ class ViewData
     private $state;
 
     /**
+     * @var array
+     */
+    private $tags;
+
+    /**
      * @var array Url parameters representing current filter state.
      */
     private $urlParameters;
@@ -82,6 +87,32 @@ class ViewData
     public function setState(FilterState $state)
     {
         $this->state = $state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return bool
+     */
+    public function hasTag($tag)
+    {
+        return in_array($tag, $this->tags, true);
+    }
+
+    /**
+     * @param string $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
     }
 
     /**
