@@ -29,6 +29,11 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
     private $requestField;
 
     /**
+     * @var array
+     */
+    private $tags = [];
+
+    /**
      * {@inheritdoc}
      */
     public function getState(Request $request)
@@ -59,5 +64,21 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
     public function setRequestField($requestField)
     {
         $this->requestField = $requestField;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param string $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
     }
 }

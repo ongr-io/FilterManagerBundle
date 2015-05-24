@@ -215,6 +215,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
             'field' => 'page_field',
             'count_per_page' => 10,
             'max_pages' => 8,
+            'tags' => [],
         ];
 
         $config['ongr_filter_manager']['filters'] = [

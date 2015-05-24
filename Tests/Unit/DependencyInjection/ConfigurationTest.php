@@ -47,22 +47,24 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                                 'exclude' => ['size'],
                             ],
                         ],
+                        'tags' => [],
                     ],
                 ],
                 'sort' => [
                     'sorting' => [
                         'request_field' => 'sort',
                         'choices' => [],
+                        'tags' => [],
                     ],
                 ],
                 'pager' => [
-                    'paging' => ['request_field' => 'page'],
+                    'paging' => ['request_field' => 'page', 'tags' => []],
                 ],
                 'range' => [
-                    'range' => ['request_field' => 'range'],
+                    'range' => ['request_field' => 'range', 'tags' => []],
                 ],
                 'choice' => [
-                    'single_choice' => ['request_field' => 'choice'],
+                    'single_choice' => ['request_field' => 'choice', 'tags' => ['badged']],
                 ],
             ],
         ];
@@ -82,7 +84,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['filters']['pager']['paging']['count_per_page'] = 10;
         $expectedBaseConfig['filters']['pager']['paging']['max_pages'] = 8;
         $expectedBaseConfig['filters']['document_field'] = [];
-        $expectedBaseConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice']];
+        $expectedBaseConfig['filters']['choice'] = [
+            'single_choice' => ['request_field' => 'choice', 'tags' => ['badged']],
+        ];
         $expectedBaseConfig['filters']['multi_choice'] = [];
         $expectedBaseConfig['filters']['fuzzy'] = [];
 
@@ -105,7 +109,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $customConfig = $expectedBaseConfig;
         $customConfig['filters']['sort']['sorting']['choices'][0] = ['field' => 'test'];
         $expectedConfig = $customConfig;
-        $expectedConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice']];
+        $expectedConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice', 'tags' => ['badged']]];
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['label'] = 'test';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['default'] = false;
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';

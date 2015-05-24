@@ -63,11 +63,16 @@ ongr_filter_manager:
             range:
                 request_field: 'range'
                 field: 'price'
+                tags:
+                    - badged
+                    - permanent
         multi_choice:
             choice:
                 request_field: 'choice'
                 field: 'choice'
                 size: 2
+                tags:
+                    - badged
         choice:
             single_choice:
                 request_field: 'single_choice'

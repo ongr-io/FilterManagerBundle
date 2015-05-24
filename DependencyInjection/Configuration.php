@@ -128,6 +128,10 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('field')
                         ->info('Document field name.')
                     ->end()
+                    ->arrayNode('tags')
+                        ->info('Filter tags that will be passed to view data.')
+                        ->prototype('scalar')->end()
+                    ->end()
                 ->end();
 
         switch ($filterName) {
