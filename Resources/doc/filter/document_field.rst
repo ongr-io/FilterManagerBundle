@@ -38,6 +38,8 @@ Configuration
 +------------------------+--------------------------------------------------------------------------------------+
 | `field`                | Specifies the field in repository to apply this filter on. (e.g. `category_id`)      |
 +------------------------+--------------------------------------------------------------------------------------+
+| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
++------------------------+--------------------------------------------------------------------------------------+
 
 Example:
 
@@ -74,5 +76,9 @@ View data returned by this filter to be used in template:
 | getState()              | Filter state                                     |
 +-------------------------+--------------------------------------------------+
 | getUrlParameters()      | Url parameters representing current filter state |
++-------------------------+--------------------------------------------------+
+| getTags()               | Lists all tags specified at filter configuration |
++-------------------------+--------------------------------------------------+
+| hasTag($tag)            | Checks if filter has the specific tag            |
 +-------------------------+--------------------------------------------------+
 

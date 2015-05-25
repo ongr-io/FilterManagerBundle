@@ -49,6 +49,8 @@ Configuration
 +------------------------+--------------------------------------------------------------------------------------+
 | `max_pages`            | Maximum number of pages displayed in pager at once (default `8`).                    |
 +------------------------+--------------------------------------------------------------------------------------+
+| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
++------------------------+--------------------------------------------------------------------------------------+
 
 Example:
 
@@ -88,4 +90,8 @@ View data returned by this filter to be used in template:
 | getUrlParameters()      | Url parameters representing current filter state |
 +-------------------------+--------------------------------------------------+
 | getPagerService()       | Returns pager service to be used in template     |
++-------------------------+--------------------------------------------------+
+| getTags()               | Lists all tags specified at filter configuration |
++-------------------------+--------------------------------------------------+
+| hasTag($tag)            | Checks if filter has the specific tag            |
 +-------------------------+--------------------------------------------------+
