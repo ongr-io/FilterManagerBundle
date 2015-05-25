@@ -85,12 +85,12 @@ class DateRange extends AbstractSingleRequestValueFilter implements FieldAwareIn
     {
         /** @var $data ViewData\RangeAwareViewData */
         $data->setMinBounds(
-           new \DateTime(
-               date(
-                   \DateTime::ISO8601,
-                   $result->getAggregations()['date_range_agg']->getValue()['min'] / 1000
-               )
-           )
+            new \DateTime(
+                date(
+                    \DateTime::ISO8601,
+                    $result->getAggregations()['date_range_agg']->getValue()['min'] / 1000
+                )
+            )
         );
 
         $data->setMaxBounds(
