@@ -50,6 +50,9 @@ ongr_filter_manager:
         bar_filters:
             filters: ['sort']
             repository: 'es.manager.default.product'
+        range_filters:
+            filters: ['date']
+            repository: 'es.manager.default.product'
     filters:
         match:
             phrase:
@@ -63,6 +66,10 @@ ongr_filter_manager:
             range:
                 request_field: 'range'
                 field: 'price'
+        date_range:
+            date:
+                request_field: 'date_range'
+                field: 'date'
         multi_choice:
             choice:
                 request_field: 'choice'

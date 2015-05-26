@@ -119,4 +119,11 @@ class Product implements DocumentInterface
      * @ES\Property(type="string", name="words", index="not_analyzed")
      */
     public $words;
+
+    /**
+     * @var string
+     *
+     * @ES\Property(type="date", name="date")
+     */
+    public $date;
 }
