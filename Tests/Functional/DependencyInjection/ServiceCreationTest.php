@@ -64,6 +64,10 @@ class ServiceCreationTest extends ElasticsearchTestCase
                 'ongr_filter_manager.foo_filters',
                 'ONGR\FilterManagerBundle\Search\FiltersManager',
             ],
+            [
+                'ongr_filter_manager.filter.fuzzy',
+                'ONGR\FilterManagerBundle\Filters\Widget\Search\FuzzySearch',
+            ],
         ];
     }
 
