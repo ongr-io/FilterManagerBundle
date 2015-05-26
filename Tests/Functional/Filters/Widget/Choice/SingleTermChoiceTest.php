@@ -139,6 +139,7 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
 
         $filter = new SingleTermChoice();
         $filter->setRequestField('choice');
+        $filter->setTags(['tagged']);
         $filter->setField('color');
         $filter->setSortType($sortParams);
 
@@ -155,6 +156,7 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
             $actualChoices[] = $choice->getLabel();
         }
 
+        $this->assertFalse($result->hasTag('badged'));
         $this->assertEquals($expectedChoices, $actualChoices);
     }
 }

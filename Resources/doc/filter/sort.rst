@@ -45,6 +45,8 @@ First, you have to specify the request field:
 +========================+======================================================================================+
 | `request_field`        | Request field used to pass the sort choice id (e.g. `www.page.com/?request_field=4`) |
 +------------------------+--------------------------------------------------------------------------------------+
+| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
++------------------------+--------------------------------------------------------------------------------------+
 
 After which you can specify multiple sort options/choices:
 
@@ -101,6 +103,10 @@ View data returned by this filter to be used in template:
 | getUrlParameters()      | Url parameters representing current filter state |
 +-------------------------+--------------------------------------------------+
 | getChoices()            | Returns a list of available sort choices         |
++-------------------------+--------------------------------------------------+
+| getTags()               | Lists all tags specified at filter configuration |
++-------------------------+--------------------------------------------------+
+| hasTag($tag)            | Checks if filter has the specific tag            |
 +-------------------------+--------------------------------------------------+
 
 

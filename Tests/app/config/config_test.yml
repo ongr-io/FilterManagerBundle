@@ -66,6 +66,9 @@ ongr_filter_manager:
             range:
                 request_field: 'range'
                 field: 'price'
+                tags:
+                    - badged
+                    - permanent
         date_range:
             date:
                 request_field: 'date_range'
@@ -75,6 +78,8 @@ ongr_filter_manager:
                 request_field: 'choice'
                 field: 'choice'
                 size: 2
+                tags:
+                    - badged
         choice:
             single_choice:
                 request_field: 'single_choice'

@@ -50,6 +50,7 @@ class ServiceCreationTest extends ElasticsearchTestCase
                 [
                     'getField' => 'price',
                     'getRequestField' => 'range',
+                    'getTags' => ['badged', 'permanent'],
                 ],
             ],
             [
@@ -58,6 +59,7 @@ class ServiceCreationTest extends ElasticsearchTestCase
                 [
                     'getField' => 'choice',
                     'getRequestField' => 'choice',
+                    'getTags' => ['badged'],
                 ],
             ],
             [
