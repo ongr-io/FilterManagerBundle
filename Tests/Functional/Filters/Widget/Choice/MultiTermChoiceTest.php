@@ -78,6 +78,9 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
         // Case #2 all elements.
         $out[] = [new Request(['choice' => ['red', 'green', 'blue']]), ['1', '2', '3', '4', '5']];
 
+        // Case #3 non ordered choices.
+        $out[] = [new Request(['choice' => [0 => 'black', 2 => 'red']]), ['1', '3']];
+
         return $out;
     }
 

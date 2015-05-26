@@ -63,6 +63,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 'range' => [
                     'range' => ['request_field' => 'range', 'tags' => []],
                 ],
+                'date_range' => [
+                    'date' => ['request_field' => 'date_range', 'field' => 'date'],
+                ],
                 'choice' => [
                     'single_choice' => ['request_field' => 'choice', 'tags' => ['badged']],
                 ],
