@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Search;
 
+use ONGR\ElasticsearchBundle\DSL\Query\BoolQuery;
 use ONGR\ElasticsearchBundle\DSL\Query\FuzzyQuery;
 use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterState;
@@ -33,9 +34,11 @@ class FuzzySearch extends AbstractSingleValue
     {
         if ($state && $state->isActive()) {
             if (strpos($this->getField(), ',') !== false) {
+                $subQuery = new BoolQuery();
                 foreach (explode(',', $this->getField()) as $field) {
-                    $search->addQuery(new FuzzyQuery($field, $state->getValue(), $this->getParameters()), 'should');
+                    $subQuery->add(new FuzzyQuery($field, $state->getValue(), $this->getParameters()), 'should');
                 }
+                $search->addQuery($subQuery, 'must');
             } else {
                 $search->addQuery(
                     new FuzzyQuery($this->getField(), $state->getValue(), $this->getParameters()),
