@@ -37,14 +37,16 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $search->addSort(
-                new EsSort(
-                    $this->choices[$state->getValue()]['field'],
-                    $this->choices[$state->getValue()]['order'],
-                    null,
-                    $this->choices[$state->getValue()]['mode']
-                )
-            );
+            $stateValue = $state->getValue();
+
+            if (!empty($this->choices[$stateValue]['fields'])) {
+                foreach ($this->choices[$stateValue]['fields'] as $sortField) {
+                    $search->addSort(new EsSort($sortField['field'], $sortField['order'], null, $sortField['mode']));
+                }
+            } else {
+                $sortField = $this->choices[$stateValue];
+                $search->addSort(new EsSort($sortField['field'], $sortField['order'], null, $sortField['mode']));
+            }
         } else {
             foreach ($this->choices as $choice) {
                 if ($choice['default']) {
