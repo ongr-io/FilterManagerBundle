@@ -181,14 +181,22 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('choices')
                             ->prototype('array')
                                 ->beforeNormalization()
-                                    ->ifTrue(
+                                    ->always(
                                         function ($v) {
-                                            return empty($v['label']);
-                                        }
-                                    )
-                                    ->then(
-                                        function ($v) {
-                                            $v['label'] = $v['field'];
+                                            if (empty($v['fields']) && !empty($v['field'])) {
+                                                $field = ['field' => $v['field']];
+                                                if (array_key_exists('order', $v)) {
+                                                    $field['order'] = $v['order'];
+                                                }
+                                                if (array_key_exists('mode', $v)) {
+                                                    $field['mode'] = $v['mode'];
+                                                }
+                                                $v['fields'][] = $field;
+                                            }
+
+                                            if (empty($v['label'])) {
+                                                $v['label'] = $v['fields'][0]['field'];
+                                            }
 
                                             return $v;
                                         }
@@ -197,11 +205,21 @@ class Configuration implements ConfigurationInterface
                                 ->addDefaultsIfNotSet()
                                 ->children()
                                     ->scalarNode('label')->end()
-                                    ->scalarNode('field')->isRequired()->end()
+                                    ->scalarNode('field')->end()
                                     ->scalarNode('order')->defaultValue('asc')->end()
                                     ->scalarNode('mode')->defaultNull()->end()
                                     ->scalarNode('key')->info('Custom parameter value')->end()
                                     ->booleanNode('default')->defaultFalse()->end()
+                                    ->arrayNode('fields')
+                                        ->isRequired()
+                                        ->requiresAtLeastOneElement()
+                                        ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('field')->isRequired()->end()
+                                            ->scalarNode('order')->defaultValue('asc')->end()
+                                            ->scalarNode('mode')->defaultNull()->end()
+                                        ->end()
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
