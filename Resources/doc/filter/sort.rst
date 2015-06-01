@@ -63,6 +63,22 @@ After which you can specify multiple sort options/choices:
 +------------------------+--------------------------------------------------------------------+
 | `mode`                 | For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
 +------------------------+--------------------------------------------------------------------+
+| `fields`               | Array of fields to sort on. For more information see table below.  |
++------------------------+--------------------------------------------------------------------+
+
+.. note:: `field`, `order`, and `mode` are ignored if at least one of fields is defined.
+
+Each object in `fields` array specifies sorting condition. Available parameters are defined below:
+
++------------------------+--------------------------------------------------------------------+
+| Setting name           | Meaning                                                            |
++========================+====================================================================+
+| `field`                | Specifies the field in repository to sort on. (e.g. `item_color`)  |
++------------------------+--------------------------------------------------------------------+
+| `order`                | Order to sort by. Default `asc`. Valid values: `asc`,  `desc`.     |
++------------------------+--------------------------------------------------------------------+
+| `mode`                 | For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
++------------------------+--------------------------------------------------------------------+
 
 Example:
 
@@ -83,6 +99,7 @@ Example:
                     choices:
                         - { label: Color ascending, field: item_color, default: true }
                         - { label: Color descending, field: item_color, order: desc }
+                        - { label: 'In stock & cheap', fields: [{field: stock, order: desc}, {field: price}] }
 
 ..
 
