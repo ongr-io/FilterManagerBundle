@@ -36,14 +36,14 @@ class FilterPass implements CompilerPassInterface
             foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
                 foreach ($filterTags as $tag) {
                     if (array_key_exists('manager', $tag)
-                        && $managerId != ONGRFilterManagerExtension::getFilterServiceId($tag['manager'])
+                        && $managerId != ONGRFilterManagerExtension::getFilterManagerId($tag['manager'])
                     ) {
                         continue;
                     }
                     
                     if (!array_key_exists('filter_name', $tag)) {
                         throw new InvalidConfigurationException(
-                            sprintf('Filter tagged with `%s` must have `filter_name` parameter set.', $filterId)
+                            sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
                         );
                     }
 
