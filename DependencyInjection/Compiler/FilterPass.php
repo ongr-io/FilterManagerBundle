@@ -35,20 +35,18 @@ class FilterPass implements CompilerPassInterface
             
             foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
                 foreach ($filterTags as $tag) {
-                    if (!array_key_exists('manager', $tag)
-                        && $managerId != ONGRFilterManagerExtension::getFilterServiceId($tag['manager'])
+                    if (array_key_exists('manager', $tag)
+                        && $managerId === ONGRFilterManagerExtension::getFilterManagerId($tag['manager'])
                     ) {
-                        continue;
-                    }
-                    
-                    if (!array_key_exists('filter_name', $tag)) {
-                        throw new InvalidConfigurationException(
-                            sprintf('Filter tagged with `%s` must have `filter_name` parameter set.', $filterId)
-                        );
-                    }
+                        if (!array_key_exists('filter_name', $tag)) {
+                            throw new InvalidConfigurationException(
+                                sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
+                            );
+                        }
 
-                    $this->addFilter($managerDefinition, $tag['filter_name'], $filterId);
-                    $container->setDefinition($managerId, $managerDefinition);
+                        $this->addFilter($managerDefinition, $tag['filter_name'], $filterId);
+                        $container->setDefinition($managerId, $managerDefinition);
+                    }
                 }
             }
             $this->checkManager($managerDefinition, "Manager '{$managerId}' does not have any filters.");
@@ -74,7 +72,7 @@ class FilterPass implements CompilerPassInterface
         );
         $manager->replaceArgument(0, $filtersContainer);
     }
-    
+
     /**
      * Checks if manager definition has any filters set.
      *
