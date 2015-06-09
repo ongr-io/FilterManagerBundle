@@ -19,3 +19,11 @@ services:
         - 'price'
       tags:
           - { name: ongr_filter_manager.filter, manager: bar_filters, filter_name: bar_range }
+
+  ongr_filter_manager.filter.bar_range_no_manager:
+        class: %ongr_filter_manager.filter.bar_range.class%
+        arguments:
+          - 'range'
+          - 'price'
+        tags:
+            - { name: ongr_filter_manager.filter, filter_name: bar_range_no_manager }
