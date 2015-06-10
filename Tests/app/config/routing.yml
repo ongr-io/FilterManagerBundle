@@ -1,5 +1,5 @@
 foo_list:
-    pattern: /list
+    path: /list
     defaults:
         _controller: ONGRFilterManagerBundle:Manager:manager
         managerName: "foo_filters"
