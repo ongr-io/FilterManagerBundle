@@ -102,3 +102,4 @@ ongr_filter_manager:
                 request_field: 'sort'
                 choices:
                     - { label: foo, field: price, default: true, order: asc }
+                    - { label: bar, fields: [{field: price, order: asc}, {field: date, order: desc}]}

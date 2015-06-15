@@ -117,6 +117,34 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['default'] = false;
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['mode'] = null;
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['field'] = 'test';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['order'] = 'asc';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['mode'] = null;
+        unset($customConfig['filters']['document_field']);
+        unset($customConfig['filters']['multi_choice']);
+        unset($customConfig['filters']['fuzzy']);
+        $cases[] = [
+            $customConfig,
+            $expectedConfig,
+        ];
+
+        // Case #3 sorting by multiple fields.
+        $customConfig = $expectedBaseConfig;
+        $customConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['field'] = 'price';
+        $customConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['field'] = 'date';
+        $customConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['order'] = 'desc';
+        $expectedConfig = $customConfig;
+        $expectedConfig['filters']['choice'] = ['single_choice' => ['request_field' => 'choice', 'tags' => ['badged']]];
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['label'] = 'price';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['default'] = false;
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['order'] = 'asc';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['mode'] = null;
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['field'] = 'price';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['order'] = 'asc';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['mode'] = null;
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['field'] = 'date';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['order'] = 'desc';
+        $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['mode'] = null;
         unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['multi_choice']);
         unset($customConfig['filters']['fuzzy']);
@@ -217,6 +245,14 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             $config,
             'The value "test" is not allowed for path "ongr_filter_manager.filters.choice.single_choice.sort.type"' .
             '. Permissible values: "_term", "_count"',
+        ];
+
+        // Case #8 Sorting fields are not set.
+        $config = $this->getBaseConfiguration();
+        $config['filters']['sort']['sorting']['choices'][0]['label'] = 'test';
+        $cases[] = [
+            $config,
+            'The child node "fields" at path "ongr_filter_manager.filters.sort.sorting.choices.0" must be configured.',
         ];
 
         return $cases;
