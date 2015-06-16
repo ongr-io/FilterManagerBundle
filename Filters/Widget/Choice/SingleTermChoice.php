@@ -78,7 +78,10 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
             $aggregation->setOrder($this->getSortType()['type'], $this->getSortType()['order']);
         }
 
-        $aggregation->setSize($this->getSize() > 0 ? $this->getSize() : 0);
+        $aggregation->setSize(0);
+        if ($this->getSize() > 0) {
+            $aggregation->setSize($this->getSize());
+        }
 
         if ($relatedSearch->getPostFilters()) {
             $filterAggregation = new FilterAggregation($name . '-filter');
