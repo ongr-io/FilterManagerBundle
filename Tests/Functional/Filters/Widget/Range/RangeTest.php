@@ -76,34 +76,59 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $managers = $this->getFilterManager();
         // Case #0 range includes everything.
         $out[] = [
-            new Request(['range' => '0;50', 'sort' => '0', 'mode' => null]),
-            ['1', '2', '3', '4', '5'],
-            true,
-            $managers,
+            'request' => new Request(['range' => '0;50', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2', '3', '4', '5'],
+            'assertOrder' => true,
+            'managers' => $managers,
         ];
 
         // Case #1 two elements.
-        $out[] = [new Request(['range' => '1;4', 'sort' => '0', 'mode' => null]), ['2', '3'], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '1;4', 'sort' => '0', 'mode' => null]),
+            'ids' => ['2', '3'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         // Case #2 no elements.
-        $out[] = [new Request(['range' => '2;3', 'sort' => '0', 'mode' => null]), [], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '2;3', 'sort' => '0', 'mode' => null]),
+            'ids' => [],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         // Case #3 invalid range specified.
         $out[] = [
-            new Request(['range' => '2', 'sort' => '0', 'mode' => null]),
+            'request' => new Request(['range' => '2', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2', '3', '4', '5'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
+
+        // Case #4 no range specified.
+        $out[] = [
+            new Request(['sort' => '0', 'mode' => null]),
             ['1', '2', '3', '4', '5'],
             true,
             $managers,
         ];
 
-        // Case #4 no range specified.
-        $out[] = [new Request(['sort' => '0', 'mode' => null]), ['1', '2', '3', '4', '5'], true, $managers];
-
         // Case #5 test with float shouldn't list anything.
-        $out[] = [new Request(['range' => '4.3;50', 'sort' => '0', 'mode' => null]), [], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '4.3;50', 'sort' => '0', 'mode' => null]),
+            'ids' => [],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         // Case #6 test with float should list.
-        $out[] = [new Request(['range' => '4.1;50', 'sort' => '0', 'mode' => null]), ['5'], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '4.1;50', 'sort' => '0', 'mode' => null]),
+            'ids' => ['5'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         return $out;
     }
