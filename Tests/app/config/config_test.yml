@@ -48,7 +48,7 @@ ongr_filter_manager:
             filters: ['phrase', 'single_choice']
             repository: 'es.manager.default.product'
         bar_filters:
-            filters: ['sort']
+            filters: ['sort', 'inclusive_range']
             repository: 'es.manager.default.product'
         range_filters:
             filters: ['date']
@@ -69,6 +69,10 @@ ongr_filter_manager:
                 tags:
                     - badged
                     - permanent
+            inclusive_range:
+                request_field: 'inclusive_range'
+                field: 'price'
+                inclusive: true
         date_range:
             date:
                 request_field: 'date_range'

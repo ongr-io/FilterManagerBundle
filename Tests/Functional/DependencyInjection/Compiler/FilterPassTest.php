@@ -51,6 +51,7 @@ class FilterPassTest extends AbstractElasticsearchTestCase
                 'filters' => [
                     'bar_range' => $fooRangeClass,
                     'sort' => 'ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort',
+                    'inclusive_range' => 'ONGR\FilterManagerBundle\Filters\Widget\Range\Range',
                 ],
             ],
             // Case #1. foo_filters.
