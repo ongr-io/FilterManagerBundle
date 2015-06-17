@@ -130,16 +130,24 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'managers' => $managers,
         ];
 
+        // Case #7 Inclusive filter.
+        $out[] = [
+            'request' => new Request(['inclusive_range' => '1;2', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
+
         return $out;
     }
 
     /**
      * Check if view data returned is correct.
      *
-     * @param Request $request     Http request.
-     * @param array   $ids         Array of document ids to assert.
-     * @param bool    $assertOrder Set true if order of results lso should be asserted.
-     * @param array   $managers    Set of filter managers to test.
+     * @param Request          $request     Http request.
+     * @param array            $ids         Array of document ids to assert.
+     * @param bool             $assertOrder Set true if order of results lso should be asserted.
+     * @param FiltersManager[] $managers    Set of filter managers to test.
      *
      * @dataProvider getTestResultsData()
      */
@@ -174,6 +182,12 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $filter->setField('price');
         $container->set('range', $filter);
 
+        $filter = new Range();
+        $filter->setRequestField('inclusive_range');
+        $filter->setField('price');
+        $filter->setInclusive(true);
+        $container->set('inclusive_range', $filter);
+
         $sort = new Sort();
         $sort->setRequestField('sort');
         $sort->setChoices($choices);
@@ -192,10 +206,10 @@ class RangeTest extends AbstractFilterManagerResultsTest
     /**
      * This method asserts if search request gives expected results.
      *
-     * @param Request $request     Http request.
-     * @param array   $ids         Array of document ids to assert.
-     * @param bool    $assertOrder Set true if order of results lso should be asserted.
-     * @param array   $managers    Set of filter managers to test.
+     * @param Request          $request     Http request.
+     * @param array            $ids         Array of document ids to assert.
+     * @param bool             $assertOrder Set true if order of results lso should be asserted.
+     * @param FiltersManager[] $managers    Set of filter managers to test.
      *
      * @dataProvider getTestResultsData()
      */

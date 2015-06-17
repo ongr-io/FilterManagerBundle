@@ -238,6 +238,16 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end();
                 break;
+            case 'range':
+            case 'date_range':
+                $node
+                    ->children()
+                        ->booleanNode('inclusive')
+                            ->info('Whether filter should match range ends.')
+                            ->defaultFalse()
+                        ->end()
+                    ->end();
+                break;
             default:
                 // Should not happen.
                 break;

@@ -12,25 +12,17 @@
 namespace ONGR\FilterManagerBundle\Filters\Widget\Range;
 
 use ONGR\ElasticsearchBundle\DSL\Aggregation\StatsAggregation;
-use ONGR\ElasticsearchBundle\DSL\Filter\RangeFilter;
 use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
-use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareInterface;
-use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareTrait;
-use ONGR\FilterManagerBundle\Filters\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filters\ViewData;
-use ONGR\FilterManagerBundle\Filters\Widget\AbstractSingleRequestValueFilter;
-use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Range filter, selects documents from lower limit to upper limit.
  */
-class Range extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
+class Range extends AbstractRange
 {
-    use FieldAwareTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -50,23 +42,15 @@ class Range extends AbstractSingleRequestValueFilter implements FieldAwareInterf
             return $state;
         }
 
-        $normalized['gt'] = floatval($values[0]);
-        $normalized['lt'] = floatval($values[1]);
+        $gt = $this->isInclusive() ? 'gte' : 'gt';
+        $lt = $this->isInclusive() ? 'lte' : 'lt';
+
+        $normalized[$gt] = floatval($values[0]);
+        $normalized[$lt] = floatval($values[1]);
 
         $state->setValue($normalized);
 
         return $state;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
-    {
-        if ($state && $state->isActive()) {
-            $filter = new RangeFilter($this->getField(), $state->getValue());
-            $search->addPostFilter($filter);
-        }
     }
 
     /**
@@ -77,14 +61,6 @@ class Range extends AbstractSingleRequestValueFilter implements FieldAwareInterf
         $stateAgg = new StatsAggregation('range_agg');
         $stateAgg->setField($this->getField());
         $search->addAggregation($stateAgg);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createViewData()
-    {
-        return new ViewData\RangeAwareViewData();
     }
 
     /**
