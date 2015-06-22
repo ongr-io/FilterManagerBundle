@@ -83,7 +83,7 @@ class FiltersContainer extends ParameterBag
      * @param SearchRequest          $request
      * @param FilterInterface[]|null $filters
      *
-     * @return \ElasticsearchBundle\DSL\Search
+     * @return Search
      */
     public function buildSearch(SearchRequest $request, $filters = null)
     {

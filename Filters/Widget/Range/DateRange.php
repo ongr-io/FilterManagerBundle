@@ -12,25 +12,18 @@
 namespace ONGR\FilterManagerBundle\Filters\Widget\Range;
 
 use ONGR\ElasticsearchBundle\DSL\Aggregation\StatsAggregation;
-use ONGR\ElasticsearchBundle\DSL\Filter\RangeFilter;
 use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
-use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareInterface;
-use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareTrait;
-use ONGR\FilterManagerBundle\Filters\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filters\ViewData;
-use ONGR\FilterManagerBundle\Filters\Widget\AbstractSingleRequestValueFilter;
-use ONGR\FilterManagerBundle\Search\SearchRequest;
+use ONGR\FilterManagerBundle\Filters\ViewData\RangeAwareViewData;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Date range filter, selects documents from lower date to upper date.
  */
-class DateRange extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
+class DateRange extends AbstractRange
 {
-    use FieldAwareTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -40,8 +33,11 @@ class DateRange extends AbstractSingleRequestValueFilter implements FieldAwareIn
 
         if ($state->getValue()) {
             $values = explode(';', $state->getValue(), 2);
-            $normalized['gt'] = $values[0];
-            $normalized['lt'] = $values[1];
+            $gt = $this->isInclusive() ? 'gte' : 'gt';
+            $lt = $this->isInclusive() ? 'lte' : 'lt';
+
+            $normalized[$gt] = $values[0];
+            $normalized[$lt] = $values[1];
 
             $state->setValue($normalized);
         }
@@ -62,28 +58,9 @@ class DateRange extends AbstractSingleRequestValueFilter implements FieldAwareIn
     /**
      * {@inheritdoc}
      */
-    public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
-    {
-        if ($state && $state->isActive()) {
-            $filter = new RangeFilter($this->getField(), $state->getValue());
-            $search->addPostFilter($filter);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createViewData()
-    {
-        return new ViewData\RangeAwareViewData();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
-        /** @var $data ViewData\RangeAwareViewData */
+        /** @var $data RangeAwareViewData */
         $data->setMinBounds(
             new \DateTime(
                 date(
