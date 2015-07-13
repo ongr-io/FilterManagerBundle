@@ -11,11 +11,11 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\DependencyInjection;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager;
 use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
 
-class ServiceCreationTest extends ElasticsearchTestCase
+class ServiceCreationTest extends AbstractElasticsearchTestCase
 {
     /**
      * Data provider for testing service creation.

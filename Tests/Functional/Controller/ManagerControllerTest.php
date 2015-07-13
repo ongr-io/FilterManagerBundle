@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Controller;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 
-class ManagerControllerTest extends ElasticsearchTestCase
+class ManagerControllerTest extends AbstractElasticsearchTestCase
 {
     /**
      * {@inheritdoc}
