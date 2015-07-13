@@ -92,6 +92,7 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('pager'))
                         ->append($this->buildFilterTree('document_field'))
                         ->append($this->buildFilterTree('range'))
+                        ->append($this->buildFilterTree('date_range'))
                     ->end()
                 ->end()
             ->end();
@@ -127,6 +128,10 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('field')
                         ->info('Document field name.')
+                    ->end()
+                    ->arrayNode('tags')
+                        ->info('Filter tags that will be passed to view data.')
+                        ->prototype('scalar')->end()
                     ->end()
                 ->end();
 
@@ -176,14 +181,22 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('choices')
                             ->prototype('array')
                                 ->beforeNormalization()
-                                    ->ifTrue(
+                                    ->always(
                                         function ($v) {
-                                            return empty($v['label']);
-                                        }
-                                    )
-                                    ->then(
-                                        function ($v) {
-                                            $v['label'] = $v['field'];
+                                            if (empty($v['fields']) && !empty($v['field'])) {
+                                                $field = ['field' => $v['field']];
+                                                if (array_key_exists('order', $v)) {
+                                                    $field['order'] = $v['order'];
+                                                }
+                                                if (array_key_exists('mode', $v)) {
+                                                    $field['mode'] = $v['mode'];
+                                                }
+                                                $v['fields'][] = $field;
+                                            }
+
+                                            if (empty($v['label'])) {
+                                                $v['label'] = $v['fields'][0]['field'];
+                                            }
 
                                             return $v;
                                         }
@@ -192,11 +205,21 @@ class Configuration implements ConfigurationInterface
                                 ->addDefaultsIfNotSet()
                                 ->children()
                                     ->scalarNode('label')->end()
-                                    ->scalarNode('field')->isRequired()->end()
+                                    ->scalarNode('field')->end()
                                     ->scalarNode('order')->defaultValue('asc')->end()
                                     ->scalarNode('mode')->defaultNull()->end()
                                     ->scalarNode('key')->info('Custom parameter value')->end()
                                     ->booleanNode('default')->defaultFalse()->end()
+                                    ->arrayNode('fields')
+                                        ->isRequired()
+                                        ->requiresAtLeastOneElement()
+                                        ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('field')->isRequired()->end()
+                                            ->scalarNode('order')->defaultValue('asc')->end()
+                                            ->scalarNode('mode')->defaultNull()->end()
+                                        ->end()
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
@@ -212,6 +235,16 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('max_pages')
                             ->info('Max pages displayed in pager at once.')
                             ->defaultValue(8)
+                        ->end()
+                    ->end();
+                break;
+            case 'range':
+            case 'date_range':
+                $node
+                    ->children()
+                        ->booleanNode('inclusive')
+                            ->info('Whether filter should match range ends.')
+                            ->defaultFalse()
                         ->end()
                     ->end();
                 break;

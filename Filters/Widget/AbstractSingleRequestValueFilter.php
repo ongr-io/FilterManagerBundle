@@ -29,6 +29,11 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
     private $requestField;
 
     /**
+     * @var array
+     */
+    private $tags = [];
+
+    /**
      * {@inheritdoc}
      */
     public function getState(Request $request)
@@ -37,6 +42,7 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
         $value = $request->get($this->getRequestField());
 
         if (isset($value) && $value !== '') {
+            $value = is_array($value) ? array_values($value) : $value;
             $state->setActive(true);
             $state->setValue($value);
             $state->setUrlParameters([$this->getRequestField() => $value]);
@@ -59,5 +65,21 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
     public function setRequestField($requestField)
     {
         $this->requestField = $requestField;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param string $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
     }
 }

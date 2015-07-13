@@ -76,34 +76,67 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $managers = $this->getFilterManager();
         // Case #0 range includes everything.
         $out[] = [
-            new Request(['range' => '0;50', 'sort' => '0', 'mode' => null]),
-            ['1', '2', '3', '4', '5'],
-            true,
-            $managers,
+            'request' => new Request(['range' => '0;50', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2', '3', '4', '5'],
+            'assertOrder' => true,
+            'managers' => $managers,
         ];
 
         // Case #1 two elements.
-        $out[] = [new Request(['range' => '1;4', 'sort' => '0', 'mode' => null]), ['2', '3'], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '1;4', 'sort' => '0', 'mode' => null]),
+            'ids' => ['2', '3'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         // Case #2 no elements.
-        $out[] = [new Request(['range' => '2;3', 'sort' => '0', 'mode' => null]), [], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '2;3', 'sort' => '0', 'mode' => null]),
+            'ids' => [],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         // Case #3 invalid range specified.
         $out[] = [
-            new Request(['range' => '2', 'sort' => '0', 'mode' => null]),
+            'request' => new Request(['range' => '2', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2', '3', '4', '5'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
+
+        // Case #4 no range specified.
+        $out[] = [
+            new Request(['sort' => '0', 'mode' => null]),
             ['1', '2', '3', '4', '5'],
             true,
             $managers,
         ];
 
-        // Case #4 no range specified.
-        $out[] = [new Request(['sort' => '0', 'mode' => null]), ['1', '2', '3', '4', '5'], true, $managers];
-
         // Case #5 test with float shouldn't list anything.
-        $out[] = [new Request(['range' => '4.3;50', 'sort' => '0', 'mode' => null]), [], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '4.3;50', 'sort' => '0', 'mode' => null]),
+            'ids' => [],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         // Case #6 test with float should list.
-        $out[] = [new Request(['range' => '4.1;50', 'sort' => '0', 'mode' => null]), ['5'], true, $managers];
+        $out[] = [
+            'request' => new Request(['range' => '4.1;50', 'sort' => '0', 'mode' => null]),
+            'ids' => ['5'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
+
+        // Case #7 Inclusive filter.
+        $out[] = [
+            'request' => new Request(['inclusive_range' => '1;2', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
 
         return $out;
     }
@@ -111,10 +144,10 @@ class RangeTest extends AbstractFilterManagerResultsTest
     /**
      * Check if view data returned is correct.
      *
-     * @param Request $request     Http request.
-     * @param array   $ids         Array of document ids to assert.
-     * @param bool    $assertOrder Set true if order of results lso should be asserted.
-     * @param array   $managers    Set of filter managers to test.
+     * @param Request          $request     Http request.
+     * @param array            $ids         Array of document ids to assert.
+     * @param bool             $assertOrder Set true if order of results lso should be asserted.
+     * @param FiltersManager[] $managers    Set of filter managers to test.
      *
      * @dataProvider getTestResultsData()
      */
@@ -149,6 +182,12 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $filter->setField('price');
         $container->set('range', $filter);
 
+        $filter = new Range();
+        $filter->setRequestField('inclusive_range');
+        $filter->setField('price');
+        $filter->setInclusive(true);
+        $container->set('inclusive_range', $filter);
+
         $sort = new Sort();
         $sort->setRequestField('sort');
         $sort->setChoices($choices);
@@ -167,10 +206,10 @@ class RangeTest extends AbstractFilterManagerResultsTest
     /**
      * This method asserts if search request gives expected results.
      *
-     * @param Request $request     Http request.
-     * @param array   $ids         Array of document ids to assert.
-     * @param bool    $assertOrder Set true if order of results lso should be asserted.
-     * @param array   $managers    Set of filter managers to test.
+     * @param Request          $request     Http request.
+     * @param array            $ids         Array of document ids to assert.
+     * @param bool             $assertOrder Set true if order of results lso should be asserted.
+     * @param FiltersManager[] $managers    Set of filter managers to test.
      *
      * @dataProvider getTestResultsData()
      */

@@ -58,13 +58,25 @@ class ONGRFilterManagerExtension extends Extension
     /**
      * Formats filter service id from given name.
      *
+     * @param string $name Filter name.
+     *
+     * @return string
+     */
+    public static function getFilterId($name)
+    {
+        return sprintf('ongr_filter_manager.filter.%s', $name);
+    }
+
+    /**
+     * Formats filter manager service id from given name.
+     *
      * @param string $name Filter manager name.
      *
      * @return string
      */
-    public static function getFilterServiceId($name)
+    public static function getFilterManagerId($name)
     {
-        return sprintf('ongr_filter_manager.filter.%s', $name);
+        return sprintf('ongr_filter_manager.%s', $name);
     }
 
     /**
@@ -89,7 +101,7 @@ class ONGRFilterManagerExtension extends Extension
                 $this->addRelation($filterDefinition, $config, 'reset', 'include');
                 $this->addRelation($filterDefinition, $config, 'reset', 'exclude');
 
-                $container->setDefinition(self::getFilterServiceId($name), $filterDefinition);
+                $container->setDefinition(self::getFilterId($name), $filterDefinition);
             }
         }
     }
@@ -132,7 +144,7 @@ class ONGRFilterManagerExtension extends Extension
             foreach ($manager['filters'] as $filter) {
                 $filtersContainer->addMethodCall(
                     'set',
-                    [$filter, new Reference(self::getFilterServiceId($filter))]
+                    [$filter, new Reference(self::getFilterId($filter))]
                 );
             }
 
@@ -145,7 +157,7 @@ class ONGRFilterManagerExtension extends Extension
             );
             $managerDefinition->addTag('es.filter_manager');
 
-            $container->setDefinition(sprintf('ongr_filter_manager.%s', $name), $managerDefinition);
+            $container->setDefinition(self::getFilterManagerId($name), $managerDefinition);
         }
     }
 

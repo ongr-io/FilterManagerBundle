@@ -56,6 +56,13 @@ Class must implement ``FilterInterface``.
      */
     public function getViewData(DocumentIterator $result, ViewData $data);
 
+    /**
+     * Returns all tags assigned to the filter.
+     *
+     * @return array
+     */
+    public function getTags();
+
 
 2. Defining service
 -------------------

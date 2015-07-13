@@ -59,6 +59,8 @@ Configuration
 +------------------------+--------------------------------------------------------------------------------------------------+
 | `sort`                 | Choices can also be sorted. You can read more about this [here](choice.md#sorting-configuration).|
 +------------------------+--------------------------------------------------------------------------------------------------+
+| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.                         |
++------------------------+--------------------------------------------------------------------------------------------------+
 
 Example:
 
@@ -97,6 +99,10 @@ View data returned by this filter to be used in template:
 | getUrlParameters()      | Url parameters representing current filter state |
 +-------------------------+--------------------------------------------------+
 | getChoices()            | Returns a list of available choices              |
++-------------------------+--------------------------------------------------+
+| getTags()               | Lists all tags specified at filter configuration |
++-------------------------+--------------------------------------------------+
+| hasTag($tag)            | Checks if filter has the specific tag            |
 +-------------------------+--------------------------------------------------+
 
 Each choice has its own data:

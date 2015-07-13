@@ -45,6 +45,8 @@ First, you have to specify the request field:
 +========================+======================================================================================+
 | `request_field`        | Request field used to pass the sort choice id (e.g. `www.page.com/?request_field=4`) |
 +------------------------+--------------------------------------------------------------------------------------+
+| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
++------------------------+--------------------------------------------------------------------------------------+
 
 After which you can specify multiple sort options/choices:
 
@@ -58,6 +60,22 @@ After which you can specify multiple sort options/choices:
 | `order`                | Order to sort by. Default `asc`. Valid values: `asc`,  `desc`.     |
 +------------------------+--------------------------------------------------------------------+
 | `default`              | Specifies whether this choice is the default one. Default `false`. |
++------------------------+--------------------------------------------------------------------+
+| `mode`                 | For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
++------------------------+--------------------------------------------------------------------+
+| `fields`               | Array of fields to sort on. For more information see table below.  |
++------------------------+--------------------------------------------------------------------+
+
+.. note:: `field`, `order`, and `mode` are ignored if at least one of fields is defined.
+
+Each object in `fields` array specifies sorting condition. Available parameters are defined below:
+
++------------------------+--------------------------------------------------------------------+
+| Setting name           | Meaning                                                            |
++========================+====================================================================+
+| `field`                | Specifies the field in repository to sort on. (e.g. `item_color`)  |
++------------------------+--------------------------------------------------------------------+
+| `order`                | Order to sort by. Default `asc`. Valid values: `asc`,  `desc`.     |
 +------------------------+--------------------------------------------------------------------+
 | `mode`                 | For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
 +------------------------+--------------------------------------------------------------------+
@@ -81,6 +99,7 @@ Example:
                     choices:
                         - { label: Color ascending, field: item_color, default: true }
                         - { label: Color descending, field: item_color, order: desc }
+                        - { label: 'In stock & cheap', fields: [{field: stock, order: desc}, {field: price}] }
 
 ..
 
@@ -101,6 +120,10 @@ View data returned by this filter to be used in template:
 | getUrlParameters()      | Url parameters representing current filter state |
 +-------------------------+--------------------------------------------------+
 | getChoices()            | Returns a list of available sort choices         |
++-------------------------+--------------------------------------------------+
+| getTags()               | Lists all tags specified at filter configuration |
++-------------------------+--------------------------------------------------+
+| hasTag($tag)            | Checks if filter has the specific tag            |
 +-------------------------+--------------------------------------------------+
 
 

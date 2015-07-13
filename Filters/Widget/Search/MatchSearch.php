@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Search;
 
+use ONGR\ElasticsearchBundle\DSL\Query\BoolQuery;
 use ONGR\ElasticsearchBundle\DSL\Query\MatchQuery;
 use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterState;
@@ -28,9 +29,11 @@ class MatchSearch extends AbstractSingleValue
     {
         if ($state && $state->isActive()) {
             if (strpos($this->getField(), ',') !== false) {
+                $subQuery = new BoolQuery();
                 foreach (explode(',', $this->getField()) as $field) {
-                    $search->addQuery(new MatchQuery($field, $state->getValue()), 'should');
+                    $subQuery->add(new MatchQuery($field, $state->getValue()), 'should');
                 }
+                $search->addQuery($subQuery, 'must');
             } else {
                 $search->addQuery(new MatchQuery($this->getField(), $state->getValue()), 'must');
             }

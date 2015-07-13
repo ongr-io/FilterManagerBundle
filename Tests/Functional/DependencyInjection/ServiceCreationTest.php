@@ -50,6 +50,7 @@ class ServiceCreationTest extends ElasticsearchTestCase
                 [
                     'getField' => 'price',
                     'getRequestField' => 'range',
+                    'getTags' => ['badged', 'permanent'],
                 ],
             ],
             [
@@ -58,11 +59,16 @@ class ServiceCreationTest extends ElasticsearchTestCase
                 [
                     'getField' => 'choice',
                     'getRequestField' => 'choice',
+                    'getTags' => ['badged'],
                 ],
             ],
             [
                 'ongr_filter_manager.foo_filters',
                 'ONGR\FilterManagerBundle\Search\FiltersManager',
+            ],
+            [
+                'ongr_filter_manager.filter.fuzzy',
+                'ONGR\FilterManagerBundle\Filters\Widget\Search\FuzzySearch',
             ],
         ];
     }

@@ -51,6 +51,12 @@ abstract class AbstractFilterFactory
                 $configuration['request_field'],
             ]
         );
+        $definition->addMethodCall(
+            'setTags',
+            [
+                $configuration['tags'],
+            ]
+        );
     }
 
     /**

@@ -149,6 +149,7 @@ class FiltersManager
             $viewData->setName($name);
             $viewData->setUrlParameters($this->composeUrlParameters($request, $filter));
             $viewData->setState($request->get($name));
+            $viewData->setTags($filter->getTags());
             $viewData->setResetUrlParameters($this->composeUrlParameters($request, $filter, [$name]));
             $out[$name] = $filter->getViewData($result, $viewData);
         }

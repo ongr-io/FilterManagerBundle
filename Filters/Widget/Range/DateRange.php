@@ -16,12 +16,13 @@ use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\ViewData;
+use ONGR\FilterManagerBundle\Filters\ViewData\RangeAwareViewData;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Range filter, selects documents from lower limit to upper limit.
+ * Date range filter, selects documents from lower date to upper date.
  */
-class Range extends AbstractRange
+class DateRange extends AbstractRange
 {
     /**
      * {@inheritdoc}
@@ -30,25 +31,16 @@ class Range extends AbstractRange
     {
         $state = parent::getState($request);
 
-        if (!$state->isActive()) {
-            return $state;
+        if ($state->getValue()) {
+            $values = explode(';', $state->getValue(), 2);
+            $gt = $this->isInclusive() ? 'gte' : 'gt';
+            $lt = $this->isInclusive() ? 'lte' : 'lt';
+
+            $normalized[$gt] = $values[0];
+            $normalized[$lt] = $values[1];
+
+            $state->setValue($normalized);
         }
-
-        $values = explode(';', $state->getValue(), 2);
-
-        if (count($values) < 2) {
-            $state->setActive(false);
-
-            return $state;
-        }
-
-        $gt = $this->isInclusive() ? 'gte' : 'gt';
-        $lt = $this->isInclusive() ? 'lte' : 'lt';
-
-        $normalized[$gt] = floatval($values[0]);
-        $normalized[$lt] = floatval($values[1]);
-
-        $state->setValue($normalized);
 
         return $state;
     }
@@ -58,7 +50,7 @@ class Range extends AbstractRange
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        $stateAgg = new StatsAggregation('range_agg');
+        $stateAgg = new StatsAggregation('date_range_agg');
         $stateAgg->setField($this->getField());
         $search->addAggregation($stateAgg);
     }
@@ -68,10 +60,24 @@ class Range extends AbstractRange
      */
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
-        /** @var $data ViewData\RangeAwareViewData */
+        /** @var $data RangeAwareViewData */
+        $data->setMinBounds(
+            new \DateTime(
+                date(
+                    \DateTime::ISO8601,
+                    $result->getAggregations()['date_range_agg']->getValue()['min'] / 1000
+                )
+            )
+        );
 
-        $data->setMinBounds($result->getAggregations()['range_agg']->getValue()['min']);
-        $data->setMaxBounds($result->getAggregations()['range_agg']->getValue()['max']);
+        $data->setMaxBounds(
+            new \DateTime(
+                date(
+                    \DateTime::ISO8601,
+                    $result->getAggregations()['date_range_agg']->getValue()['max'] / 1000
+                )
+            )
+        );
 
         return $data;
     }

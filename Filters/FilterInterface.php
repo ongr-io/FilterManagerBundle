@@ -64,4 +64,11 @@ interface FilterInterface extends RelationsAwareInterface
      * @return ViewData
      */
     public function getViewData(DocumentIterator $result, ViewData $data);
+
+    /**
+     * Returns all tags assigned to the filter.
+     *
+     * @return array
+     */
+    public function getTags();
 }

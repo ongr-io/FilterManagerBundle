@@ -26,6 +26,9 @@ class RangeFilterFactory extends AbstractFilterFactory
         parent::configure($definition, $configuration);
 
         $definition->addMethodCall('setField', [$configuration['field']]);
+        if (array_key_exists('inclusive', $configuration)) {
+            $definition->addMethodCall('setInclusive', [$configuration['inclusive']]);
+        }
     }
 
     /**

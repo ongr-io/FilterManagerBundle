@@ -78,6 +78,9 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
         // Case #2 all elements.
         $out[] = [new Request(['choice' => ['red', 'green', 'blue']]), ['1', '2', '3', '4', '5']];
 
+        // Case #3 non ordered choices.
+        $out[] = [new Request(['choice' => [0 => 'black', 2 => 'red']]), ['1', '3']];
+
         return $out;
     }
 
@@ -92,6 +95,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
 
         $filter = new MultiTermChoice();
         $filter->setRequestField('choice');
+        $filter->setTags(['badged']);
         $filter->setField('color');
         $container->set('choice', $filter);
 
@@ -182,6 +186,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
             }
         }
 
+        $this->assertTrue($viewData->hasTag('badged'));
         $this->assertEquals($expectedUrlParams, $actualUrls);
     }
 }

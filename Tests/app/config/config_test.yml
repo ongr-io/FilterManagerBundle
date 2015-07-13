@@ -48,7 +48,10 @@ ongr_filter_manager:
             filters: ['phrase', 'single_choice']
             repository: 'es.manager.default.product'
         bar_filters:
-            filters: ['sort']
+            filters: ['sort', 'inclusive_range']
+            repository: 'es.manager.default.product'
+        range_filters:
+            filters: ['date']
             repository: 'es.manager.default.product'
     filters:
         match:
@@ -63,11 +66,24 @@ ongr_filter_manager:
             range:
                 request_field: 'range'
                 field: 'price'
+                tags:
+                    - badged
+                    - permanent
+            inclusive_range:
+                request_field: 'inclusive_range'
+                field: 'price'
+                inclusive: true
+        date_range:
+            date:
+                request_field: 'date_range'
+                field: 'date'
         multi_choice:
             choice:
                 request_field: 'choice'
                 field: 'choice'
                 size: 2
+                tags:
+                    - badged
         choice:
             single_choice:
                 request_field: 'single_choice'
@@ -90,3 +106,4 @@ ongr_filter_manager:
                 request_field: 'sort'
                 choices:
                     - { label: foo, field: price, default: true, order: asc }
+                    - { label: bar, fields: [{field: price, order: asc}, {field: date, order: desc}]}

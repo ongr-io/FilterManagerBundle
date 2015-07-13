@@ -33,36 +33,67 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
                         '_id' => 1,
                         'color' => 'red',
                         'manufacturer' => 'a',
+                        'title' => 'm1',
                     ],
                     [
                         '_id' => 2,
                         'color' => 'blue',
                         'manufacturer' => 'a',
+                        'title' => 'm2',
                     ],
                     [
                         '_id' => 3,
                         'color' => 'red',
                         'manufacturer' => 'b',
+                        'title' => 'm3',
                     ],
                     [
                         '_id' => 4,
                         'color' => 'blue',
                         'manufacturer' => 'b',
+                        'title' => 'm4',
                     ],
                     [
                         '_id' => 5,
                         'color' => 'green',
                         'manufacturer' => 'b',
+                        'title' => 'm5',
                     ],
                     [
                         '_id' => 6,
                         'color' => 'blue',
                         'manufacturer' => 'a',
+                        'title' => 'm6',
                     ],
                     [
                         '_id' => 7,
                         'color' => 'yellow',
                         'manufacturer' => 'a',
+                        'title' => 'm7',
+                    ],
+                    [
+                        '_id' => 8,
+                        'color' => 'red',
+                        'manufacturer' => 'a',
+                        'title' => 'm8',
+                    ],
+                    [
+                        '_id' => 9,
+                        'color' => 'blue',
+                        'manufacturer' => 'a',
+                        'title' => 'm9',
+                    ],
+                    [
+                        '_id' => 10,
+                        'color' => 'red',
+                        'manufacturer' => 'a',
+                        'title' => 'm10',
+                    ],
+                    [
+                        '_id' => 11,
+                        'color' => 'blue',
+                        'manufacturer' => 'a',
+                        'title' => 'm11',
                     ],
                 ],
             ],
@@ -139,6 +170,7 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
 
         $filter = new SingleTermChoice();
         $filter->setRequestField('choice');
+        $filter->setTags(['tagged']);
         $filter->setField('color');
         $filter->setSortType($sortParams);
 
@@ -155,6 +187,28 @@ class SingleTermChoiceTest extends ElasticsearchTestCase
             $actualChoices[] = $choice->getLabel();
         }
 
+        $this->assertFalse($result->hasTag('badged'));
         $this->assertEquals($expectedChoices, $actualChoices);
+    }
+
+    /**
+     * Check if fetches more choices than ES default.
+     */
+    public function testChoicesSize()
+    {
+        $container = new FiltersContainer();
+
+        $filter = new SingleTermChoice();
+        $filter->setRequestField('choice');
+        $filter->setField('title');
+
+        $container->set('choice', $filter);
+
+        $manager = new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+
+        /** @var ChoicesAwareViewData $result */
+        $result = $manager->execute(new Request())->getFilters()['choice'];
+
+        $this->assertEquals(11, count($result->getChoices()));
     }
 }

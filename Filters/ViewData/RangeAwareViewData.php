@@ -14,22 +14,22 @@ namespace ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 
 /**
- * This class holds extra data for range filter.
+ * This class holds extra data for range and date_range filters.
  */
 class RangeAwareViewData extends ViewData
 {
     /**
-     * @var float
+     * @var float|\DateTime
      */
     private $minBounds;
 
     /**
-     * @var float
+     * @var float|\DateTime
      */
     private $maxBounds;
 
     /**
-     * @return float
+     * @return float|\DateTime
      */
     public function getMaxBounds()
     {
@@ -37,7 +37,7 @@ class RangeAwareViewData extends ViewData
     }
 
     /**
-     * @param float $maxBounds
+     * @param float|\DateTime $maxBounds
      */
     public function setMaxBounds($maxBounds)
     {
@@ -45,7 +45,7 @@ class RangeAwareViewData extends ViewData
     }
 
     /**
-     * @return float
+     * @return float|\DateTime
      */
     public function getMinBounds()
     {
@@ -53,7 +53,7 @@ class RangeAwareViewData extends ViewData
     }
 
     /**
-     * @param float $minBounds
+     * @param float|\DateTime $minBounds
      */
     public function setMinBounds($minBounds)
     {
