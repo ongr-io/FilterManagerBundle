@@ -58,7 +58,7 @@ class Range extends AbstractRange
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        $stateAgg = new StatsAggregation('range_agg');
+        $stateAgg = new StatsAggregation('range_agg' . $this->getField());
         $stateAgg->setField($this->getField());
         $search->addAggregation($stateAgg);
     }
