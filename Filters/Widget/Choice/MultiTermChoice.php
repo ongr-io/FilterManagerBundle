@@ -16,6 +16,7 @@ use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class provides multiple terms choice filter.
@@ -30,6 +31,20 @@ class MultiTermChoice extends SingleTermChoice
         if ($state && $state->isActive()) {
             $search->addPostFilter(new TermsFilter($this->getField(), $state->getValue()));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getState(Request $request)
+    {
+        $value = $request->get($this->getRequestField());
+
+        if (isset($value) && $value !== '' && !is_array($value)) {
+            $request->query->set($this->getRequestField(), [ $value ]);
+        }
+
+        return parent::getState($request);
     }
 
     /**
