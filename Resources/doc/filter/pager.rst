@@ -29,14 +29,6 @@ If we have a pager filter with `count_per_page` set to `2` and we request for th
 | 4       | green      |
 +---------+------------+
 
-**To use this filter, you'll need to add pager bundle to your composer requirements**
-
-.. code-block:: bash
-
-    $ php composer.phar require ongr/pager-bundle "~1.0"
-
-..
-
 Configuration
 -------------
 
@@ -95,3 +87,16 @@ View data returned by this filter to be used in template:
 +-------------------------+--------------------------------------------------+
 | hasTag($tag)            | Checks if filter has the specific tag            |
 +-------------------------+--------------------------------------------------+
+
+Template variables
+------------------
+
+To add pagination in twig template add this:
+
+.. code-block:: twig
+
+    {{ ongr_paginate(filter_manager.filters.list_pager.getPager(), 'ongr_search_page') }}
+
+..
+
+Where first parameter is PagerService and second parameter is routing name.
