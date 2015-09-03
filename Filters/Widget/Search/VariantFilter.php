@@ -27,9 +27,7 @@ class VariantFilter extends AbstractSingleValue
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-//        if ($state && $state->isActive()) {
-            $filter = new MissingFilter($this->getField());
-            $search->addFilter($filter, BoolFilter::MUST);
-//        }
+        $filter = new MissingFilter($this->getField());
+        $search->addFilter($filter, BoolFilter::MUST);
     }
 }
