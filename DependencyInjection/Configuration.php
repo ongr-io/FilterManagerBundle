@@ -93,6 +93,7 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('document_field'))
                         ->append($this->buildFilterTree('range'))
                         ->append($this->buildFilterTree('date_range'))
+                        ->append($this->buildFilterTree('variant'))
                     ->end()
                 ->end()
             ->end();

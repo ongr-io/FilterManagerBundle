@@ -69,6 +69,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 'choice' => [
                     'single_choice' => ['request_field' => 'choice', 'tags' => ['badged']],
                 ],
+                'variant' => [
+                    'variant' => ['request_field' => null, 'tags' => []],
+                ],
             ],
         ];
     }
