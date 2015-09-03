@@ -21,6 +21,7 @@ use ONGR\FilterManagerBundle\DependencyInjection\Filter\MultiChoiceFilterFactory
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\PagerFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\RangeFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\SortFilterFactory;
+use ONGR\FilterManagerBundle\DependencyInjection\Filter\VariantFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -48,6 +49,7 @@ class ONGRFilterManagerBundle extends Bundle
         $extension->addFilterFactory(new PagerFilterFactory());
         $extension->addFilterFactory(new RangeFilterFactory());
         $extension->addFilterFactory(new DateRangeFilterFactory());
+        $extension->addFilterFactory(new VariantFilterFactory());
 
         $container->addCompilerPass(new FilterPass());
     }
