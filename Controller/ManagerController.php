@@ -45,7 +45,7 @@ class ManagerController extends Controller
      *
      * @return array
      */
-    private function getFilterManagerResponse($request, $name)
+    protected function getFilterManagerResponse($request, $name)
     {
         return ['filter_manager' => $this->get(sprintf('ongr_filter_manager.%s', $name))->execute($request)];
     }
