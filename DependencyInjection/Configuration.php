@@ -93,6 +93,7 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('document_field'))
                         ->append($this->buildFilterTree('range'))
                         ->append($this->buildFilterTree('date_range'))
+                        ->append($this->buildFilterTree('variant'))
                     ->end()
                 ->end()
             ->end();
@@ -146,7 +147,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('sort')
                         ->children()
                             ->enumNode('type')
-                                ->values(['_term', '_asc'])
+                                ->values(['_term', '_count'])
                                 ->defaultValue('_term')
                             ->end()
                             ->enumNode('order')

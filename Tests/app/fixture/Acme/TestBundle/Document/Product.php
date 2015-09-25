@@ -39,6 +39,13 @@ class Product implements DocumentInterface
     /**
      * @var string
      *
+     * @ES\Property(type="string", name="parent_id", index="not_analyzed")
+     */
+    public $parentId;
+
+    /**
+     * @var string
+     *
      * @ES\Property(type="string", name="title")
      */
     public $title;
