@@ -51,8 +51,8 @@ class ChoiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUrlParameters()
     {
-        $this->choice->setUrlParameters([]);
-        $this->assertEquals([], $this->choice->getUrlParameters());
+        $this->choice->setUrlParameters(['http://google.com']);
+        $this->assertEquals(['http://google.com'], $this->choice->getUrlParameters());
     }
 
     /**

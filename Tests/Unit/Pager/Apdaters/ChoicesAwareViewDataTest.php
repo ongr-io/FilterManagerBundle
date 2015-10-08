@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Unit\Filters\ViewData;
 
 use ONGR\FilterManagerBundle\Filters\ViewData\ChoicesAwareViewData;
+use ONGR\FilterManagerBundle\Filters\ViewData\Choice;
 
 class ChoicesAwareViewDataTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,17 +22,11 @@ class ChoicesAwareViewDataTest extends \PHPUnit_Framework_TestCase
     private $oChoicesAwareViewData;
 
     /**
-     * @var \ONGR\FilterManagerBundle\Filters\ViewData\Choice
-     */
-    private $mockChoice;
-
-    /**
      * Tests setUp method.
      */
     protected function setUp()
     {
         $this->oChoicesAwareViewData = new ChoicesAwareViewData();
-        $this->mockChoice = $this->getMockBuilder('ONGR\FilterManagerBundle\Filters\ViewData\Choice')->getMock();
     }
 
     /**
@@ -39,8 +34,11 @@ class ChoicesAwareViewDataTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetChoice()
     {
-        $this->oChoicesAwareViewData->setChoices($this->mockChoice);
-        $this->assertEquals($this->mockChoice, $this->oChoicesAwareViewData->getChoices());
+        $this->oChoicesAwareViewData->setChoices(new Choice());
+        $this->assertInstanceOf(
+            'ONGR\FilterManagerBundle\Filters\ViewData\Choice',
+            $this->oChoicesAwareViewData->getChoices()
+        );
     }
 
     /**
@@ -48,7 +46,10 @@ class ChoicesAwareViewDataTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddChoice()
     {
-        $this->oChoicesAwareViewData->addChoice($this->mockChoice);
-        $this->assertEquals($this->mockChoice, $this->oChoicesAwareViewData->getChoices()[0]);
+        $this->oChoicesAwareViewData->addChoice(new Choice());
+        $this->assertInstanceOf(
+            'ONGR\FilterManagerBundle\Filters\ViewData\Choice',
+            $this->oChoicesAwareViewData->getChoices()[0]
+        );
     }
 }
