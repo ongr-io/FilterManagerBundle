@@ -74,6 +74,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
     {
         $out = [];
         $managers = $this->getFilterManager();
+        $inclusiveManagers = $this->getFilterManagerInclusive();
         // Case #0 range includes everything.
         $out[] = [
             'request' => new Request(['range' => '0;50', 'sort' => '0', 'mode' => null]),
@@ -135,7 +136,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'request' => new Request(['inclusive_range' => '1;2', 'sort' => '0', 'mode' => null]),
             'ids' => ['1', '2'],
             'assertOrder' => true,
-            'managers' => $managers,
+            'managers' => $inclusiveManagers,
         ];
 
         return $out;
@@ -144,10 +145,10 @@ class RangeTest extends AbstractFilterManagerResultsTest
     /**
      * Check if view data returned is correct.
      *
-     * @param Request          $request     Http request.
-     * @param array            $ids         Array of document ids to assert.
-     * @param bool             $assertOrder Set true if order of results lso should be asserted.
-     * @param FiltersManager[] $managers    Set of filter managers to test.
+     * @param Request $request Http request.
+     * @param array $ids Array of document ids to assert.
+     * @param bool $assertOrder Set true if order of results lso should be asserted.
+     * @param FiltersManager[] $managers Set of filter managers to test.
      *
      * @dataProvider getTestResultsData()
      */
@@ -182,6 +183,31 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $filter->setField('price');
         $container->set('range', $filter);
 
+        $sort = new Sort();
+        $sort->setRequestField('sort');
+        $sort->setChoices($choices);
+        $container->set('sorting', $sort);
+
+        $managers['range'] = new FiltersManager(
+            $container,
+            $this->getManager()->getRepository('AcmeTestBundle:Product')
+        );
+
+        $managers['bar_range'] = self::createClient()->getContainer()->get('ongr_filter_manager.bar_filters');
+
+        return $managers;
+    }
+
+    protected function getFilterManagerInclusive()
+    {
+        $managers = [];
+        $container = new FiltersContainer();
+
+        $choices = [
+            ['label' => 'Stock ASC', 'field' => 'price', 'order' => 'asc', 'default' => false, 'mode' => null],
+        ];
+
+
         $filter = new Range();
         $filter->setRequestField('inclusive_range');
         $filter->setField('price');
@@ -193,7 +219,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $sort->setChoices($choices);
         $container->set('sorting', $sort);
 
-        $managers['range'] = new FiltersManager(
+        $managers['inclusive_range'] = new FiltersManager(
             $container,
             $this->getManager()->getRepository('AcmeTestBundle:Product')
         );

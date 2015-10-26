@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Range;
 
+use ONGR\ElasticsearchBundle\DSL\Aggregation\FilterAggregation;
 use ONGR\ElasticsearchBundle\DSL\Aggregation\StatsAggregation;
 use ONGR\ElasticsearchBundle\DSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
@@ -58,9 +59,17 @@ class Range extends AbstractRange
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        $stateAgg = new StatsAggregation('range_agg');
+        $stateAgg = new StatsAggregation($this->getField() . '_range');
         $stateAgg->setField($this->getField());
-        $search->addAggregation($stateAgg);
+
+        if ($relatedSearch->getPostFilters()) {
+            $filterAggregation = new FilterAggregation($this->getField() . '-filter');
+            $filterAggregation->setFilter($relatedSearch->getPostFilters());
+            $filterAggregation->addAggregation($stateAgg);
+            $search->addAggregation($filterAggregation);
+        } else {
+            $search->addAggregation($stateAgg);
+        }
     }
 
     /**
@@ -69,9 +78,14 @@ class Range extends AbstractRange
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         /** @var $data ViewData\RangeAwareViewData */
-
-        $data->setMinBounds($result->getAggregations()['range_agg']->getValue()['min']);
-        $data->setMaxBounds($result->getAggregations()['range_agg']->getValue()['max']);
+        if (isset($result->getAggregations()[$this->getField() . '-filter'])) {
+            $filter = $result->getAggregations()[$this->getField() . '-filter'];
+            $data->setMinBounds($filter->getAggregations()[$this->getField() . '_range']->getValue()['min']);
+            $data->setMaxBounds($filter->getAggregations()[$this->getField() . '_range']->getValue()['max']);
+        } else {
+            $data->setMinBounds($result->getAggregations()[$this->getField() . '_range']->getValue()['min']);
+            $data->setMaxBounds($result->getAggregations()[$this->getField() . '_range']->getValue()['max']);
+        }
 
         return $data;
     }
