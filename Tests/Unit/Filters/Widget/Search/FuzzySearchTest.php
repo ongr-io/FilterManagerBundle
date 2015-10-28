@@ -27,18 +27,18 @@ class FuzzySearchTest extends \PHPUnit_Framework_TestCase
 
         $fuzzySearch = new FuzzySearch();
 
-        $mockSearch = $this->getMockBuilder('ONGR\ElasticsearchBundle\DSL\Search')->getMock();
+        $mockSearch = $this->getMockBuilder('ONGR\ElasticsearchDSL\Search')->getMock();
         $mockSearch->expects($this->once())
             ->method('addQuery')
-            ->with($this->isInstanceOf('ONGR\ElasticsearchBundle\DSL\Query\FuzzyQuery'), $this->equalTo('must'));
+            ->with($this->isInstanceOf('ONGR\ElasticsearchDSL\Query\FuzzyQuery'), $this->equalTo('must'));
 
         $fuzzySearch->setField('name');
         $fuzzySearch->modifySearch($mockSearch, $mockFilterState);
 
-        $mockSearch = $this->getMockBuilder('ONGR\ElasticsearchBundle\DSL\Search')->getMock();
+        $mockSearch = $this->getMockBuilder('ONGR\ElasticsearchDSL\Search')->getMock();
         $mockSearch->expects($this->exactly(1))
             ->method('addQuery')
-            ->with($this->isInstanceOf('ONGR\ElasticsearchBundle\DSL\Query\BoolQuery'), $this->equalTo('must'));
+            ->with($this->isInstanceOf('ONGR\ElasticsearchDSL\Query\BoolQuery'), $this->equalTo('must'));
 
         $fuzzySearch->setField('name,age,address');
         $fuzzySearch->modifySearch($mockSearch, $mockFilterState);

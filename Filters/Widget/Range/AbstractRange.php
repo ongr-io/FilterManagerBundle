@@ -11,8 +11,8 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Range;
 
-use ONGR\ElasticsearchBundle\DSL\Filter\RangeFilter;
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Filter\RangeFilter;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareInterface;
 use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareTrait;

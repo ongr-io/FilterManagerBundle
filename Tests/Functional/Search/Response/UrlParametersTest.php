@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Response;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class tests if we provide correct url parameters.
  */
-class UrlParametersTest extends ElasticsearchTestCase
+class UrlParametersTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array

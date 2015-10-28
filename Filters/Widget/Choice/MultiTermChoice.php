@@ -11,8 +11,8 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Choice;
 
-use ONGR\ElasticsearchBundle\DSL\Filter\TermsFilter;
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Filter\TermsFilter;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Search\SearchRequest;

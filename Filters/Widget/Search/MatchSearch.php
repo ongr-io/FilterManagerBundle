@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Search;
 
-use ONGR\ElasticsearchBundle\DSL\Query\BoolQuery;
-use ONGR\ElasticsearchBundle\DSL\Query\MatchQuery;
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Query\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\MatchQuery;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 

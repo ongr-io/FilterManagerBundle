@@ -78,6 +78,8 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
      */
     public function testFiltering($expected, $request, $fuzziness = null, $prefixLength = null, $maxExpansions = null)
     {
+        $this->getManager();
+
         $container = new FiltersContainer();
 
         $fuzzy = new FuzzySearch();

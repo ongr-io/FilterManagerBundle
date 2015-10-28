@@ -11,10 +11,10 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Choice;
 
-use ONGR\ElasticsearchBundle\DSL\Aggregation\FilterAggregation;
-use ONGR\ElasticsearchBundle\DSL\Aggregation\TermsAggregation;
-use ONGR\ElasticsearchBundle\DSL\Filter\TermFilter;
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Aggregation\FilterAggregation;
+use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
+use ONGR\ElasticsearchDSL\Filter\TermFilter;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\Aggregation\ValueAggregation;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
@@ -71,8 +71,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
         $name = $state ? $state->getName() : $this->getField();
-        $aggregation = new TermsAggregation($name);
-        $aggregation->setField($this->getField());
+        $aggregation = new TermsAggregation($name, $this->getField());
 
         if ($this->getSortType()) {
             $aggregation->addParameter('order', [$this->getSortType()['type'] => $this->getSortType()['order']]);
@@ -168,12 +167,12 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
      */
     protected function fetchAggregation(DocumentIterator $result, $name)
     {
-        $aggregations = $result->getAggregations();
-        if (isset($aggregations[$name])) {
-            return $aggregations[$name];
+        $aggregation = $result->getAggregation($name);
+        if (isset($aggregation)) {
+            return $aggregation;
         }
 
-        $buckets = $aggregations->find(sprintf('%s-filter.%s', $name, $name));
+        $buckets = $result->getAggregations()->find(sprintf('%s-filter.%s', $name, $name));
 
         if (isset($buckets)) {
             return $buckets;

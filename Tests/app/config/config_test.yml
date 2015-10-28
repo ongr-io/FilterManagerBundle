@@ -8,34 +8,39 @@ framework:
         engines: ['twig']
 
 ongr_elasticsearch:
+    analysis:
+        tokenizer:
+            pathTokenizer:
+                type : path_hierarchy
+                buffer_size: 2024
+                skip: 0
+                delimiter: /
+        filter:
+            incremental_filter:
+                type: edge_ngram
+                min_gram: 1
+                max_gram: 20
+        analyzer:
+            urlAnalyzer:
+                type: custom
+                tokenizer: keyword
+                filter: [lowercase]
     connections:
         default:
             hosts:
-                - { host: 127.0.0.1, port: 9200 }
+                - 127.0.0.1:9200
             index_name: filter_manager_testing
             settings:
                 refresh_interval: -1
                 number_of_shards: 2
                 number_of_replicas: 0
-                index:
-                    refresh_interval: -1
-                analysis:
-                    tokenizer:
-                        pathTokenizer:
-                            type : path_hierarchy
-                            buffer_size: 2024
-                            skip: 0
-                            delimiter: /
-                    filter:
-                        incremental_filter:
-                            type: edge_ngram
-                            min_gram: 1
-                            max_gram: 20
-                    analyzer:
-                        urlAnalyzer:
-                            type: custom
-                            tokenizer: keyword
-                            filter: [lowercase]
+            analysis:
+                tokenizer:
+                    - pathTokenizer
+                filter:
+                    - incremental_filter
+                analyzer:
+                    - urlAnalyzer
     managers:
         default:
             connection: default

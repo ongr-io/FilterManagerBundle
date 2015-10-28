@@ -11,10 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\Relations;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Relations\ExcludeRelation;
 
-class ExcludeRelationTest extends ElasticsearchTestCase
+class ExcludeRelationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Data provider for testFuzzyQuery().

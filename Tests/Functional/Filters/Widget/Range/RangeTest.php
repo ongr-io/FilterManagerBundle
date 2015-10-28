@@ -153,6 +153,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
      */
     public function testViewData(Request $request, $ids, $assertOrder = false, $managers = [])
     {
+        $this->getManager();
         foreach ($managers as $filter => $filterManager) {
             /** @var RangeAwareViewData $viewData */
             $viewData = $filterManager->execute($request)->getFilters()[$filter];
@@ -215,6 +216,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
      */
     public function testResults(Request $request, $ids, $assertOrder = false, $managers = [])
     {
+        $this->getManager();
         foreach ($managers as $filterManager) {
             $actual = array_map(
                 [$this, 'fetchDocumentId'],

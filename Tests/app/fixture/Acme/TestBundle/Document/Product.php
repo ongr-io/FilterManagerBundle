@@ -12,15 +12,13 @@
 namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
+use ONGR\ElasticsearchBundle\Document\AbstractDocument;
 
 /**
  * @ES\Document(type="product")
  */
-class Product implements DocumentInterface
+class Product extends AbstractDocument
 {
-    use DocumentTrait;
 
     /**
      * @var string
@@ -35,13 +33,6 @@ class Product implements DocumentInterface
      * @ES\Property(type="string", name="sku")
      */
     public $sku;
-
-    /**
-     * @var string
-     *
-     * @ES\Property(type="string", name="parent_id", index="not_analyzed")
-     */
-    public $parentId;
 
     /**
      * @var string
@@ -88,42 +79,42 @@ class Product implements DocumentInterface
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="categories", index="not_analyzed")
+     * @ES\Property(type="string", name="categories", options={"index"="not_analyzed"})
      */
     public $categories;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="manufacturer", index="not_analyzed")
+     * @ES\Property(type="string", name="manufacturer", options={"index"="not_analyzed"})
      */
     public $manufacturer;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="color", index="not_analyzed")
+     * @ES\Property(type="string", name="color", options={"index"="not_analyzed"})
      */
     public $color;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="size", index="not_analyzed")
+     * @ES\Property(type="string", name="size", options={"index"="not_analyzed"})
      */
     public $size;
 
     /**
      * @var int
      *
-     * @ES\Property(type="integer", name="items", index="not_analyzed")
+     * @ES\Property(type="integer", name="items", options={"index"="not_analyzed"})
      */
     public $items;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="words", index="not_analyzed")
+     * @ES\Property(type="string", name="words", options={"index"="not_analyzed"})
      */
     public $words;
 

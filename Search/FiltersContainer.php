@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Search;
 
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterInterface;
 use ONGR\FilterManagerBundle\Relations\FilterIterator;
 use ONGR\FilterManagerBundle\Relations\RelationInterface;

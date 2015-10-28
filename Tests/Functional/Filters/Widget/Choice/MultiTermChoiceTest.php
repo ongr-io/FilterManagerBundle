@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Widget\Choice;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Filters\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice;

@@ -11,13 +11,13 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Widget\Search;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class MatchSearchTest extends ElasticsearchTestCase
+class MatchSearchTest extends AbstractElasticsearchTestCase
 {
     /**
      * {@inheritdoc}
@@ -92,6 +92,8 @@ class MatchSearchTest extends ElasticsearchTestCase
      */
     public function testFiltering($expected, $request)
     {
+        $this->getManager();
+
         $result = $this->getFilerManger()->execute($request);
 
         $actual = [];

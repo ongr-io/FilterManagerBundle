@@ -12,14 +12,14 @@
 namespace ONGR\FilterManagerBundle\Test;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class is able to test results from filters manager.
  */
-abstract class AbstractFilterManagerResultsTest extends ElasticsearchTestCase
+abstract class AbstractFilterManagerResultsTest extends AbstractElasticsearchTestCase
 {
     /**
      * Return any kind of filters manager to test.

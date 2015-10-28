@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\ViewData;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\ViewData;
 use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Relations\ExcludeRelation;
@@ -19,7 +19,7 @@ use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class FilterStateTest extends ElasticsearchTestCase
+class FilterStateTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array

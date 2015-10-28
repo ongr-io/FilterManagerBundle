@@ -12,13 +12,13 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Widget\Sort;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class SortTest extends ElasticsearchTestCase
+class SortTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array
