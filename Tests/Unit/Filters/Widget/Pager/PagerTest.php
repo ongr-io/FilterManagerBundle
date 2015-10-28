@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\Filters\Widget\Pager;
 
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager;
 
@@ -55,7 +55,7 @@ class PagerTest extends \PHPUnit_Framework_TestCase
         $result = $this->getMockBuilder('ONGR\ElasticsearchBundle\Result\DocumentIterator')
             ->disableOriginalConstructor()
             ->getMock();
-        $result->expects($this->once())->method('getTotalCount')->willReturn(55);
+        $result->expects($this->once())->method('count')->willReturn(55);
 
         $viewData = $filter->createViewData();
         $viewData->setState($filterStateMock);

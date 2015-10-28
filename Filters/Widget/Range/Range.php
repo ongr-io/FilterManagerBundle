@@ -11,8 +11,8 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Range;
 
-use ONGR\ElasticsearchBundle\DSL\Aggregation\StatsAggregation;
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Aggregation\StatsAggregation;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\ViewData;
@@ -58,7 +58,7 @@ class Range extends AbstractRange
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        $stateAgg = new StatsAggregation('range_agg');
+        $stateAgg = new StatsAggregation($state->getName());
         $stateAgg->setField($this->getField());
         $search->addAggregation($stateAgg);
     }
@@ -68,10 +68,10 @@ class Range extends AbstractRange
      */
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
+        $name = $data->getState()->getName();
         /** @var $data ViewData\RangeAwareViewData */
-
-        $data->setMinBounds($result->getAggregations()['range_agg']->getValue()['min']);
-        $data->setMaxBounds($result->getAggregations()['range_agg']->getValue()['max']);
+        $data->setMinBounds($result->getAggregation($name)->getValue()['min']);
+        $data->setMaxBounds($result->getAggregation($name)->getValue()['max']);
 
         return $data;
     }

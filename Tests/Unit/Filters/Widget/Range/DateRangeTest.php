@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\Unit\Filters\Range;
+namespace ONGR\FilterManagerBundle\Tests\Unit\Filters\Widget\Range;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\ViewData\RangeAwareViewData;
@@ -25,6 +25,15 @@ class DateRangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetViewData()
     {
+        $repositoryMock = $this->getMockBuilder('ONGR\ElasticsearchBundle\Service\Repository')
+            ->disableOriginalConstructor()
+            ->setMethods(['getManager', 'getConverter', 'getConfig'])
+            ->getMock();
+
+        $repositoryMock->expects($this->any())->method('getManager')->willReturnSelf();
+        $repositoryMock->expects($this->any())->method('getConverter')->willReturnSelf();
+        $repositoryMock->expects($this->any())->method('getConfig')->willReturn([]);
+
         $dateRange = new DateRange();
 
         $minDate = new \DateTime('-1 week');
@@ -39,7 +48,7 @@ class DateRangeTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
             ],
-            [],
+            $repositoryMock,
             []
         );
 

@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Controller;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 
-class ManagerControllerTest extends ElasticsearchTestCase
+class ManagerControllerTest extends AbstractElasticsearchTestCase
 {
     /**
      * {@inheritdoc}
@@ -48,6 +48,9 @@ class ManagerControllerTest extends ElasticsearchTestCase
      */
     public function testManagerAction()
     {
+        // Create index by getting manager.
+        $this->getManager();
+
         $client = static::createClient();
         $crawler = $client->request('GET', '/list');
 

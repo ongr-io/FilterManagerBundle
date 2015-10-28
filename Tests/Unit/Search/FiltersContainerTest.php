@@ -61,7 +61,7 @@ class FiltersContainerTest extends \PHPUnit_Framework_TestCase
         $mockFilterInterface->expects($this->once())
             ->method('modifySearch')
             ->withConsecutive(
-                $this->isInstanceOf('ONGR\ElasticsearchBundle\DSL\Search'),
+                $this->isInstanceOf('ONGR\ElasticsearchDSL\Search'),
                 $this->equalTo('testName'),
                 $this->identicalTo($mockRequest)
             );
@@ -70,7 +70,7 @@ class FiltersContainerTest extends \PHPUnit_Framework_TestCase
         $filtersContainer->add([ $mockFilterInterface ]);
 
         $result = $filtersContainer->buildSearch($mockRequest);
-        $this->assertInstanceOf('ONGR\ElasticsearchBundle\DSL\Search', $result);
+        $this->assertInstanceOf('ONGR\ElasticsearchDSL\Search', $result);
     }
 
     /**

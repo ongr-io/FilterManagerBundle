@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Pager;
 
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterInterface;
 use ONGR\FilterManagerBundle\Filters\FilterState;
@@ -124,7 +124,7 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
         /** @var ViewData\PagerAwareViewData $data */
         $data->setPager(
             new PagerService(
-                new CountAdapter($result->getTotalCount()),
+                new CountAdapter($result->count()),
                 array_filter(
                     [
                         'page' => $data->getState()->getValue(),

@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filters\FooRange;
 
-use ONGR\ElasticsearchBundle\DSL\Aggregation\StatsAggregation;
-use ONGR\ElasticsearchBundle\DSL\Filter\RangeFilter;
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Aggregation\StatsAggregation;
+use ONGR\ElasticsearchDSL\Filter\RangeFilter;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\Helper\FieldAwareInterface;
@@ -103,9 +103,8 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         /** @var $data ViewData\RangeAwareViewData */
-
-        $data->setMinBounds($result->getAggregations()['range_agg']->getValue()['min']);
-        $data->setMaxBounds($result->getAggregations()['range_agg']->getValue()['max']);
+        $data->setMinBounds($result->getAggregation('range_agg')->getValue()['min']);
+        $data->setMaxBounds($result->getAggregation('range_agg')->getValue()['max']);
 
         return $data;
     }

@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Search;
 
-use ONGR\ElasticsearchBundle\ORM\Repository;
+use ONGR\ElasticsearchBundle\Service\Repository;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterInterface;
 use ONGR\FilterManagerBundle\Filters\FilterState;

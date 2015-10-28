@@ -11,8 +11,8 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Range;
 
-use ONGR\ElasticsearchBundle\DSL\Aggregation\StatsAggregation;
-use ONGR\ElasticsearchBundle\DSL\Search;
+use ONGR\ElasticsearchDSL\Aggregation\StatsAggregation;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\ViewData;
@@ -65,7 +65,7 @@ class DateRange extends AbstractRange
             new \DateTime(
                 date(
                     \DateTime::ISO8601,
-                    $result->getAggregations()['date_range_agg']->getValue()['min'] / 1000
+                    $result->getAggregation('date_range_agg')->getValue()['min'] / 1000
                 )
             )
         );
@@ -74,7 +74,7 @@ class DateRange extends AbstractRange
             new \DateTime(
                 date(
                     \DateTime::ISO8601,
-                    $result->getAggregations()['date_range_agg']->getValue()['max'] / 1000
+                    $result->getAggregation('date_range_agg')->getValue()['max'] / 1000
                 )
             )
         );

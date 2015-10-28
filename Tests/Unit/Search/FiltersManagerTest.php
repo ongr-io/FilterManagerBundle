@@ -42,7 +42,7 @@ class FiltersManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($searchRequest));
         $mockFiltersContainer->expects($this->exactly(2))
             ->method('buildSearch')
-            ->will($this->returnValue($this->getMock('ONGR\ElasticsearchBundle\DSL\Search')));
+            ->will($this->returnValue($this->getMock('ONGR\ElasticsearchDSL\Search')));
         $mockFiltersContainer->expects($this->exactly(2))
             ->method('all')
             ->will($this->returnValue(['filter' => $mockFilterInterface]));
@@ -54,7 +54,7 @@ class FiltersManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRepository = $this->getMockBuilder('ONGR\ElasticsearchBundle\ORM\Repository')
+        $mockRepository = $this->getMockBuilder('ONGR\ElasticsearchBundle\Service\Repository')
             ->disableOriginalConstructor()
             ->getMock();
         $mockRepository->expects($this->once())

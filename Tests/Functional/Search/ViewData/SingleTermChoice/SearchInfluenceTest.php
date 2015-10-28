@@ -11,14 +11,14 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Search\ViewData\SingleTermChoice;
 
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class SearchInfluenceTest extends ElasticsearchTestCase
+class SearchInfluenceTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array
@@ -126,6 +126,8 @@ class SearchInfluenceTest extends ElasticsearchTestCase
      */
     public function testInfluence(Request $request, $filterName, $expected)
     {
+        $this->getManager();
+
         /** @var ChoicesAwareViewData $data */
         $data = $this->getFiltersManager()->execute($request)->getFilters()[$filterName];
 

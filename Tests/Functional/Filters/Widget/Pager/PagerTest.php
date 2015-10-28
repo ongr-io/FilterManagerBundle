@@ -12,14 +12,14 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Widget\Pager;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
-use ONGR\ElasticsearchBundle\Test\ElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager;
 use ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FiltersContainer;
 use ONGR\FilterManagerBundle\Search\FiltersManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class PagerTest extends ElasticsearchTestCase
+class PagerTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array
@@ -141,6 +141,7 @@ class PagerTest extends ElasticsearchTestCase
      */
     public function testPager(Request $request, $options, $expectedDocs)
     {
+        $this->getManager();
         $request->query->add(['sort' => '0']);
         $result = $this->getFiltersManager($options)->execute($request)->getResult();
 
@@ -158,6 +159,7 @@ class PagerTest extends ElasticsearchTestCase
      */
     public function testGetViewData()
     {
+        $this->getManager();
         $manager = $this->getFiltersManager(['count_per_page' => 2, 'max_pages' => 3]);
         $viewData = $manager->execute(new Request(['page' => 3]))->getFilters();
 
@@ -216,6 +218,7 @@ class PagerTest extends ElasticsearchTestCase
      */
     public function testPageRange($options, $page, $expected)
     {
+        $this->getManager();
         $manager = $this->getFiltersManager($options);
 
         $range = $manager

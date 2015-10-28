@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Filters\Widget\Sort;
 
-use ONGR\ElasticsearchBundle\DSL\Search;
-use ONGR\ElasticsearchBundle\DSL\Sort\Sort as EsSort;
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
+use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use ONGR\FilterManagerBundle\Filters\FilterState;
 use ONGR\FilterManagerBundle\Filters\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filters\ViewData\ChoicesAwareViewData;
@@ -41,16 +41,20 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
 
             if (!empty($this->choices[$stateValue]['fields'])) {
                 foreach ($this->choices[$stateValue]['fields'] as $sortField) {
-                    $search->addSort(new EsSort($sortField['field'], $sortField['order'], null, $sortField['mode']));
+                    $search->addSort(
+                        new FieldSort($sortField['field'], $sortField['order'], ['mode' => $sortField['mode']])
+                    );
                 }
             } else {
                 $sortField = $this->choices[$stateValue];
-                $search->addSort(new EsSort($sortField['field'], $sortField['order'], null, $sortField['mode']));
+                $search->addSort(
+                    new FieldSort($sortField['field'], $sortField['order'], ['mode' => $sortField['mode']])
+                );
             }
         } else {
             foreach ($this->choices as $choice) {
                 if ($choice['default']) {
-                    $search->addSort(new EsSort($choice['field'], $choice['order']));
+                    $search->addSort(new FieldSort($choice['field'], $choice['order']));
 
                     break;
                 }
