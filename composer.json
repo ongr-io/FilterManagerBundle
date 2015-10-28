@@ -18,7 +18,8 @@
     "require-dev": {
         "monolog/monolog": "~1.0",
         "phpunit/phpunit": "~4.4",
-        "ongr/ongr-strict-standard": "~2.1"
+        "ongr/ongr-strict-standard": "~2.1",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "psr-4": { "ONGR\\FilterManagerBundle\\": "" }
