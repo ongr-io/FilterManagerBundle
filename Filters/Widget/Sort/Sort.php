@@ -84,7 +84,9 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
             $viewChoice = new ViewData\Choice();
             $viewChoice->setLabel($choice['label']);
             $viewChoice->setDefault($choice['default']);
-            $viewChoice->setMode($choice['mode']);
+            if (isset($choice['mode'])) {
+                $viewChoice->setMode($choice['mode']);
+            }
             $viewChoice->setActive($active);
             if ($active) {
                 $viewChoice->setUrlParameters($data->getResetUrlParameters());
