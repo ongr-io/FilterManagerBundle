@@ -20,14 +20,16 @@ class SortTest extends \PHPUnit_Framework_TestCase
     public function testWithoutMode()
     {
         $filter = new Sort();
-        $filter->setChoices([
-            'default' => [
-                'label'   => 'default sorting',
-                'field'   => 'name',
-                'order'   => 'asc',
-                'default' => true,
+        $filter->setChoices(
+            [
+                'default' => [
+                    'label' => 'default sorting',
+                    'field' => 'name',
+                    'order' => 'asc',
+                    'default' => true,
+                ],
             ]
-        ]);
+        );
         $filter->setRequestField('sort');
 
         $state = new FilterState();
