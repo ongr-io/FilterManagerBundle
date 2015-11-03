@@ -41,20 +41,15 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
 
             if (!empty($this->choices[$stateValue]['fields'])) {
                 foreach ($this->choices[$stateValue]['fields'] as $sortField) {
-                    $search->addSort(
-                        new FieldSort($sortField['field'], $sortField['order'], ['mode' => $sortField['mode']])
-                    );
+                    $this->addFieldToSort($search, $sortField);
                 }
             } else {
-                $sortField = $this->choices[$stateValue];
-                $search->addSort(
-                    new FieldSort($sortField['field'], $sortField['order'], ['mode' => $sortField['mode']])
-                );
+                $this->addFieldToSort($search, $this->choices[$stateValue]);
             }
         } else {
             foreach ($this->choices as $choice) {
                 if ($choice['default']) {
-                    $search->addSort(new FieldSort($choice['field'], $choice['order']));
+                    $this->addFieldToSort($search, $choice);
 
                     break;
                 }
@@ -126,5 +121,22 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
         $parameters[$this->getRequestField()] = $key;
 
         return $parameters;
+    }
+
+    /**
+     * Adds sort field parameters into given search object.
+     *
+     * @param Search $search
+     * @param array  $sortField
+     */
+    private function addFieldToSort(Search $search, $sortField)
+    {
+        $search->addSort(
+            new FieldSort(
+                $sortField['field'],
+                $sortField['order'],
+                isset($sortField['mode']) ? ['mode' => $sortField['mode']] : []
+            )
+        );
     }
 }
