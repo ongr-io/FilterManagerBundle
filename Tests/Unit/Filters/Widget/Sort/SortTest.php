@@ -10,7 +10,7 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class SortTest
+ * Unit test for sorting.
  **/
 class SortTest extends \PHPUnit_Framework_TestCase
 {
