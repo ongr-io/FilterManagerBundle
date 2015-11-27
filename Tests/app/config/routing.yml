@@ -5,5 +5,11 @@ foo_list:
         managerName: "foo_filters"
         template: "AcmeTestBundle:Manager:default.html.twig"
 
+app_list_json:
+    path: /list.json
+    defaults:
+        _controller: ONGRFilterManagerBundle:Manager:json
+        managerName: "foo_filters"
+
 test_page:
     path: /

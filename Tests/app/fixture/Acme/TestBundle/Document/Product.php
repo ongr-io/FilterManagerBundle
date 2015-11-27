@@ -13,11 +13,12 @@ namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
 use ONGR\ElasticsearchBundle\Document\AbstractDocument;
+use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
  * @ES\Document(type="product")
  */
-class Product extends AbstractDocument
+class Product extends AbstractDocument implements SerializableInterface
 {
 
     /**
@@ -124,4 +125,16 @@ class Product extends AbstractDocument
      * @ES\Property(type="date", name="date")
      */
     public $date;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSerializableData()
+    {
+        return [
+            '_id' => $this->getId(),
+            'title' => $this->title,
+            'color' => $this->color,
+        ];
+    }
 }

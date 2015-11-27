@@ -46,4 +46,18 @@ class ChoicesAwareViewData extends ViewData
     {
         $this->choices[] = $choice;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSerializableData()
+    {
+        $data = parent::getSerializableData();
+
+        foreach ($this->getChoices() as $choice) {
+            $data['choices'][] = $choice->getSerializableData();
+        }
+
+        return $data;
+    }
 }

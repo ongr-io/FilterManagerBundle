@@ -59,4 +59,18 @@ class RangeAwareViewData extends ViewData
     {
         $this->minBounds = $minBounds;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSerializableData()
+    {
+        $data = parent::getSerializableData();
+
+        // TODO: handle \DateTime serialization
+        $data['min_bound'] = $this->minBounds;
+        $data['max_bound'] = $this->maxBounds;
+
+        return $data;
+    }
 }

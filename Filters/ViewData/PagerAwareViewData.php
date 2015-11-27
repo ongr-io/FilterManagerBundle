@@ -39,4 +39,19 @@ class PagerAwareViewData extends ViewData
     {
         return $this->pager;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSerializableData()
+    {
+        $data = parent::getSerializableData();
+
+        $data['pager'] = [
+            'page' => $this->pager->getPage(),
+            'last_page' => $this->pager->getLastPage(),
+        ];
+
+        return $data;
+    }
 }

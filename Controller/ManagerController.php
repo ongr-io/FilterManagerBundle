@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,5 +49,22 @@ class ManagerController extends Controller
     protected function getFilterManagerResponse($request, $name)
     {
         return ['filter_manager' => $this->get(sprintf('ongr_filter_manager.%s', $name))->execute($request)];
+    }
+
+    /**
+     * Returns JSON response with search response data.
+     *
+     * @param Request $request
+     * @param string  $managerName
+     *
+     * @return array
+     */
+    public function jsonAction(Request $request, $managerName)
+    {
+        $data = $this->get(sprintf('ongr_filter_manager.%s', $managerName))
+            ->execute($request)
+            ->getSerializableData();
+
+        return new JsonResponse($data);
     }
 }
