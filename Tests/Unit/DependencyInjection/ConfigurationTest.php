@@ -96,22 +96,22 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['filters']['multi_choice'] = [];
         $expectedBaseConfig['filters']['fuzzy'] = [];
 
-        // Case #0 Base configuration with default values.
-        $cases[] = [
+        // Base configuration with default values.
+        $cases['base_config_default_values'] = [
             $baseConfig,
             $expectedBaseConfig,
         ];
 
-        // Case #1 Normalize relations string to array.
+        // Normalize relations string to array.
         $customConfig = $baseConfig;
         $customConfig['filters']['match']['phrase']['relations']['search']['include'] = 'color';
         $customConfig['filters']['match']['phrase']['relations']['reset']['exclude'] = 'size';
-        $cases[] = [
+        $cases['normalize_relations_field'] = [
             $customConfig,
             $expectedBaseConfig,
         ];
 
-        // Case #2 Set choice field name as label if label is missing.
+        // Set choice field name as label if label is missing.
         $customConfig = $expectedBaseConfig;
         $customConfig['filters']['sort']['sorting']['choices'][0] = ['field' => 'test'];
         $expectedConfig = $customConfig;
@@ -126,12 +126,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['multi_choice']);
         unset($customConfig['filters']['fuzzy']);
-        $cases[] = [
+        $cases['choice_name_as_label'] = [
             $customConfig,
             $expectedConfig,
         ];
 
-        // Case #3 sorting by multiple fields.
+        // Sorting by multiple fields.
         $customConfig = $expectedBaseConfig;
         $customConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['field'] = 'price';
         $customConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['field'] = 'date';
@@ -151,7 +151,21 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['multi_choice']);
         unset($customConfig['filters']['fuzzy']);
-        $cases[] = [
+        $cases['sorting_multiple_fields'] = [
+            $customConfig,
+            $expectedConfig,
+        ];
+
+        // Allow to skip "managers" config.
+        $customConfig = $expectedBaseConfig;
+        unset($customConfig['managers']);
+        $expectedConfig = $customConfig;
+        unset($customConfig['filters']['document_field']);
+        unset($customConfig['filters']['multi_choice']);
+        unset($customConfig['filters']['fuzzy']);
+        $expectedConfig['managers'] = [];
+
+        $cases['allow_to_skip_managers_config'] = [
             $customConfig,
             $expectedConfig,
         ];
@@ -183,77 +197,69 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $cases = [];
 
-        // Case #0 Missing "managers" config.
-        $config = $this->getBaseConfiguration();
-        $config['managers'] = null;
-        $cases[] = [
-            $config,
-            'The path "ongr_filter_manager.managers" should have at least 1 element(s) defined.',
-        ];
-
-        // Case #1 Incomplete manager config, missing "repository".
+        // Incomplete manager config, missing "repository".
         $config = $this->getBaseConfiguration();
         unset($config['managers']['foo_filters']['repository']);
-        $cases[] = [
+        $cases['require_manager_repository'] = [
             $config,
             'The child node "repository" at path "ongr_filter_manager.managers.foo_filters" must be configured.',
         ];
 
-        // Case #2 Empty "filters" config.
+        // Empty "filters" config.
         $config = $this->getBaseConfiguration();
         $config['filters'] = null;
-        $cases[] = [
+        $cases['empty_filters_config'] = [
             $config,
             'Invalid configuration for path "ongr_filter_manager.filters": At least single filter must be configured.',
         ];
 
-        // Case #3 Incomplete "filters" config, no filters specified under filter type.
+        // Incomplete "filters" config, no filters specified under filter type.
         $config = $this->getBaseConfiguration();
         $config['filters']['match'] = null;
-        $cases[] = [
+        $cases['incomplete_filters_config'] = [
             $config,
             'The path "ongr_filter_manager.filters.match" should have at least 1 element(s) defined.',
         ];
 
-        // Case #4 Incomplete "filters" config, "request_field" missing.
+        // Incomplete "filters" config, "request_field" missing.
         $config = $this->getBaseConfiguration();
         unset($config['filters']['match']['phrase']['request_field']);
-        $cases[] = [
+        $cases['request_field_missing'] = [
             $config,
             'The child node "request_field" at path "ongr_filter_manager.filters.match.phrase" must be configured.',
         ];
 
-        // Case #5 Incomplete relations config.
+        // Incomplete relations config.
         $config = $this->getBaseConfiguration();
         $config['filters']['match']['phrase']['relations']['search']['include'] = [];
-        $cases[] = [
+        $cases['incomplete_relations_config'] = [
             $config,
             'Invalid configuration for path "ongr_filter_manager.filters.match.phrase.relations.search": ' .
             'Relation must have "include" or "exclude" fields specified.',
         ];
 
-        // Case #6 Incorrect relations specified.
+        // Incorrect relations specified.
         $config = $this->getBaseConfiguration();
         $config['filters']['match']['phrase']['relations']['search']['exclude'] = ['foo'];
-        $cases[] = [
+        $cases['incorrect_relations_config'] = [
             $config,
             'Invalid configuration for path "ongr_filter_manager.filters.match.phrase.relations.search": ' .
             'Relation must have only "include" or "exclude" fields specified.',
         ];
 
-        // Case #7 Incorrect type of sorting specified.
+        // Incorrect type of sorting specified.
         $config = $this->getBaseConfiguration();
         $config['filters']['choice']['single_choice']['sort']['type'] = 'test';
-        $cases[] = [
+        $cases['incorrect_sorting_type'] = [
             $config,
             'The value "test" is not allowed for path "ongr_filter_manager.filters.choice.single_choice.sort.type"' .
             '. Permissible values: "_term", "_count"',
         ];
 
-        // Case #8 Sorting fields are not set.
+        // Sorting fields are not set.
         $config = $this->getBaseConfiguration();
         $config['filters']['sort']['sorting']['choices'][0]['label'] = 'test';
-        $cases[] = [
+        $cases['sorting_fields_not_set'] = [
             $config,
             'The child node "fields" at path "ongr_filter_manager.filters.sort.sorting.choices.0" must be configured.',
         ];
