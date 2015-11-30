@@ -11,7 +11,6 @@
 
 namespace ONGR\FilterManagerBundle\DependencyInjection;
 
-use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\ParentNodeDefinitionInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -44,7 +43,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('managers')
-                    ->requiresAtLeastOneElement()
+                    ->defaultValue([])
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
