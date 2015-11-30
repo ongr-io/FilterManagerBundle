@@ -13,11 +13,12 @@ namespace ONGR\FilterManagerBundle\Search;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filters\ViewData;
+use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
  * This class holds full response of documents and filters data.
  */
-class SearchResponse
+class SearchResponse implements SerializableInterface
 {
     /**
      * @var DocumentIterator Elasticsearch response object.
@@ -68,5 +69,35 @@ class SearchResponse
     public function getUrlParameters()
     {
         return $this->urlParameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSerializableData()
+    {
+        $data = [
+            'count' => $this->result->count(),
+            'documents' => [],
+            'filters' => [],
+            'url_parameters' => $this->urlParameters,
+        ];
+
+        foreach ($this->result as $document) {
+            if (!$document instanceof SerializableInterface) {
+                throw new \LogicException(
+                    'In order to serialize search response documents MUST implement ' .
+                        '"ONGR\FilterManagerBundle\SerializableInterface" interface.'
+                );
+            }
+
+            $data['documents'][] = $document->getSerializableData();
+        }
+
+        foreach ($this->filters as $name => $filter) {
+            $data['filters'][$name] = $filter->getSerializableData();
+        }
+
+        return $data;
     }
 }

@@ -11,10 +11,12 @@
 
 namespace ONGR\FilterManagerBundle\Filters;
 
+use ONGR\FilterManagerBundle\SerializableInterface;
+
 /**
  * This class defines data structure to represent filter state.
  */
-class FilterState
+class FilterState implements SerializableInterface
 {
     /**
      * @var bool True if filter is currently.
@@ -98,5 +100,16 @@ class FilterState
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSerializableData()
+    {
+        return [
+            'active' => $this->active,
+            'value' => $this->value,
+        ];
     }
 }

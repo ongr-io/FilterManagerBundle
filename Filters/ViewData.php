@@ -11,10 +11,12 @@
 
 namespace ONGR\FilterManagerBundle\Filters;
 
+use ONGR\FilterManagerBundle\SerializableInterface;
+
 /**
  * This class defines data structure passed into view by single filter.
  */
-class ViewData
+class ViewData implements SerializableInterface
 {
     /**
      * @var FilterState
@@ -129,5 +131,19 @@ class ViewData
     public function setUrlParameters($urlParameters)
     {
         $this->urlParameters = $urlParameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSerializableData()
+    {
+        return [
+            'name' => $this->name,
+            'state' => $this->getState()->getSerializableData(),
+            'tags' => $this->tags,
+            'url_params' => $this->urlParameters,
+            'reset_url_params' => $this->resetUrlParameters,
+        ];
     }
 }

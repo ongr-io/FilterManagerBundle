@@ -57,4 +57,24 @@ class ManagerControllerTest extends AbstractElasticsearchTestCase
         $this->assertTrue($client->getResponse()->isOk(), 'Client should return 200 code.');
         $this->assertEquals(3, $crawler->filter('ul > li')->count(), 'There should be generated 3 li elements.');
     }
+
+    /**
+     * Test JSON action.
+     */
+    public function testJsonAction()
+    {
+        // Create index by getting manager.
+        $this->getManager();
+
+        $client = static::createClient();
+        $client->request('GET', '/list.json');
+
+        $response = $client->getResponse();
+        $this->assertTrue($response->isOk(), 'Client should return 200 code.');
+        $this->assertJson($response->getContent());
+
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertCount(3, $data['documents']);
+    }
 }
