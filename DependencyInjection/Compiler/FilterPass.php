@@ -12,13 +12,11 @@
 namespace ONGR\FilterManagerBundle\DependencyInjection\Compiler;
 
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
-use ONGR\FilterManagerBundle\Filters\FilterInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Compiles custom filters.
@@ -30,47 +28,31 @@ class FilterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
+            $tag = array_shift($filterTags);
+            if (!array_key_exists('filter_name', $tag)) {
+                throw new InvalidConfigurationException(
+                    sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
+                );
+            }
+
+            $filterLabel = ONGRFilterManagerExtension::getFilterId($tag['filter_name']);
+            if ($filterLabel === $filterId) {
+                continue;
+            }
+
+            if ($container->hasDefinition($filterLabel)) {
+                throw new InvalidConfigurationException(
+                    "Found duplicate filter name `{$tag['filter_name']}`"
+                );
+            }
+            $container->setDefinition($filterLabel, $container->getDefinition($filterId));
+        }
+
         foreach ($container->findTaggedServiceIds('es.filter_manager') as $managerId => $managerTags) {
             $managerDefinition = $container->getDefinition($managerId);
-            
-            foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
-                foreach ($filterTags as $tag) {
-                    if (array_key_exists('manager', $tag)
-                        && $managerId === ONGRFilterManagerExtension::getFilterManagerId($tag['manager'])
-                    ) {
-                        if (!array_key_exists('filter_name', $tag)) {
-                            throw new InvalidConfigurationException(
-                                sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
-                            );
-                        }
-
-                        $this->addFilter($managerDefinition, $tag['filter_name'], $filterId);
-                        $container->setDefinition($managerId, $managerDefinition);
-                    }
-                }
-            }
             $this->checkManager($managerDefinition, "Manager '{$managerId}' does not have any filters.");
         }
-    }
-
-    /**
-     * Adds filter to manager definition by id and name.
-     *
-     * @param Definition $manager
-     * @param string     $filterName
-     * @param string     $filterId
-     */
-    private function addFilter($manager, $filterName, $filterId)
-    {
-        $filtersContainer = $manager->getArgument(0);
-        $filtersContainer->addMethodCall(
-            'set',
-            [
-                $filterName,
-                new Reference($filterId),
-            ]
-        );
-        $manager->replaceArgument(0, $filtersContainer);
     }
 
     /**
