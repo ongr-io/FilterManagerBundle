@@ -46,7 +46,7 @@ class FilterPass implements CompilerPassInterface
                         "Found duplicate filter name `{$tag['filter_name']}`"
                     );
                 }
-                $container->setDefinition($filterLabel, $container->getDefinition($filterId));
+                $container->setAlias($filterLabel, $filterId);
             }
         }
 

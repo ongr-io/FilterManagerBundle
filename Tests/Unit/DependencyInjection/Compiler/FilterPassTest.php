@@ -95,7 +95,7 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
      * Tests duplicated filter name exception.
      *
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Found duplicate filter name `foo_filter`
+     * @expectedExceptionMessage Found duplicate filter name `bar_filter`
      */
     public function testDuplicateFilterName()
     {
@@ -104,14 +104,14 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
             [
                 'ongr_filter_manager.filter.foo_filter' => [
                     [
-                        'filter_name' => 'foo_filter'
+                        'filter_name' => 'bar_filter'
                     ],
                 ],
             ]
         );
 
         $this->container->expects($this->once())
-            ->method('hasDefinition')
+            ->method('has')
             ->with($this->anything())
             ->willReturn(true);
 
@@ -165,7 +165,7 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->container->expects($this->exactly(2))
-            ->method('setDefinition')
+            ->method('setAlias')
             ->withConsecutive(
                 [$this->equalTo('ongr_filter_manager.filter.foo_filter'), $this->anything()],
                 [$this->equalTo('ongr_filter_manager.filter.bar_filter'), $this->anything()]
