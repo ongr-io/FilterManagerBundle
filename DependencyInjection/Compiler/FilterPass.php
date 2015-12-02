@@ -29,24 +29,25 @@ class FilterPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
-            $tag = array_shift($filterTags);
-            if (!array_key_exists('filter_name', $tag)) {
-                throw new InvalidConfigurationException(
-                    sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
-                );
-            }
+            foreach ($filterTags as $tag) {
+                if (!array_key_exists('filter_name', $tag)) {
+                    throw new InvalidConfigurationException(
+                        sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
+                    );
+                }
 
-            $filterLabel = ONGRFilterManagerExtension::getFilterId($tag['filter_name']);
-            if ($filterLabel === $filterId) {
-                continue;
-            }
+                $filterLabel = ONGRFilterManagerExtension::getFilterId($tag['filter_name']);
+                if ($filterLabel === $filterId) {
+                    continue;
+                }
 
-            if ($container->hasDefinition($filterLabel)) {
-                throw new InvalidConfigurationException(
-                    "Found duplicate filter name `{$tag['filter_name']}`"
-                );
+                if ($container->has($filterLabel)) {
+                    throw new InvalidConfigurationException(
+                        "Found duplicate filter name `{$tag['filter_name']}`"
+                    );
+                }
+                $container->setDefinition($filterLabel, $container->getDefinition($filterId));
             }
-            $container->setDefinition($filterLabel, $container->getDefinition($filterId));
         }
 
         foreach ($container->findTaggedServiceIds('es.filter_manager') as $managerId => $managerTags) {
