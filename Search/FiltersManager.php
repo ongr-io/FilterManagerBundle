@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class is entry point for search request execution.
  */
-class FiltersManager
+class FiltersManager implements FiltersManagerInterface
 {
     /**
      * @var FiltersContainer
@@ -48,11 +48,7 @@ class FiltersManager
     }
 
     /**
-     * Generates and executes search request.
-     *
-     * @param Request $request
-     *
-     * @return SearchResponse
+     * {@inheritdoc}
      */
     public function execute(Request $request)
     {
