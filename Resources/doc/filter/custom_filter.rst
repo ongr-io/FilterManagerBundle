@@ -1,7 +1,7 @@
 Custom Filter
 =============
 
-There is possibility to add custom filters to filter managers via tagged filter service.
+There is possibility to add custom filters to filter managers.
 You must create filter class, define it as a service with ``ongr_filter_manager.filter`` tag.
 
 1. Create filter class
@@ -67,8 +67,7 @@ Class must implement ``FilterInterface``.
 2. Defining service
 -------------------
 
-Filter service must be tagged with ``ongr_filter_manager.filter`` tag, ``manager`` and ``filter_name`` nodes are required.
-Filter will be added to specified ``manager``  ``FilterContainer``.
+Filter service must be tagged with ``ongr_filter_manager.filter`` tag, ``filter_name`` node is required.
 
 .. code-block:: yaml
 
@@ -82,7 +81,7 @@ Filter will be added to specified ``manager``  ``FilterContainer``.
           - 'price'
           - 'price'
         tags:
-            - { name: ongr_filter_manager.filter, manager: foo_filters, filter_name: foo_range }
+            - { name: ongr_filter_manager.filter, filter_name: foo_range }
 
 Arguments from service definition can be passed to filters constructor.
 
@@ -104,8 +103,26 @@ Filter example can be found `here <https://github.com/ongr-io/FilterManagerBundl
 
 Services `configuration <https://github.com/ongr-io/FilterManagerBundle/blob/master/Tests/app/fixture/Acme/TestBundle/Resources/config/services.yml>`_.
 
+3. Configuration
+----------------
 
-3. Using filter
+Add filter to specific manager at bundle's configuration. The same way as any other filter.
+
+Example:
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+
+    ongr_filter_manager:
+        managers:
+            item_list:
+                filters:
+                    - foo_range
+                repository: 'item'
+..
+
+4. Using filter
 ---------------
 
-Filter can be used as other filters trough ``FilterManager``, see FilterManager bundle usage `documentation <../usage.html>`_.
+Filter can be used as other filters through ``FilterManager``, see FilterManager bundle usage `documentation <../usage.html>`_.

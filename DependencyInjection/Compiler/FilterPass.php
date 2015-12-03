@@ -12,7 +12,6 @@
 namespace ONGR\FilterManagerBundle\DependencyInjection\Compiler;
 
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
-use ONGR\FilterManagerBundle\Filters\FilterInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,25 +29,29 @@ class FilterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        foreach ($container->findTaggedServiceIds('es.filter_manager') as $managerId => $managerTags) {
-            $managerDefinition = $container->getDefinition($managerId);
-            
-            foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
-                foreach ($filterTags as $tag) {
-                    if (array_key_exists('manager', $tag)
-                        && $managerId === ONGRFilterManagerExtension::getFilterManagerId($tag['manager'])
-                    ) {
-                        if (!array_key_exists('filter_name', $tag)) {
-                            throw new InvalidConfigurationException(
-                                sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
-                            );
-                        }
+        foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
+            foreach ($filterTags as $tag) {
+                if (!array_key_exists('filter_name', $tag)) {
+                    throw new InvalidConfigurationException(
+                        sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
+                    );
+                }
 
-                        $this->addFilter($managerDefinition, $tag['filter_name'], $filterId);
-                        $container->setDefinition($managerId, $managerDefinition);
-                    }
+                $filterName = $tag['filter_name'];
+                $filterLabel = ONGRFilterManagerExtension::getFilterId($filterName);
+
+                if (array_key_exists('manager', $tag)) {
+                    $this->addFilter($container, $tag['manager'], $filterName, $filterId);
+                }
+
+                if ($filterLabel !== $filterId && !$container->has($filterLabel)) {
+                    $container->setAlias($filterLabel, $filterId);
                 }
             }
+        }
+
+        foreach ($container->findTaggedServiceIds('es.filter_manager') as $managerId => $managerTags) {
+            $managerDefinition = $container->getDefinition($managerId);
             $this->checkManager($managerDefinition, "Manager '{$managerId}' does not have any filters.");
         }
     }
@@ -56,13 +59,32 @@ class FilterPass implements CompilerPassInterface
     /**
      * Adds filter to manager definition by id and name.
      *
-     * @param Definition $manager
-     * @param string     $filterName
-     * @param string     $filterId
+     * @param ContainerBuilder $container
+     * @param string           $managerName
+     * @param string           $filterName
+     * @param string           $filterId
      */
-    private function addFilter($manager, $filterName, $filterId)
+    private function addFilter($container, $managerName, $filterName, $filterId)
     {
-        $filtersContainer = $manager->getArgument(0);
+        trigger_error(
+            sprintf(
+                'Manager `%s` assignation at filter\'s `%s` definition found. '
+                . 'Filter should be added to manager at manager\'s configuration.',
+                $managerName,
+                $filterName
+            ),
+            E_USER_DEPRECATED
+        );
+        try {
+            $managerDefinition = $container
+                ->getDefinition(ONGRFilterManagerExtension::getFilterManagerId($managerName));
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidConfigurationException(
+                sprintf('Manager `%s` defined at filter `%s` configuration does not exist.', $managerName, $filterName)
+            );
+        }
+
+        $filtersContainer = $managerDefinition->getArgument(0);
         $filtersContainer->addMethodCall(
             'set',
             [
@@ -70,7 +92,9 @@ class FilterPass implements CompilerPassInterface
                 new Reference($filterId),
             ]
         );
-        $manager->replaceArgument(0, $filtersContainer);
+        $managerDefinition->replaceArgument(0, $filtersContainer);
+
+        $container->setDefinition($managerName, $managerDefinition);
     }
 
     /**
