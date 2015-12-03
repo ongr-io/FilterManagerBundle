@@ -45,10 +45,10 @@ ongr_elasticsearch:
 ongr_filter_manager:
     managers:
         foo_filters:
-            filters: ['phrase', 'single_choice']
+            filters: ['phrase', 'single_choice', 'foo_range']
             repository: 'es.manager.default.product'
         bar_filters:
-            filters: ['sort', 'inclusive_range']
+            filters: ['sort', 'inclusive_range', 'bar_range']
             repository: 'es.manager.default.product'
         range_filters:
             filters: ['date']
