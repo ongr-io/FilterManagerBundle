@@ -56,7 +56,8 @@ class PagerExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('ongr_paginate', [$this, 'paginate'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('ongr_paginate', [$this, 'paginate'],
+                ['is_safe' => ['html'], 'needs_environment' => true]),
             new \Twig_SimpleFunction('ongr_paginate_path', [$this, 'path'], ['is_safe' => []]),
         ];
     }
@@ -64,20 +65,23 @@ class PagerExtension extends \Twig_Extension
     /**
      * Renders pagination element.
      *
-     * @param PagerService $pager
-     * @param string       $route
-     * @param array        $parameters
-     * @param string       $template
+     * @param \Twig_Environment $env
+     * @param PagerService      $pager
+     * @param string            $route
+     * @param array             $parameters
+     * @param string            $template
      *
      * @return string
      */
     public function paginate(
+        \Twig_Environment $env,
         PagerService $pager,
         $route,
         array $parameters = [],
         $template = 'ONGRFilterManagerBundle:Pager:paginate.html.twig'
     ) {
-        return $this->environment->render(
+
+        return $env->render(
             $template,
             ['pager' => $pager, 'route' => $route, 'parameters' => $parameters]
         );
