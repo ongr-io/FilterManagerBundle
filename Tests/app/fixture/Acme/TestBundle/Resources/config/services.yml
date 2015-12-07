@@ -10,7 +10,7 @@ services:
       - 'price'
       - 'price'
     tags:
-        - { name: ongr_filter_manager.filter, manager: foo_filters, filter_name: foo_range }
+        - { name: ongr_filter_manager.filter, filter_name: foo_range }
 
   ongr_filter_manager.filter.bar_range:
       class: %ongr_filter_manager.filter.bar_range.class%
@@ -18,12 +18,4 @@ services:
         - 'range'
         - 'price'
       tags:
-          - { name: ongr_filter_manager.filter, manager: bar_filters, filter_name: bar_range }
-
-  ongr_filter_manager.filter.bar_range_no_manager:
-        class: %ongr_filter_manager.filter.bar_range.class%
-        arguments:
-          - 'range'
-          - 'price'
-        tags:
-            - { name: ongr_filter_manager.filter, filter_name: bar_range_no_manager }
+          - { name: ongr_filter_manager.filter, filter_name: bar_range }

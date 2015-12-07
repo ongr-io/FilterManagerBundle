@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Definition;
 class FilterPassTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ContainerBuilder
+     * @var ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject
      */
     private $container;
 
@@ -79,17 +79,41 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
     public function testFilterNameTagNotSet()
     {
         $this->setContainerConfig(
+            [],
             [
-                'ongr_filter_manager.foo_filters' => [],
-            ],
+                'ongr_filter_manager.filter.foo_filter' => [
+                    [],
+                ],
+            ]
+        );
+
+        $compilerPass = new FilterPass();
+        $compilerPass->process($this->container);
+    }
+
+    /**
+     * Tests duplicated filter name exception.
+     *
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Found duplicate filter name `bar_filter`
+     */
+    public function testDuplicateFilterName()
+    {
+        $this->setContainerConfig(
+            [],
             [
                 'ongr_filter_manager.filter.foo_filter' => [
                     [
-                        'manager' => 'foo_filters',
+                        'filter_name' => 'bar_filter'
                     ],
                 ],
             ]
         );
+
+        $this->container->expects($this->once())
+            ->method('has')
+            ->with($this->anything())
+            ->willReturn(true);
 
         $compilerPass = new FilterPass();
         $compilerPass->process($this->container);
@@ -117,21 +141,35 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
     /**
      * Test FilterPass with correct configuration.
      */
-    public function testAddMethodCall()
+    public function testSetDefinitions()
     {
         $this->setContainerConfig(
+            [],
             [
-                'ongr_filter_manager.foo_filters' => [],
-            ],
-            [
-                'ongr_filter_manager.filter.foo_filter' => [
+                'custom.filters.foo' => [
                     [
-                        'manager' => 'foo_filters',
-                        'filter_name' => 'foo_filter',
+                        'filter_name' => 'foo_filter'
+                    ],
+                ],
+                'custom.filters.bar' => [
+                    [
+                        'filter_name' => 'bar_filter'
+                    ],
+                ],
+                'ongr_filter_manager.filter.qux_filter' => [
+                    [
+                        'filter_name' => 'qux_filter'
                     ],
                 ],
             ]
         );
+
+        $this->container->expects($this->exactly(2))
+            ->method('setAlias')
+            ->withConsecutive(
+                [$this->equalTo('ongr_filter_manager.filter.foo_filter'), $this->anything()],
+                [$this->equalTo('ongr_filter_manager.filter.bar_filter'), $this->anything()]
+            );
 
         $compilerPass = new FilterPass();
         $compilerPass->process($this->container);
