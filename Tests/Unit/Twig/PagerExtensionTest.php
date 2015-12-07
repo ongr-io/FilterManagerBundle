@@ -73,7 +73,7 @@ class PagerExtensionTest extends \PHPUnit_Framework_TestCase
         $parameters = [];
         $template = 'tpl';
 
-        $result = $this->pagerExtension->paginate($pager, $route, $parameters, $template);
+        $result = $this->pagerExtension->paginate($twigEnvironment, $pager, $route, $parameters, $template);
         $this->assertNotEmpty($result);
     }
 

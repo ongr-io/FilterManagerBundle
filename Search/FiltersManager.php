@@ -66,7 +66,7 @@ class FiltersManager implements FiltersManagerInterface
     {
         $search = $this->container->buildSearch($request);
 
-        /** @var FilterInterface[] $filters */
+        /** @var FilterInterface $filter */
         foreach ($this->container->all() as $name => $filter) {
             // We simply exclude not related filters and current filter itself.
             $relatedFilters = $this->container->getFiltersByRelation(
