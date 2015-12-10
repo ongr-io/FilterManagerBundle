@@ -59,8 +59,6 @@ class PagerExtensionTest extends \PHPUnit_Framework_TestCase
     public function testPaginate()
     {
         $twigEnvironment = $this->getMock('\Twig_Environment');
-        $this->pagerExtension->initRuntime($twigEnvironment);
-
         $twigEnvironment->expects($this->once())
             ->method('render')
             ->will($this->returnValue('result'));
