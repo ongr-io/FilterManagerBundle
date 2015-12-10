@@ -30,24 +30,11 @@ class PagerExtension extends \Twig_Extension
     protected $router;
 
     /**
-     * @var \Twig_Environment
-     */
-    protected $environment;
-
-    /**
      * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        $this->environment = $environment;
     }
 
     /**
