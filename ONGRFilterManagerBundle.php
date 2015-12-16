@@ -44,7 +44,6 @@ class ONGRFilterManagerBundle extends Bundle
         $extension->addFilterFactory(new MultiChoiceFilterFactory());
         $extension->addFilterFactory(new MatchFilterFactory());
         $extension->addFilterFactory(new FuzzyFilterFactory());
-        $extension->addFilterFactory(new DocumentFieldFilterFactory());
         $extension->addFilterFactory(new SortFilterFactory());
         $extension->addFilterFactory(new PagerFilterFactory());
         $extension->addFilterFactory(new RangeFilterFactory());
