@@ -17,6 +17,7 @@ List of filters provided by this bundle.
 - [Choice](filter/choice.md)
 - [Multi choice](filter/multi_choice.md)
 - [Match](filter/match.md)
+- [Fuzzy](filter/fuzzy_search.md)
 - [Pager](filter/pager.md)
 - [Sort](filter/sort.md)
 - [Range](filter/range.md)
