@@ -12,12 +12,15 @@ matrix:
     - php: hhvm
 before_script:
   - composer config -g github-oauth.github.com $GITHUB_COMPOSER_AUTH
+  - composer global require squizlabs/php_codesniffer --no-interaction
+  - composer global require satooshi/php-coveralls --no-interaction
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer install --no-interaction
 script:
   - vendor/bin/phpunit --coverage-clover=coveralls.clover
-  - vendor/bin/phpcs -p --standard=PSR2 --ignore=vendor/,Tests/app/ ./
+  - phpcs -p --standard=PSR2 --ignore=vendor/,Tests/app/ ./
 after_script:
-  - vendor/bin/coveralls
+  - coveralls
 notifications:
   webhooks:
     urls:

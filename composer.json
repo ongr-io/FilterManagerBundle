@@ -1,6 +1,6 @@
 {
     "name": "ongr/filter-manager-bundle",
-    "description": "Filter manager bundle for product lists",
+    "description": "Filter manager bundle for document lists",
     "type": "symfony-bundle",
     "homepage": "http://ongr.io",
     "license": "MIT",
@@ -17,11 +17,11 @@
     },
     "require-dev": {
         "monolog/monolog": "~1.0",
-        "phpunit/phpunit": "~4.4",
-        "squizlabs/php_codesniffer": "~2.4",
-        "satooshi/php-coveralls": "dev-master"
+        "phpunit/phpunit": "~4.4"
     },
     "autoload": {
-        "psr-4": { "ONGR\\FilterManagerBundle\\": "" }
+        "psr-4": {
+            "ONGR\\FilterManagerBundle\\": ""
+        }
     }
 }
