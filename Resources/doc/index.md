@@ -19,5 +19,6 @@ List of filters provided by this bundle.
 - [Match](filter/match.md)
 - [Pager](filter/pager.md)
 - [Sort](filter/sort.md)
+- [Range](filter/range.md)
 - [Custom filter](filter/custom_filter.md)
 - [Document field](filter/document_field.md)
