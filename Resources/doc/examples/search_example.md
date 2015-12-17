@@ -55,6 +55,13 @@ class Product extends AbstractDocument
      * @ES\Property(name="image", type="string", options={"index"="no"})
      */
     public $image;
+
+    /**
+     * @var bool
+     *
+     * @ES\Property(name="active", type="boolean")
+     */
+    public $active;
 }
 
 ```
@@ -97,6 +104,10 @@ ongr_filter_manager:
             search_pager:
                 request_field: 'page'
                 count_per_page: 5
+        field_value:
+            only_active:
+                field: 'active'
+                value: true
         sort:
             search_sort:
                 request_field: 'sort'
@@ -140,6 +151,7 @@ Documents can be accessed through `filter_manager.getResult()`. To make a dummy 
         <li>Country: {{ product.country }}</li>
         <li>Weight: {{ product.weight }}</li>
         <li>Image URL: {{ product.image }}</li>
+        <li>Active: {{ product.active }}</li>
     </ul>
 {% endfor %}
 ```
