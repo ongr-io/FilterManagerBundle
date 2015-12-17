@@ -70,19 +70,19 @@ ongr_elasticsearch:
 
 ongr_filter_manager:
     managers:
-        item_list: # <- Filter manager name
+        search_list: # <- Filter manager name
             filters:
                 - country
-            repository: 'es.manager.default.item'
+            repository: 'es.manager.default.product'
     filters:
         choice:
             country: # <- Filter name
                 request_field: 'country'
                 field: country
 ```
-> Note that `Item` document has to be defined. More about that in ElasticsearchBundle [documentation](https://github.com/ongr-io/ElasticsearchBundle/blob/master/Resources/doc/mapping.md).
+> Note that `Product` document has to be defined. More about that in ElasticsearchBundle [documentation](https://github.com/ongr-io/ElasticsearchBundle/blob/master/Resources/doc/mapping.md).
 
-In this particular example, we defined a single filter manager named `item_list` to filter documents from item repository, and we will be using the filter named `country` to filter on countries defined in document.
+In this particular example, we defined a single filter manager named `search_list` to filter documents from product repository, and we will be using the filter named `country` to filter on countries defined in document.
 
 ### Step 4: Use your new bundle
 
