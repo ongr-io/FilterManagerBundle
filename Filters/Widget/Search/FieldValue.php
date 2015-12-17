@@ -27,7 +27,7 @@ class FieldValue extends AbstractSingleValue implements RelationsAwareInterface
 {
     use RelationsAwareTrait;
 
-        /**
+    /**
      * @var string
      */
     protected $value;
