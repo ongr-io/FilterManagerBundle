@@ -94,6 +94,7 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('range'))
                         ->append($this->buildFilterTree('date_range'))
                         ->append($this->buildFilterTree('variant'))
+                        ->append($this->buildFilterTree('field_value'))
                     ->end()
                 ->end()
             ->end();
@@ -123,10 +124,6 @@ class Configuration implements ConfigurationInterface
                             ->append($this->buildRelationsTree('reset'))
                         ->end()
                     ->end()
-                    ->scalarNode('request_field')
-                        ->info('URL parameter name.')
-                        ->isRequired()
-                    ->end()
                     ->scalarNode('field')
                         ->info('Document field name.')
                     ->end()
@@ -135,6 +132,16 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()
                     ->end()
                 ->end();
+
+        if ($filterName != 'field_value') {
+            $node
+                ->children()
+                    ->scalarNode('request_field')
+                        ->info('URL parameter name.')
+                        ->isRequired()
+                    ->end()
+                ->end();
+        }
 
         switch ($filterName) {
             case 'choice':
@@ -247,6 +254,14 @@ class Configuration implements ConfigurationInterface
                             ->info('Whether filter should match range ends.')
                             ->defaultFalse()
                         ->end()
+                    ->end();
+                break;
+            case 'field_value':
+                $node
+                    ->children()
+                        ->scalarNode('value')
+                            ->info('Value which will be used for filtering.')
+                            ->isRequired()
                     ->end();
                 break;
             default:
