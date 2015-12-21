@@ -2,6 +2,7 @@
 
 In this example simple search page will be implemented. Multiple fields with different boosting will be used in search.
 In configuration we will search in `title` and `color` fields. `color` will be boosted by `2` and `title` by `0.5` (deboosting).
+Boosting is done by suffixing field name with `^{boost_factor}`, e.g `title^2` ,`color^0.5`. 
 
 ## Preparation
 
@@ -103,8 +104,6 @@ Create index with `app/console ongr:es:index:create`.
 Create file `products.json` with following content:
 
 ```json
-# products.json
-
 [
 {"count":4,"date":"2015-12-21T14:42:17+0200"},
 {"_type":"product","_id":"1","_source":{"title":"iPhone","color":"White"}},
@@ -121,10 +120,6 @@ Import this data with `app/console ongr:es:index:import products.json` command.
 Now if you go to `example.com/search_boosted` you should see page with search form and list of products.
 
 If you type in "white" in input and press `Search` then these results (in this order) will be shown:
-- `White iPhone`
-- `iPhone`
-- `iPad with white edges`
-
-`White iPhone` is first because it has word "white" in both fields `title` and `color`. 
-`iPhone` is second because it has "white" in `color` field which is boosted more than `title`.
-`iPad with white edges` is last because it has "white" only in `title`.
+- `White iPhone` is first because it has word "white" in both fields `title` and `color`.
+- `iPhone` is second because it has "white" in `color` field which is boosted more than `title`.
+- `iPad with white edges` is last because it has "white" only in `title`.
