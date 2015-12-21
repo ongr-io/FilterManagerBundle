@@ -1,11 +1,7 @@
-parameters:
-    ongr_filter_manager.twig.pager_extension.class: ONGR\FilterManagerBundle\Twig\PagerExtension
-    ongr_filter_manager.search.filters_manager.class: ONGR\FilterManagerBundle\Search\FiltersManager
-
 services:
     ongr_filter_manager.twig.pager_extension:
-            class: %ongr_filter_manager.twig.pager_extension.class%
+            class: ONGR\FilterManagerBundle\Twig\PagerExtension
             arguments:
-                - @router
+                - '@router'
             tags:
                 - { name: twig.extension }
