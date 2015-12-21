@@ -31,7 +31,13 @@ class MatchSearch extends AbstractSingleValue
             if (strpos($this->getField(), ',') !== false) {
                 $subQuery = new BoolQuery();
                 foreach (explode(',', $this->getField()) as $field) {
-                    $subQuery->add(new MatchQuery($field, $state->getValue()), 'should');
+                    if (strpos($field, '^') === false) {
+                        $subQuery->add(new MatchQuery($field, $state->getValue()), 'should');
+                    } else {
+                        list ($field, $boost) = explode('^', $field);
+
+                        $subQuery->add(new MatchQuery($field, $state->getValue(), ['boost' => $boost]), 'should');
+                    }
                 }
                 $search->addQuery($subQuery, 'must');
             } else {
