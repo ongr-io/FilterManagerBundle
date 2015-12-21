@@ -6,6 +6,6 @@ services:
     ongr_filter_manager.twig.pager_extension:
             class: %ongr_filter_manager.twig.pager_extension.class%
             arguments:
-                - @router
+                - '@router'
             tags:
                 - { name: twig.extension }
