@@ -59,7 +59,7 @@ class Product extends AbstractDocument
     /**
      * @var string
      *
-     * @ES\Property(name="color", type="string", options={"index"="not_analyzed"})
+     * @ES\Property(name="color", type="string")
      */
     public $color;
 }
