@@ -149,7 +149,7 @@ class ONGRFilterManagerExtension extends Extension
             }
 
             $managerDefinition = new Definition(
-                $container->getParameter('ongr_filter_manager.search.filters_manager.class'),
+                'ONGR\FilterManagerBundle\Search\FiltersManager',
                 [
                     $filtersContainer,
                     new Reference($manager['repository']),
