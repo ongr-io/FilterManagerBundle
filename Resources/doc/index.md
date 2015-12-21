@@ -10,6 +10,7 @@
 - [Using custom controller](examples/custom_controller.md)
 - [Using as JSON API](examples/json_api.md)
 - [Writing custom filter](examples/custom_filter.md)
+- [Searching in specific fields with boosting](examples/fields_boosting.md)
 
 ## Filters
 
