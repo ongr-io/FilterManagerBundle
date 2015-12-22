@@ -33,7 +33,7 @@ class DocumentFieldFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Search\DocumentField';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Search\DocumentField';
     }
 
     /**

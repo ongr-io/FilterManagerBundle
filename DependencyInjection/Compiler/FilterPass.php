@@ -59,15 +59,15 @@ class FilterPass implements CompilerPassInterface
     /**
      * Checks if manager definition has any filters set.
      *
-     * @param Definition $filtersManager
+     * @param Definition $filterManager
      * @param string     $message
      *
      * @throws InvalidArgumentException
      */
-    private function checkManager(Definition $filtersManager, $message = '')
+    private function checkManager(Definition $filterManager, $message = '')
     {
-        $filtersContainer = $filtersManager->getArgument(0);
-        if (!$filtersContainer->hasMethodCall('set')) {
+        $filterContainer = $filterManager->getArgument(0);
+        if (!$filterContainer->hasMethodCall('set')) {
             throw new InvalidArgumentException($message);
         }
     }

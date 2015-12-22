@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use ONGR\FilterManagerBundle\DependencyInjection\Compiler\FilterPass;
-use ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filters\FooRange\FooRange;
+use ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filter\FooRange\FooRange;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 

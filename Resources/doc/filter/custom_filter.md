@@ -18,10 +18,10 @@ use ONGR\ElasticsearchDSL\Filter\TermFilter;
 use ONGR\ElasticsearchDSL\Query\FunctionScoreQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Search;
-use ONGR\FilterManagerBundle\Filters\FilterInterface;
-use ONGR\FilterManagerBundle\Filters\FilterState;
-use ONGR\FilterManagerBundle\Filters\ViewData;
-use ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice;
+use ONGR\FilterManagerBundle\Filter\FilterInterface;
+use ONGR\FilterManagerBundle\Filter\FilterState;
+use ONGR\FilterManagerBundle\Filter\ViewData;
+use ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**

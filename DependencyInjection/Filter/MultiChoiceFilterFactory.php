@@ -21,7 +21,7 @@ class MultiChoiceFilterFactory extends ChoiceFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice';
     }
 
     /**

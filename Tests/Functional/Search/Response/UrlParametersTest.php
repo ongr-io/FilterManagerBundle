@@ -12,9 +12,9 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Response;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
-use ONGR\FilterManagerBundle\Search\FiltersContainer;
-use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -56,11 +56,11 @@ class UrlParametersTest extends AbstractElasticsearchTestCase
     /**
      * Return any kind of filters manager to test.
      *
-     * @return FiltersManager
+     * @return FilterManager
      */
     protected function getFilterManager()
     {
-        $container = new FiltersContainer();
+        $container = new FilterContainer();
 
         $filter = new MatchSearch();
         $filter->setField('title');
@@ -72,7 +72,7 @@ class UrlParametersTest extends AbstractElasticsearchTestCase
         $filter->setRequestField('d');
         $container->set('description_match', $filter);
 
-        return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
     }
 
     /**

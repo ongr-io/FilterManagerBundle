@@ -13,7 +13,7 @@ namespace ONGR\FilterManagerBundle\Test;
 
 use ONGR\ElasticsearchBundle\Document\DocumentInterface;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,9 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class AbstractFilterManagerResultsTest extends AbstractElasticsearchTestCase
 {
     /**
-     * Return any kind of filters manager to test.
+     * Return any kind of filter manager to test.
      *
-     * @return FiltersManager
+     * @return FilterManager
      */
     abstract protected function getFilterManager();
 

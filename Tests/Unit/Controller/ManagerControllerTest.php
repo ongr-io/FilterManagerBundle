@@ -31,7 +31,7 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $managerMock = $this
-            ->getMockBuilder('ONGR\FilterManagerBundle\Search\FiltersManager')
+            ->getMockBuilder('ONGR\FilterManagerBundle\Search\FilterManager')
             ->disableOriginalConstructor()
             ->setMethods(['execute'])
             ->getMock();

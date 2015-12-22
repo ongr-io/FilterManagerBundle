@@ -40,7 +40,7 @@ class FuzzyFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Search\FuzzySearch';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch';
     }
 
     /**
