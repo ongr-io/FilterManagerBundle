@@ -19,11 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
 interface FiltersManagerInterface
 {
     /**
-     * Generates and executes search request.
+     * Handles search request.
      *
      * @param Request $request
      *
      * @return SearchResponse
      */
-    public function execute(Request $request);
+    public function handleRequest(Request $request);
 }

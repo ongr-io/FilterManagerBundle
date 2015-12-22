@@ -107,6 +107,6 @@ class UrlParametersTest extends AbstractElasticsearchTestCase
      */
     public function testUrlParameters(Request $request, $expected)
     {
-        $this->assertEquals($expected, $this->getFilterManager()->execute($request)->getUrlParameters());
+        $this->assertEquals($expected, $this->getFilterManager()->handleRequest($request)->getUrlParameters());
     }
 }

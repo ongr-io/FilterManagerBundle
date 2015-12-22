@@ -107,7 +107,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
     {
         /** @var ChoicesAwareViewData $result */
         $result = $this->getContainer()->get('ongr_filter_manager.foo_filters')
-            ->execute(new Request())->getFilters()['single_choice'];
+            ->handleRequest(new Request())->getFilters()['single_choice'];
 
         $expectedChoices = [
             'red',
@@ -179,7 +179,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
         $manager = new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
 
         /** @var ChoicesAwareViewData $result */
-        $result = $manager->execute(new Request())->getFilters()['choice'];
+        $result = $manager->handleRequest(new Request())->getFilters()['choice'];
 
         $actualChoices = [];
 
@@ -207,7 +207,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
         $manager = new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
 
         /** @var ChoicesAwareViewData $result */
-        $result = $manager->execute(new Request())->getFilters()['choice'];
+        $result = $manager->handleRequest(new Request())->getFilters()['choice'];
 
         $this->assertEquals(11, count($result->getChoices()));
     }

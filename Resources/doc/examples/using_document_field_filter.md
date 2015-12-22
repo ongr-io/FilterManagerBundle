@@ -159,7 +159,7 @@ class DefaultController extends Controller
 
         $cities = [];
 
-        foreach ($manager->execute($request)->getResult() as $city) {
+        foreach ($manager->handleRequest($request)->getResult() as $city) {
             $cities[] = $city->name;
         }
 

@@ -175,7 +175,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
      */
     public function testChoiceUrl(Request $request, array $expectedUrlParams)
     {
-        $result = $this->getFilterManager()->execute($request);
+        $result = $this->getFilterManager()->handleRequest($request);
 
         /** @var ChoicesAwareViewData $viewData */
         $viewData = $result->getFilters()['choice'];

@@ -33,12 +33,12 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
         $managerMock = $this
             ->getMockBuilder('ONGR\FilterManagerBundle\Search\FiltersManager')
             ->disableOriginalConstructor()
-            ->setMethods(['execute'])
+            ->setMethods(['handleRequest'])
             ->getMock();
 
         $managerMock
             ->expects($this->once())
-            ->method('execute')
+            ->method('handleRequest')
             ->with(new Request())
             ->will($this->returnValue($searchResponse));
 
