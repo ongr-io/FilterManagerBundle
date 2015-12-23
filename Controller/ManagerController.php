@@ -65,6 +65,12 @@ class ManagerController extends Controller
             ->execute($request)
             ->getSerializableData();
 
-        return new JsonResponse($data);
+        $response = new JsonResponse($data);
+
+        if ($request->query->has('pretty')) {
+            $response->setEncodingOptions(JSON_PRETTY_PRINT);
+        }
+
+        return $response;
     }
 }
