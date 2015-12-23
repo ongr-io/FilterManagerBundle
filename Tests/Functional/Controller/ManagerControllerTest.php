@@ -75,6 +75,26 @@ class ManagerControllerTest extends AbstractElasticsearchTestCase
 
         $data = json_decode($response->getContent(), true);
 
+        // Check that json is not "pretty"
+        $this->assertTrue(substr_count($response->getContent(), PHP_EOL) <= 1);
+
         $this->assertCount(3, $data['documents']);
+    }
+
+    /**
+     * Test JSON action with pretty argument.
+     */
+    public function testPrettyJsonAction()
+    {
+        // Create index by getting manager.
+        $this->getManager();
+
+        $client = static::createClient();
+        $client->request('GET', '/list.json', ['pretty' => true]);
+
+        $response = $client->getResponse();
+        $this->assertJson($response->getContent());
+
+        $this->assertTrue(substr_count($response->getContent(), PHP_EOL) > 1);
     }
 }
