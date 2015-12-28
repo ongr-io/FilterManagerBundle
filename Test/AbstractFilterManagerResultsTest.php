@@ -48,7 +48,7 @@ abstract class AbstractFilterManagerResultsTest extends AbstractElasticsearchTes
     {
         $actual = array_map(
             [$this, 'fetchDocumentId'],
-            iterator_to_array($this->getFilterManager()->execute($request)->getResult())
+            iterator_to_array($this->getFilterManager()->handleRequest($request)->getResult())
         );
 
         if (!$assertOrder) {

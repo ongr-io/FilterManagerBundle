@@ -92,7 +92,7 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
         $container->set('fuzzy', $fuzzy);
 
         $fmb = new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
-        $result = $fmb->execute($request);
+        $result = $fmb->handleRequest($request);
 
         $actual = [];
         foreach ($result->getResult() as $doc) {

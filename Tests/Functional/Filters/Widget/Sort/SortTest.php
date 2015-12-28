@@ -199,7 +199,7 @@ class SortTest extends AbstractElasticsearchTestCase
      */
     public function testSorting(Request $request, $expectedOrder)
     {
-        $result = $this->getFiltersManager()->execute($request)->getResult();
+        $result = $this->getFiltersManager()->handleRequest($request)->getResult();
 
         $actual = [];
         /** @var DocumentInterface $document */

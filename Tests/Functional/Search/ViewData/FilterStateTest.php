@@ -117,7 +117,7 @@ class FilterStateTest extends AbstractElasticsearchTestCase
      */
     public function testFilterState(Request $request, $filter, $value, $urlParameters, $resetUrlParameters)
     {
-        $response = $this->getFilterManager()->execute($request);
+        $response = $this->getFilterManager()->handleRequest($request);
 
         /** @var ViewData $data */
         $data = $response->getFilters()[$filter];

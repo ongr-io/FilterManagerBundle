@@ -50,7 +50,7 @@ class FiltersManager implements FiltersManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(Request $request)
+    public function handleRequest(Request $request)
     {
         return $this->search($this->container->buildSearchRequest($request));
     }

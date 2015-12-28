@@ -17,9 +17,9 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
 class FiltersManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Tests execute method.
+     * Tests handleRequest() method.
      */
-    public function testExecute()
+    public function testHandleRequest()
     {
         $mockFilterState = $this->getMock('ONGR\FilterManagerBundle\Filters\FilterState');
         $mockFilterState->expects($this->any())
@@ -65,6 +65,6 @@ class FiltersManagerTest extends \PHPUnit_Framework_TestCase
             $mockFiltersContainer,
             $mockRepository
         );
-        $filtersManager->execute($this->getMock('Symfony\Component\HttpFoundation\Request'));
+        $filtersManager->handleRequest($this->getMock('Symfony\Component\HttpFoundation\Request'));
     }
 }
