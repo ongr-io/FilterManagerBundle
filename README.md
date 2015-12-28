@@ -18,6 +18,10 @@ It is important to mention that filtering is everything what has impact on list,
 [![](https://poser.pugx.org/ongr/filter-manager-bundle/v/unstable)](https://packagist.org/packages/ongr/filter-manager-bundle)
 [![](https://poser.pugx.org/ongr/filter-manager-bundle/license)](https://packagist.org/packages/ongr/filter-manager-bundle)
 
+## Documentation
+
+The online documentation of the bundle is in [Github](Resources/doc/index.md).
+
 ## Instalation
 
 ### Step 1: Install FilterManager bundle
@@ -87,11 +91,6 @@ In this particular example, we defined a single filter manager named `search_lis
 ### Step 4: Use your new bundle
 
 FilterManagerBundle is ready to use. You can take a look at our [search page example](Resources/doc/examples/search_example.md).
-
-
-## Documentation
-
-The online documentation of the bundle is in [Github](Resources/doc/index.md).
 
 ## License
 
