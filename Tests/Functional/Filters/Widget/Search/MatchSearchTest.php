@@ -94,7 +94,7 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
     {
         $this->getManager();
 
-        $result = $this->getFilerManger()->execute($request);
+        $result = $this->getFilerManger()->handleRequest($request);
 
         $actual = [];
         foreach ($result->getResult() as $doc) {

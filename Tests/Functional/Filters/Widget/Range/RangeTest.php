@@ -156,7 +156,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $this->getManager();
         foreach ($managers as $filter => $filterManager) {
             /** @var RangeAwareViewData $viewData */
-            $viewData = $filterManager->execute($request)->getFilters()[$filter];
+            $viewData = $filterManager->handleRequest($request)->getFilters()[$filter];
 
             $this->assertInstanceOf('ONGR\FilterManagerBundle\Filters\ViewData\RangeAwareViewData', $viewData);
             $this->assertEquals(1, $viewData->getMinBounds());
@@ -220,7 +220,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
         foreach ($managers as $filterManager) {
             $actual = array_map(
                 [$this, 'fetchDocumentId'],
-                iterator_to_array($filterManager->execute($request)->getResult())
+                iterator_to_array($filterManager->handleRequest($request)->getResult())
             );
 
             if (!$assertOrder) {

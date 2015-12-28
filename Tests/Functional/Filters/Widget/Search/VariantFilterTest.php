@@ -53,7 +53,7 @@ class VariantFilterTest extends AbstractElasticsearchTestCase
      *
      * @return FiltersManager
      */
-    public function getFilerManger()
+    public function getFilterManger()
     {
         $container = new FiltersContainer();
 
@@ -72,7 +72,7 @@ class VariantFilterTest extends AbstractElasticsearchTestCase
     {
         $this->getManager();
 
-        $result = $this->getFilerManger()->execute(new Request());
+        $result = $this->getFilterManger()->handleRequest(new Request());
 
         $actual = [];
         foreach ($result->getResult() as $doc) {

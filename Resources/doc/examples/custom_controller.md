@@ -53,7 +53,7 @@ class ListController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $results = $this->get('ongr_filter_manager.item_list')->execute($request);
+        $results = $this->get('ongr_filter_manager.item_list')->handleRequest($request);
 
         return $this->render(
             'AppBundle:List:results.html.twig',

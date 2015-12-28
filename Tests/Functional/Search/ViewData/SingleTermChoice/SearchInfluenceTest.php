@@ -129,7 +129,7 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
         $this->getManager();
 
         /** @var ChoicesAwareViewData $data */
-        $data = $this->getFiltersManager()->execute($request)->getFilters()[$filterName];
+        $data = $this->getFiltersManager()->handleRequest($request)->getFilters()[$filterName];
 
         $actual = [];
         foreach ($data->getChoices() as $choice) {

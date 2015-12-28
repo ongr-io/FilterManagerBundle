@@ -48,7 +48,7 @@ class ManagerController extends Controller
      */
     protected function getFilterManagerResponse($request, $name)
     {
-        return ['filter_manager' => $this->get(sprintf('ongr_filter_manager.%s', $name))->execute($request)];
+        return ['filter_manager' => $this->get(sprintf('ongr_filter_manager.%s', $name))->handleRequest($request)];
     }
 
     /**
@@ -62,7 +62,7 @@ class ManagerController extends Controller
     public function jsonAction(Request $request, $managerName)
     {
         $data = $this->get(sprintf('ongr_filter_manager.%s', $managerName))
-            ->execute($request)
+            ->handleRequest($request)
             ->getSerializableData();
 
         $response = new JsonResponse($data);
