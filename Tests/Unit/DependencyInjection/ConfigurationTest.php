@@ -72,6 +72,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 'variant' => [
                     'variant' => ['request_field' => null, 'tags' => []],
                 ],
+                'field_value' => [
+                    'only_active' => [
+                        'field' => 'active',
+                        'value' => true,
+                        'tags' => [],
+                    ],
+                ],
             ],
         ];
     }

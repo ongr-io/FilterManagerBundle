@@ -106,6 +106,10 @@ ongr_filter_manager:
                 fuzziness: 5
                 prefix_length: 0
                 max_expansions: 50
+        field_value:
+            only_active:
+                field: 'active'
+                value: true
         sort:
             sort:
                 request_field: 'sort'

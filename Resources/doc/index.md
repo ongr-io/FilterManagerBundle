@@ -23,4 +23,6 @@ List of filters provided by this bundle.
 - [Pager](filter/pager.md)
 - [Sort](filter/sort.md)
 - [Range](filter/range.md)
+- [Field value](filter/field_value.md)
+- [Custom filter](filter/custom_filter.md)
 - [Document field](filter/document_field.md)
