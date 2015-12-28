@@ -89,7 +89,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig = $baseConfig;
         $expectedBaseConfig['filters']['pager']['paging']['count_per_page'] = 10;
         $expectedBaseConfig['filters']['pager']['paging']['max_pages'] = 8;
-        $expectedBaseConfig['filters']['document_field'] = [];
         $expectedBaseConfig['filters']['choice'] = [
             'single_choice' => ['request_field' => 'choice', 'tags' => ['badged']],
         ];
@@ -123,7 +122,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['field'] = 'test';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['order'] = 'asc';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][0]['mode'] = null;
-        unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['multi_choice']);
         unset($customConfig['filters']['fuzzy']);
         $cases[] = [
@@ -148,7 +146,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['field'] = 'date';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['order'] = 'desc';
         $expectedConfig['filters']['sort']['sorting']['choices'][0]['fields'][1]['mode'] = null;
-        unset($customConfig['filters']['document_field']);
         unset($customConfig['filters']['multi_choice']);
         unset($customConfig['filters']['fuzzy']);
         $cases[] = [

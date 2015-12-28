@@ -90,7 +90,6 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('fuzzy'))
                         ->append($this->buildFilterTree('sort'))
                         ->append($this->buildFilterTree('pager'))
-                        ->append($this->buildFilterTree('document_field'))
                         ->append($this->buildFilterTree('range'))
                         ->append($this->buildFilterTree('date_range'))
                         ->append($this->buildFilterTree('variant'))
