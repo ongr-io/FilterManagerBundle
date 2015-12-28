@@ -12,7 +12,7 @@ It is important to mention that filtering is everything what has impact on list,
 [![](https://travis-ci.org/ongr-io/FilterManagerBundle.svg?branch=master)](https://travis-ci.org/ongr-io/FilterManagerBundle)
 [![](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/?branch=master)
 [![](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/?branch=master)
-[![](https://insight.sensiolabs.com/projects/44c0f05e-a9a8-41ab-9acf-1225cef2887c/mini.png)](https://insight.sensiolabs.com/projects/44c0f05e-a9a8-41ab-9acf-1225cef2887c)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/85da870f-6b31-48bd-885c-5b6203f25041/mini.png)](https://insight.sensiolabs.com/projects/85da870f-6b31-48bd-885c-5b6203f25041)
 [![](https://poser.pugx.org/ongr/filter-manager-bundle/downloads)](https://packagist.org/packages/ongr/filter-manager-bundle)
 [![](https://poser.pugx.org/ongr/filter-manager-bundle/v/stable)](https://packagist.org/packages/ongr/filter-manager-bundle)
 [![](https://poser.pugx.org/ongr/filter-manager-bundle/v/unstable)](https://packagist.org/packages/ongr/filter-manager-bundle)
