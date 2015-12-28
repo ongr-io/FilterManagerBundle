@@ -31,7 +31,7 @@ class VariantFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Search\VariantFilter';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Search\VariantFilter';
     }
 
     /**

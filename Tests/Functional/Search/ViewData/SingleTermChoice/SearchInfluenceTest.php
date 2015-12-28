@@ -12,10 +12,10 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Search\ViewData\SingleTermChoice;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filters\ViewData\ChoicesAwareViewData;
-use ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice;
-use ONGR\FilterManagerBundle\Search\FiltersContainer;
-use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
+use ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class SearchInfluenceTest extends AbstractElasticsearchTestCase
@@ -54,11 +54,11 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
     }
 
     /**
-     * @return FiltersManager
+     * @return FilterManager
      */
-    protected function getFiltersManager()
+    protected function getFilterManager()
     {
-        $container = new FiltersContainer();
+        $container = new FilterContainer();
 
         $filter = new SingleTermChoice();
         $filter->setRequestField('c');
@@ -72,7 +72,7 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
         $filter->setSortType(['type' => '_term', 'order' => 'asc', 'priorities' => []]);
         $container->set('manufacturer', $filter);
 
-        return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
     }
 
     /**
@@ -129,7 +129,7 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
         $this->getManager();
 
         /** @var ChoicesAwareViewData $data */
-        $data = $this->getFiltersManager()->handleRequest($request)->getFilters()[$filterName];
+        $data = $this->getFilterManager()->handleRequest($request)->getFilters()[$filterName];
 
         $actual = [];
         foreach ($data->getChoices() as $choice) {

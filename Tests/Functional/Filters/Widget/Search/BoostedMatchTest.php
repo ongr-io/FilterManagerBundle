@@ -12,9 +12,9 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Widget\Search;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
-use ONGR\FilterManagerBundle\Search\FiltersContainer;
-use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class BoostedMatchTest extends AbstractElasticsearchTestCase
@@ -48,11 +48,11 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
     /**
      * Returns filter manager with MatchSearch set.
      *
-     * @return FiltersManager
+     * @return FilterManager
      */
     public function getFilerManger()
     {
-        $container = new FiltersContainer();
+        $container = new FilterContainer();
 
         $match = new MatchSearch();
         $match->setRequestField('q');
@@ -60,7 +60,7 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
 
         $container->set('match', $match);
 
-        return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
     }
 
     /**
@@ -94,7 +94,7 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
     {
         $this->getManager();
 
-        $result = $this->getFilerManger()->execute($request);
+        $result = $this->getFilerManger()->handleRequest($request);
 
         $actual = [];
         foreach ($result->getResult() as $doc) {

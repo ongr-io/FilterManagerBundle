@@ -33,7 +33,7 @@ class SortFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Sort\Sort';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort';
     }
 
     /**

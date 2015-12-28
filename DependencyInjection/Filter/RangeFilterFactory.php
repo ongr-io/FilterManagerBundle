@@ -36,7 +36,7 @@ class RangeFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Range\Range';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Range\Range';
     }
 
     /**

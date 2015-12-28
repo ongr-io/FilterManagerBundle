@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\Functional\ViewData;
+namespace ONGR\FilterManagerBundle\Tests\Functional\Search\ViewData;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filters\ViewData;
-use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
-use ONGR\FilterManagerBundle\Relations\ExcludeRelation;
-use ONGR\FilterManagerBundle\Search\FiltersContainer;
-use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Filter\ViewData;
+use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
+use ONGR\FilterManagerBundle\Relation\ExcludeRelation;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class FilterStateTest extends AbstractElasticsearchTestCase
@@ -55,11 +55,11 @@ class FilterStateTest extends AbstractElasticsearchTestCase
     /**
      * Return any kind of filters manager to test.
      *
-     * @return FiltersManager
+     * @return FilterManager
      */
     protected function getFilterManager()
     {
-        $container = new FiltersContainer();
+        $container = new FilterContainer();
 
         $filter = new MatchSearch();
         $filter->setField('title');
@@ -73,7 +73,7 @@ class FilterStateTest extends AbstractElasticsearchTestCase
         $filter->setRequestField('d');
         $container->set('description_match', $filter);
 
-        return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
     }
 
     /**

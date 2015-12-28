@@ -21,7 +21,7 @@ class DateRangeFilterFactory extends RangeFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Range\DateRange';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Range\DateRange';
     }
 
     /**

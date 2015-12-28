@@ -33,7 +33,7 @@ class MatchFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch';
     }
 
     /**

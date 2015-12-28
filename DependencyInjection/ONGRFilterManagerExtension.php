@@ -42,7 +42,7 @@ class ONGRFilterManagerExtension extends Extension
         $loader->load('services.yml');
 
         !isset($config['filters']) ? : $this->addFilters($config['filters'], $container);
-        !isset($config['managers']) ? : $this->addFiltersManagers($config, $container);
+        !isset($config['managers']) ? : $this->addFilterManagers($config, $container);
     }
 
     /**
@@ -136,22 +136,22 @@ class ONGRFilterManagerExtension extends Extension
      * @param array            $config    Configuration array.
      * @param ContainerBuilder $container Service container.
      */
-    private function addFiltersManagers(array $config, ContainerBuilder $container)
+    private function addFilterManagers(array $config, ContainerBuilder $container)
     {
         foreach ($config['managers'] as $name => $manager) {
-            $filtersContainer = new Definition('ONGR\FilterManagerBundle\Search\FiltersContainer');
+            $filterContainer = new Definition('ONGR\FilterManagerBundle\Search\FilterContainer');
 
             foreach ($manager['filters'] as $filter) {
-                $filtersContainer->addMethodCall(
+                $filterContainer->addMethodCall(
                     'set',
                     [$filter, new Reference(self::getFilterId($filter))]
                 );
             }
 
             $managerDefinition = new Definition(
-                'ONGR\FilterManagerBundle\Search\FiltersManager',
+                'ONGR\FilterManagerBundle\Search\FilterManager',
                 [
-                    $filtersContainer,
+                    $filterContainer,
                     new Reference($manager['repository']),
                 ]
             );
@@ -190,7 +190,7 @@ class ONGRFilterManagerExtension extends Extension
     private function getRelation($type, $relations)
     {
         return new Definition(
-            sprintf('ONGR\FilterManagerBundle\Relations\%sRelation', ucfirst($type)),
+            sprintf('ONGR\FilterManagerBundle\Relation\%sRelation', ucfirst($type)),
             [$relations]
         );
     }
