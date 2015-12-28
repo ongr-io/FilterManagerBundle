@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Search;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
-use ONGR\FilterManagerBundle\Filters\ViewData;
+use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
@@ -48,7 +48,7 @@ class SearchResponse implements SerializableInterface
     }
 
     /**
-     * @return \ONGR\FilterManagerBundle\Filters\ViewData[]
+     * @return \ONGR\FilterManagerBundle\Filter\ViewData[]
      */
     public function getFilters()
     {

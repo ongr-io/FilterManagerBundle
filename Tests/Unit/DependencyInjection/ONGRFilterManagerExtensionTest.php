@@ -53,7 +53,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
                         
                         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
                         $this->assertEquals(
-                            'ONGR\FilterManagerBundle\Relations\IncludeRelation',
+                            'ONGR\FilterManagerBundle\Relation\IncludeRelation',
                             $definition->getClass()
                         );
                         $this->assertEquals(
@@ -88,7 +88,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
 
                         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
                         $this->assertEquals(
-                            'ONGR\FilterManagerBundle\Relations\ExcludeRelation',
+                            'ONGR\FilterManagerBundle\Relation\ExcludeRelation',
                             $definition->getClass()
                         );
                         $this->assertEquals(
@@ -126,7 +126,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
 
                         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
                         $this->assertEquals(
-                            'ONGR\FilterManagerBundle\Relations\ExcludeRelation',
+                            'ONGR\FilterManagerBundle\Relation\ExcludeRelation',
                             $definition->getClass()
                         );
                         $this->assertEquals(
@@ -151,7 +151,7 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
 
                         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Definition', $definition);
                         $this->assertEquals(
-                            'ONGR\FilterManagerBundle\Relations\IncludeRelation',
+                            'ONGR\FilterManagerBundle\Relation\IncludeRelation',
                             $definition->getClass()
                         );
                         $this->assertEquals(

@@ -41,7 +41,7 @@ class ChoiceFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice';
     }
 
     /**

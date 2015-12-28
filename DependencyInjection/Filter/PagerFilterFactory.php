@@ -34,7 +34,7 @@ class PagerFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager';
     }
 
     /**

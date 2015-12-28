@@ -12,8 +12,8 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\DependencyInjection;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager;
-use ONGR\FilterManagerBundle\Filters\Widget\Range\Range;
+use ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager;
+use ONGR\FilterManagerBundle\Filter\Widget\Range\Range;
 
 class ServiceCreationTest extends AbstractElasticsearchTestCase
 {
@@ -27,11 +27,11 @@ class ServiceCreationTest extends AbstractElasticsearchTestCase
         return [
             [
                 'ongr_filter_manager.filter.phrase',
-                'ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch',
+                'ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch',
             ],
             [
                 'ongr_filter_manager.filter.pager',
-                'ONGR\FilterManagerBundle\Filters\Widget\Pager\Pager',
+                'ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager',
                 [
                     'getCountPerPage' => 12,
                     'getRequestField' => 'page',
@@ -39,14 +39,14 @@ class ServiceCreationTest extends AbstractElasticsearchTestCase
             ],
             [
                 'ongr_filter_manager.filter.choice',
-                'ONGR\FilterManagerBundle\Filters\Widget\Choice\SingleTermChoice',
+                'ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice',
                 [
                     'getSize' => 2,
                 ],
             ],
             [
                 'ongr_filter_manager.filter.range',
-                'ONGR\FilterManagerBundle\Filters\Widget\Range\Range',
+                'ONGR\FilterManagerBundle\Filter\Widget\Range\Range',
                 [
                     'getField' => 'price',
                     'getRequestField' => 'range',
@@ -55,7 +55,7 @@ class ServiceCreationTest extends AbstractElasticsearchTestCase
             ],
             [
                 'ongr_filter_manager.filter.choice',
-                'ONGR\FilterManagerBundle\Filters\Widget\Choice\MultiTermChoice',
+                'ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice',
                 [
                     'getField' => 'choice',
                     'getRequestField' => 'choice',
@@ -64,11 +64,11 @@ class ServiceCreationTest extends AbstractElasticsearchTestCase
             ],
             [
                 'ongr_filter_manager.foo_filters',
-                'ONGR\FilterManagerBundle\Search\FiltersManager',
+                'ONGR\FilterManagerBundle\Search\FilterManager',
             ],
             [
                 'ongr_filter_manager.filter.fuzzy',
-                'ONGR\FilterManagerBundle\Filters\Widget\Search\FuzzySearch',
+                'ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch',
             ],
         ];
     }

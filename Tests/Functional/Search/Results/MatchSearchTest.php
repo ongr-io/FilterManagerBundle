@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Search\Results;
 
-use ONGR\FilterManagerBundle\Filters\Widget\Search\MatchSearch;
-use ONGR\FilterManagerBundle\Search\FiltersContainer;
-use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -53,7 +53,7 @@ class MatchSearchTest extends AbstractFilterManagerResultsTest
     /**
      * Return any kind of filters manager to test.
      *
-     * @return FiltersManager
+     * @return FilterManager
      */
     protected function getFilterManager()
     {
@@ -61,10 +61,10 @@ class MatchSearchTest extends AbstractFilterManagerResultsTest
         $filter->setField('title');
         $filter->setRequestField('q');
 
-        $container = new FiltersContainer();
+        $container = new FilterContainer();
         $container->set('title_match', $filter);
 
-        return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
     }
 
     /**

@@ -37,7 +37,7 @@ ongr_search_page:
 ```
 
 ```php
-#src/AppBundle/Controller/ListController.php
+# src/AppBundle/Controller/ListController.php
 
 /**
  * Controller for list pages.
@@ -69,7 +69,7 @@ class ListController extends Controller
 ## Template variables
 
 If you’re using default controller, [SearchResponse] from
-[FiltersManager](https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FiltersManager.php) will be named filter_manager in template, otherwise
+[FilterManager](https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FilterManager.php) will be named filter_manager in template, otherwise
 it’s whatever you call it in your controller.
 
 You can use [SearchResponse] to get results in your template:

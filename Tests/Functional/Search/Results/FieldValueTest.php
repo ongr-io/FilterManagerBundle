@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Search\Results;
 
-use ONGR\FilterManagerBundle\Filters\Widget\Search\FieldValue;
-use ONGR\FilterManagerBundle\Search\FiltersContainer;
-use ONGR\FilterManagerBundle\Search\FiltersManager;
+use ONGR\FilterManagerBundle\Filter\Widget\Search\FieldValue;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -56,10 +56,10 @@ class FieldValueTest extends AbstractFilterManagerResultsTest
         $filter->setField('active');
         $filter->setValue(true);
 
-        $container = new FiltersContainer();
+        $container = new FilterContainer();
         $container->set('field_value', $filter);
 
-        return new FiltersManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
     }
 
     /**
