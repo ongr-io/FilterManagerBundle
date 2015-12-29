@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Pager;
 
-use ONGR\ElasticsearchBundle\Document\DocumentInterface;
+use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager;
 use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
@@ -146,7 +146,7 @@ class PagerTest extends AbstractElasticsearchTestCase
         $result = $this->getFilterManager($options)->handleRequest($request)->getResult();
 
         $actual = [];
-        /** @var DocumentInterface $document */
+        /** @var DocumentTrait $document */
         foreach ($result as $document) {
             $actual[] = $document->getId();
         }

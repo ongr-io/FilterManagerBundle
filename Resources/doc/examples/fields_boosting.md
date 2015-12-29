@@ -43,24 +43,26 @@ Next step is to define document:
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\AbstractDocument;
+use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 
 /**
  * @ES\Document(type="product")
  */
-class Product extends AbstractDocument
+class Product
 {
+    use DocumentTrait;
+
     /**
      * @var string
      *
-     * @ES\Property(name="title", type="string")
+     * @ES\Property(type="string")
      */
     public $title;
 
     /**
      * @var string
      *
-     * @ES\Property(name="color", type="string")
+     * @ES\Property(type="string")
      */
     public $color;
 }

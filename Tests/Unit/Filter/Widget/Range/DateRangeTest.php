@@ -25,14 +25,13 @@ class DateRangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetViewData()
     {
-        $repositoryMock = $this->getMockBuilder('ONGR\ElasticsearchBundle\Service\Repository')
+        $managerMock = $this->getMockBuilder('ONGR\ElasticsearchBundle\Service\Manager')
             ->disableOriginalConstructor()
-            ->setMethods(['getManager', 'getConverter', 'getConfig'])
+            ->setMethods(['getConverter', 'getConfig'])
             ->getMock();
 
-        $repositoryMock->expects($this->any())->method('getManager')->willReturnSelf();
-        $repositoryMock->expects($this->any())->method('getConverter')->willReturnSelf();
-        $repositoryMock->expects($this->any())->method('getConfig')->willReturn([]);
+        $managerMock->expects($this->any())->method('getConverter')->willReturnSelf();
+        $managerMock->expects($this->any())->method('getConfig')->willReturn([]);
 
         $dateRange = new DateRange();
 
@@ -48,7 +47,7 @@ class DateRangeTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
             ],
-            $repositoryMock,
+            $managerMock,
             []
         );
 
