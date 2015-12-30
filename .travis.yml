@@ -5,11 +5,13 @@ php:
   - 5.6
   - 7.0
   - hhvm
-services:
-  - elasticsearch
 matrix:
   allow_failures:
     - php: hhvm
+services:
+  - elasticsearch
+install:
+  - composer require --dev --no-update --no-interaction satooshi/php-coveralls
 before_script:
   - composer config -g github-oauth.github.com $GITHUB_COMPOSER_AUTH
   - composer install --no-interaction
