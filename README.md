@@ -13,15 +13,9 @@ If you have any questions, don't hesitate to ask them on [![Join the chat at htt
  chat, or just come to say Hi ;).
 
 [![Build Status](https://travis-ci.org/ongr-io/FilterManagerBundle.svg?branch=master)](https://travis-ci.org/ongr-io/FilterManagerBundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/?branch=master)
-[![Code Climate](https://codeclimate.com/github/ongr-io/FilterManagerBundle/badges/gpa.svg)](https://codeclimate.com/github/ongr-io/FilterManagerBundle)
 [![Coverage Status](https://coveralls.io/repos/ongr-io/FilterManagerBundle/badge.svg?branch=master&service=github)](https://coveralls.io/github/ongr-io/FilterManagerBundle?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/85da870f-6b31-48bd-885c-5b6203f25041/mini.png)](https://insight.sensiolabs.com/projects/85da870f-6b31-48bd-885c-5b6203f25041)
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/4b9400aad7df4bebac9a8be9983c605a)](https://www.codacy.com/app/ongr/FilterManagerBundle)
 [![Latest Stable Version](https://poser.pugx.org/ongr/filter-manager-bundle/v/stable)](https://packagist.org/packages/ongr/filter-manager-bundle)
-[![Total Downloads](https://poser.pugx.org/ongr/filter-manager-bundle/downloads)](https://packagist.org/packages/ongr/filter-manager-bundle)
-[![Latest Unstable Version](https://poser.pugx.org/ongr/filter-manager-bundle/v/unstable)](https://packagist.org/packages/ongr/filter-manager-bundle)
-[![License](https://poser.pugx.org/ongr/filter-manager-bundle/license)](https://packagist.org/packages/ongr/filter-manager-bundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ongr-io/FilterManagerBundle/?branch=master)
 
 
 ## Documentation
