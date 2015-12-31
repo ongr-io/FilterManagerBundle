@@ -68,18 +68,19 @@ Next step is to define documents:
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\AbstractDocument;
+use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\RouterBundle\Document\SeoAwareTrait;
 
 /**
  * @ES\Document(type="country")
  */
-class Country extends AbstractDocument
+class Country
 {
+    use DocumentTrait;
     use SeoAwareTrait;
 
     /**
-     * @ES\Property(name="name", type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $name;
 }
@@ -91,20 +92,22 @@ class Country extends AbstractDocument
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\AbstractDocument;
+use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 
 /**
  * @ES\Document(type="city")
  */
-class City extends AbstractDocument
+class City
 {
+    use DocumentTrait;
+
     /**
-     * @ES\Property(name="name", type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $name;
 
     /**
-     * @ES\Property(name="country_id", type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $countryId;
 }

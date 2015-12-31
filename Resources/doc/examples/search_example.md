@@ -14,52 +14,54 @@ In this example we will use `Product` documents:
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\AbstractDocument;
+use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 
 /**
  * @ES\Document
  */
-class Product extends AbstractDocument
+class Product
 {
+    use DocumentTrait;
+
     /**
      * @var string
      *
-     * @ES\Property(name="title", type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $title;
 
     /**
      * @var string
      *
-     * @ES\Property(name="color", type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $color;
 
     /**
      * @var string
      *
-     * @ES\Property(name="country", type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $country;
 
     /**
      * @var string
      *
-     * @ES\Property(name="weight", type="float")
+     * @ES\Property(type="float")
      */
     public $weight;
 
     /**
      * @var string
      *
-     * @ES\Property(name="image", type="string", options={"index"="no"})
+     * @ES\Property(type="string", options={"index"="no"})
      */
     public $image;
 
     /**
      * @var bool
      *
-     * @ES\Property(name="active", type="boolean")
+     * @ES\Property(type="boolean")
      */
     public $active;
 }

@@ -12,54 +12,55 @@
 namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\AbstractDocument;
+use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
  * @ES\Document(type="product")
  */
-class Product extends AbstractDocument implements SerializableInterface
+class Product implements SerializableInterface
 {
+    use DocumentTrait;
 
     /**
      * @var string
      *
-     * @ES\Property(type="boolean", name="active")
+     * @ES\Property(type="boolean")
      */
     public $active;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="sku")
+     * @ES\Property(type="string")
      */
     public $sku;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="title")
+     * @ES\Property(type="string")
      */
     public $title;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="description")
+     * @ES\Property(type="string")
      */
     public $description;
 
     /**
      * @var string
      *
-     * @ES\Property(type="geo_point", name="location")
+     * @ES\Property(type="geo_point")
      */
     public $location;
 
     /**
      * @var int
      *
-     * @ES\Property(type="integer", name="stock")
+     * @ES\Property(type="integer")
      */
     public $stock;
 
@@ -73,56 +74,56 @@ class Product extends AbstractDocument implements SerializableInterface
     /**
      * @var float
      *
-     * @ES\Property(type="float", name="price")
+     * @ES\Property(type="float")
      */
     public $price;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="categories", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $categories;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="manufacturer", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $manufacturer;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="color", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $color;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="size", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $size;
 
     /**
      * @var int
      *
-     * @ES\Property(type="integer", name="items", options={"index"="not_analyzed"})
+     * @ES\Property(type="integer", options={"index"="not_analyzed"})
      */
     public $items;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", name="words", options={"index"="not_analyzed"})
+     * @ES\Property(type="string", options={"index"="not_analyzed"})
      */
     public $words;
 
     /**
      * @var string
      *
-     * @ES\Property(type="date", name="date")
+     * @ES\Property(type="date")
      */
     public $date;
 
