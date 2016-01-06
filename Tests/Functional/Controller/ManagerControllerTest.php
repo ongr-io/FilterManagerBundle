@@ -48,9 +48,6 @@ class ManagerControllerTest extends AbstractElasticsearchTestCase
      */
     public function testManagerAction()
     {
-        // Create index by getting manager.
-        $this->getManager();
-
         $client = static::createClient();
         $crawler = $client->request('GET', '/list');
 
@@ -63,9 +60,6 @@ class ManagerControllerTest extends AbstractElasticsearchTestCase
      */
     public function testJsonAction()
     {
-        // Create index by getting manager.
-        $this->getManager();
-
         $client = static::createClient();
         $client->request('GET', '/list.json');
 
@@ -86,9 +80,6 @@ class ManagerControllerTest extends AbstractElasticsearchTestCase
      */
     public function testPrettyJsonAction()
     {
-        // Create index by getting manager.
-        $this->getManager();
-
         $client = static::createClient();
         $client->request('GET', '/list.json', ['pretty' => true]);
 

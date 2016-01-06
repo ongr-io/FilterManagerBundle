@@ -126,8 +126,6 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
      */
     public function testInfluence(Request $request, $filterName, $expected)
     {
-        $this->getManager();
-
         /** @var ChoicesAwareViewData $data */
         $data = $this->getFilterManager()->handleRequest($request)->getFilters()[$filterName];
 

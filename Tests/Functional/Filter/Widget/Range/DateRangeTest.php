@@ -110,7 +110,6 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
      */
     public function testViewData(Request $request, $ids, $assertOrder = false, $managers = [])
     {
-        $this->getManager();
         foreach ($managers as $filter => $filterManager) {
             /** @var RangeAwareViewData $viewData */
             $viewData = $filterManager->handleRequest($request)->getFilters()[$filter];
@@ -137,7 +136,7 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
     protected function getFilterManager()
     {
         return [
-            'date' => self::createClient()->getContainer()->get('ongr_filter_manager.range_filters'),
+            'date' => $this->getContainer()->get('ongr_filter_manager.range_filters'),
         ];
     }
 
@@ -153,8 +152,6 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
      */
     public function testResults(Request $request, $ids, $assertOrder = false, $managers = [])
     {
-        $this->getManager();
-
         foreach ($managers as $filterManager) {
             $actual = array_map(
                 [$this, 'fetchDocumentId'],

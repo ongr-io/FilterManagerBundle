@@ -140,7 +140,6 @@ class PagerTest extends AbstractElasticsearchTestCase
      */
     public function testPager(Request $request, $options, $expectedDocs)
     {
-        $this->getManager();
         $request->query->add(['sort' => '0']);
         $result = $this->getFilterManager($options)->handleRequest($request)->getResult();
 
@@ -157,7 +156,6 @@ class PagerTest extends AbstractElasticsearchTestCase
      */
     public function testGetViewData()
     {
-        $this->getManager();
         $manager = $this->getFilterManager(['count_per_page' => 2, 'max_pages' => 3]);
         $viewData = $manager->handleRequest(new Request(['page' => 3]))->getFilters();
 
@@ -216,7 +214,6 @@ class PagerTest extends AbstractElasticsearchTestCase
      */
     public function testPageRange($options, $page, $expected)
     {
-        $this->getManager();
         $manager = $this->getFilterManager($options);
 
         $range = $manager

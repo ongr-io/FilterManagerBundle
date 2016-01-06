@@ -24,13 +24,12 @@ class PagerExtensionsTest extends AbstractElasticsearchTestCase
      */
     public function testPaginate()
     {
-        $container = self::createClient()->getContainer();
         $counter = new CountAdapter(10);
         $pagerService = new PagerService($counter);
         $pagerService->setLimit(2);
         $pagerService->setPage(2);
         /** @var \Twig_Environment $environment */
-        $environment = $container->get('twig');
+        $environment = $this->getContainer()->get('twig');
         $environment->setLoader(new \Twig_Loader_String());
         $paginateTemplate = '{{ ongr_paginate_path(route, pager.getFirstPage, parameters) }}
         {{ ongr_paginate_path(route, pager.getLastPage, parameters) }}';

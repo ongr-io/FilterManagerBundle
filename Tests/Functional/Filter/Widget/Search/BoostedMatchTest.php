@@ -92,8 +92,6 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
      */
     public function testFiltering($expected, $request)
     {
-        $this->getManager();
-
         $result = $this->getFilerManger()->handleRequest($request);
 
         $actual = [];

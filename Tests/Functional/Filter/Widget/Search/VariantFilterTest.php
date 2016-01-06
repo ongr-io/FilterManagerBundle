@@ -69,8 +69,6 @@ class VariantFilterTest extends AbstractElasticsearchTestCase
      */
     public function testFiltering()
     {
-        $this->getManager();
-
         $result = $this->getFilterManger()->handleRequest(new Request());
 
         $actual = [];
