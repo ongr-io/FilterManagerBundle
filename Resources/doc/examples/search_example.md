@@ -14,15 +14,12 @@ In this example we will use `Product` documents:
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 
 /**
  * @ES\Document
  */
 class Product
 {
-    use DocumentTrait;
-
     /**
      * @var string
      *

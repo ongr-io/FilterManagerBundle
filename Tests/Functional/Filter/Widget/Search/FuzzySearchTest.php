@@ -96,7 +96,7 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
 
         $actual = [];
         foreach ($result->getResult() as $doc) {
-            $actual[] = $doc->getId();
+            $actual[] = $doc->id;
         }
 
         sort($actual);

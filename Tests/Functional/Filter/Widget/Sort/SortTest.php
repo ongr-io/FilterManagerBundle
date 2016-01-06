@@ -11,7 +11,6 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Sort;
 
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
@@ -202,9 +201,8 @@ class SortTest extends AbstractElasticsearchTestCase
         $result = $this->getFilterManager()->handleRequest($request)->getResult();
 
         $actual = [];
-        /** @var DocumentTrait $document */
         foreach ($result as $document) {
-            $actual[] = $document->getId();
+            $actual[] = $document->id;
         }
 
         $this->assertSame($expectedOrder, $actual);

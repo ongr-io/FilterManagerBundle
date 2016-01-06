@@ -12,7 +12,6 @@
 namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
@@ -20,7 +19,12 @@ use ONGR\FilterManagerBundle\SerializableInterface;
  */
 class Product implements SerializableInterface
 {
-    use DocumentTrait;
+    /**
+     * @var string
+     *
+     * @ES\Id()
+     */
+    public $id;
 
     /**
      * @var string
@@ -133,7 +137,7 @@ class Product implements SerializableInterface
     public function getSerializableData()
     {
         return [
-            '_id' => $this->getId(),
+            '_id' => $this->id,
             'title' => $this->title,
             'color' => $this->color,
         ];

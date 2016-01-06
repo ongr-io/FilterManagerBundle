@@ -75,7 +75,7 @@ class VariantFilterTest extends AbstractElasticsearchTestCase
 
         $actual = [];
         foreach ($result->getResult() as $doc) {
-            $actual[] = $doc->getId();
+            $actual[] = $doc->id;
         }
 
         $this->assertCount(1, $actual);
