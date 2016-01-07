@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\Functional\Filters\Widget\Search;
+namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
@@ -92,13 +92,11 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
      */
     public function testFiltering($expected, $request)
     {
-        $this->getManager();
-
         $result = $this->getFilerManger()->handleRequest($request);
 
         $actual = [];
         foreach ($result->getResult() as $doc) {
-            $actual[] = $doc->getId();
+            $actual[] = $doc->id;
         }
 
         $this->assertEquals($expected, $actual);

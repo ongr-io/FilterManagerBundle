@@ -68,7 +68,6 @@ Next step is to define documents:
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\RouterBundle\Document\SeoAwareTrait;
 
 /**
@@ -76,7 +75,6 @@ use ONGR\RouterBundle\Document\SeoAwareTrait;
  */
 class Country
 {
-    use DocumentTrait;
     use SeoAwareTrait;
 
     /**
@@ -92,15 +90,12 @@ class Country
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 
 /**
  * @ES\Document(type="city")
  */
 class City
 {
-    use DocumentTrait;
-
     /**
      * @ES\Property(type="string", options={"index"="not_analyzed"})
      */

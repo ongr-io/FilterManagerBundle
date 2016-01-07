@@ -11,7 +11,6 @@
 
 namespace ONGR\FilterManagerBundle\Test;
 
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,12 +61,12 @@ abstract class AbstractFilterManagerResultsTest extends AbstractElasticsearchTes
     /**
      * Returns document id.
      *
-     * @param DocumentTrait $doc
+     * @param object $doc
      *
      * @return string
      */
     protected function fetchDocumentId($doc)
     {
-        return $doc->getId();
+        return $doc->id;
     }
 }

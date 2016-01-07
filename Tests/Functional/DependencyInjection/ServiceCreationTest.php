@@ -84,7 +84,7 @@ class ServiceCreationTest extends AbstractElasticsearchTestCase
      */
     public function testServices($id, $instance, $params = [])
     {
-        $container = self::createClient()->getContainer();
+        $container = $this->getContainer();
 
         $this->assertTrue($container->has($id));
         $service = $container->get($id);

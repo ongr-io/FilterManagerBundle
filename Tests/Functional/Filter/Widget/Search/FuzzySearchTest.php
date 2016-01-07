@@ -78,8 +78,6 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
      */
     public function testFiltering($expected, $request, $fuzziness = null, $prefixLength = null, $maxExpansions = null)
     {
-        $this->getManager();
-
         $container = new FilterContainer();
 
         $fuzzy = new FuzzySearch();
@@ -96,7 +94,7 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
 
         $actual = [];
         foreach ($result->getResult() as $doc) {
-            $actual[] = $doc->getId();
+            $actual[] = $doc->id;
         }
 
         sort($actual);

@@ -43,15 +43,12 @@ Next step is to define document:
 namespace AppBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 
 /**
  * @ES\Document(type="product")
  */
 class Product
 {
-    use DocumentTrait;
-
     /**
      * @var string
      *

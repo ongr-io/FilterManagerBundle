@@ -92,13 +92,11 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
      */
     public function testFiltering($expected, $request)
     {
-        $this->getManager();
-
         $result = $this->getFilerManger()->handleRequest($request);
 
         $actual = [];
         foreach ($result->getResult() as $doc) {
-            $actual[] = $doc->getId();
+            $actual[] = $doc->id;
         }
 
         sort($actual);

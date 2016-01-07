@@ -153,7 +153,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
      */
     public function testViewData(Request $request, $ids, $assertOrder = false, $managers = [])
     {
-        $this->getManager();
         foreach ($managers as $filter => $filterManager) {
             /** @var RangeAwareViewData $viewData */
             $viewData = $filterManager->handleRequest($request)->getFilters()[$filter];
@@ -199,7 +198,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
             $this->getManager()->getRepository('AcmeTestBundle:Product')
         );
 
-        $managers['bar_range'] = self::createClient()->getContainer()->get('ongr_filter_manager.bar_filters');
+        $managers['bar_range'] = $this->getContainer()->get('ongr_filter_manager.bar_filters');
 
         return $managers;
     }
@@ -216,7 +215,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
      */
     public function testResults(Request $request, $ids, $assertOrder = false, $managers = [])
     {
-        $this->getManager();
         foreach ($managers as $filterManager) {
             $actual = array_map(
                 [$this, 'fetchDocumentId'],

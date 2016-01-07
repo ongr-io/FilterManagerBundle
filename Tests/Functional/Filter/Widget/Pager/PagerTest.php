@@ -11,7 +11,6 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Pager;
 
-use ONGR\ElasticsearchBundle\Document\DocumentTrait;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager;
 use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
@@ -141,14 +140,12 @@ class PagerTest extends AbstractElasticsearchTestCase
      */
     public function testPager(Request $request, $options, $expectedDocs)
     {
-        $this->getManager();
         $request->query->add(['sort' => '0']);
         $result = $this->getFilterManager($options)->handleRequest($request)->getResult();
 
         $actual = [];
-        /** @var DocumentTrait $document */
         foreach ($result as $document) {
-            $actual[] = $document->getId();
+            $actual[] = $document->id;
         }
 
         $this->assertSame($expectedDocs, $actual);
@@ -159,7 +156,6 @@ class PagerTest extends AbstractElasticsearchTestCase
      */
     public function testGetViewData()
     {
-        $this->getManager();
         $manager = $this->getFilterManager(['count_per_page' => 2, 'max_pages' => 3]);
         $viewData = $manager->handleRequest(new Request(['page' => 3]))->getFilters();
 
@@ -218,7 +214,6 @@ class PagerTest extends AbstractElasticsearchTestCase
      */
     public function testPageRange($options, $page, $expected)
     {
-        $this->getManager();
         $manager = $this->getFilterManager($options);
 
         $range = $manager
