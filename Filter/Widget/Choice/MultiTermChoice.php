@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Choice;
 
+use ONGR\ElasticsearchDSL\Filter\NotFilter;
 use ONGR\ElasticsearchDSL\Filter\TermsFilter;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
@@ -23,13 +24,53 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MultiTermChoice extends SingleTermChoice
 {
+
+    const OPERATION_OR = 'or';
+    const OPERATION_AND = 'and';
+    const OPERATION_NOT_AND = 'not_and';
+
+    /**
+     * @var string
+     */
+    private $booleanOperation;
+
+    /**
+     * @return mixed
+     */
+    public function getBooleanOperation()
+    {
+        return $this->booleanOperation;
+    }
+
+    /**
+     * @param $operation
+     */
+    public function setBooleanOperation($operation)
+    {
+        $this->booleanOperation = $operation;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $search->addPostFilter(new TermsFilter($this->getField(), $state->getValue()));
+            $filter = new TermsFilter($this->getField(), $state->getValue());
+
+            switch (strtolower($this->getBooleanOperation())) {
+                case self::OPERATION_AND:
+                    $filter->setParameters(['execution' => 'and']);
+                    break;
+                case self::OPERATION_NOT_AND:
+                    $filter = new NotFilter($filter);
+                    break;
+                case self::OPERATION_OR:
+                default:
+                    // Do nothing
+            }
+
+            $search->addPostFilter($filter);
         }
     }
 
