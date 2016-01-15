@@ -164,6 +164,17 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end();
+
+                if ($filterName == 'multi_choice') {
+                    $node
+                        ->children()
+                            ->enumNode('boolean_operation')
+                                ->values(['or', 'and', 'not_and'])
+                                ->defaultValue('or')
+                            ->end()
+                        ->end();
+                }
+
                 break;
             case 'fuzzy':
                 $node

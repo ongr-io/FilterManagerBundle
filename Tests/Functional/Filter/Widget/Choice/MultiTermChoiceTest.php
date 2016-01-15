@@ -67,19 +67,31 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
         $out = [];
 
         // Case #0 should return only three items.
-        $out[] = [new Request(['choice' => ['red', 'green']]), ['1', '3', '5']];
+        $out[] = [new Request(['choice' => ['red', 'green']]), ['1', '3', '5'], false, 'or'];
 
         // Case #1 no elements.
-        $out[] = [new Request(['choice' => ['yellow', 'black']]), []];
+        $out[] = [new Request(['choice' => ['yellow', 'black']]), [], false, 'or'];
 
         // Case #2 all elements.
-        $out[] = [new Request(['choice' => ['red', 'green', 'blue']]), ['1', '2', '3', '4', '5']];
+        $out[] = [new Request(['choice' => ['red', 'green', 'blue']]), ['1', '2', '3', '4', '5'], false, 'or'];
 
         // Case #3 non ordered choices.
-        $out[] = [new Request(['choice' => [0 => 'black', 2 => 'red']]), ['1', '3']];
+        $out[] = [new Request(['choice' => [0 => 'black', 2 => 'red']]), ['1', '3'], false, 'or'];
 
         // Case #4 string parameter should not raise an exception.
-        $out[] = [new Request(['choice' => 'red']), ['1', '3']];
+        $out[] = [new Request(['choice' => 'red']), ['1', '3'], false, 'or'];
+
+        // Case #5 No element with AND operation
+        $out[] = [new Request(['choice' => ['red', 'green']]), [], false, 'and'];
+
+        // Case #6 NOT AND operation
+        $out[] = [new Request(['choice' => ['red', 'green']]), ['2', '4'], false, 'not_and'];
+
+        // Case #7 NOT AND operation, no element
+        $out[] = [new Request(['choice' => ['red', 'green', 'blue']]), [], false, 'not_and'];
+
+        // Case #8 NOT AND operation, should not raise an exception.
+        $out[] = [new Request(['choice' => 'red']), ['2', '4', '5'], false, 'not_and'];
 
         return $out;
     }
@@ -87,9 +99,11 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
     /**
      * Returns filter manager.
      *
+     * @param array $options
+     *
      * @return FilterManager
      */
-    protected function getFilterManager()
+    protected function getFilterManager($options = [])
     {
         $container = new FilterContainer();
 
@@ -97,6 +111,12 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
         $filter->setRequestField('choice');
         $filter->setTags(['badged']);
         $filter->setField('color');
+
+        if (empty($options['boolean_operation'])) {
+            $options['boolean_operation'] = MultiTermChoice::OPERATION_OR;
+        }
+        $filter->setBooleanOperation($options['boolean_operation']);
+
         $container->set('choice', $filter);
 
         return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
@@ -188,5 +208,38 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
 
         $this->assertTrue($viewData->hasTag('badged'));
         $this->assertEquals($expectedUrlParams, $actualUrls);
+    }
+
+    /**
+     * This method asserts if search request gives expected results.
+     *
+     * @param Request $request     Http request.
+     * @param array   $ids         Array of document ids to assert.
+     * @param bool    $assertOrder Set true if order of results lso should be asserted.
+     * @param string  $operation   Boolean Operation
+     *
+     * @dataProvider getTestResultsData()
+     */
+    public function testResults(
+        Request $request,
+        $ids,
+        $assertOrder = false,
+        $operation = MultiTermChoice::OPERATION_OR
+    ) {
+        $actual = array_map(
+            [$this, 'fetchDocumentId'],
+            iterator_to_array(
+                $this->getFilterManager(['boolean_operation' => $operation])
+                    ->handleRequest($request)
+                    ->getResult()
+            )
+        );
+
+        if (!$assertOrder) {
+            sort($actual);
+            sort($ids);
+        }
+
+        $this->assertEquals($ids, $actual);
     }
 }
