@@ -22,7 +22,7 @@ If you have any questions, don't hesitate to ask them on [![Join the chat at htt
 
 The online documentation of the bundle is in [Github](Resources/doc/index.md).
 
-## Instalation
+## Installation
 
 ### Step 1: Install FilterManager bundle
 
@@ -39,17 +39,15 @@ $ composer require ongr/filter-manager-bundle "~1.0"
 Enable Filter Manager bundle in your AppKernel:
 
 ```php
-<?php
 // app/AppKernel.php
 
 public function registerBundles()
 {
-    $bundles = array(
+    $bundles = [
         // ...
         new ONGR\ElasticsearchBundle\ONGRElasticsearchBundle(),
         new ONGR\FilterManagerBundle\ONGRFilterManagerBundle(),
-        // ...
-    );
+    ];
     
     // ...
 }

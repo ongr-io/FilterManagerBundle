@@ -11,8 +11,8 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Search;
 
-use ONGR\ElasticsearchDSL\Filter\BoolFilter;
-use ONGR\ElasticsearchDSL\Filter\MissingFilter;
+use ONGR\ElasticsearchDSL\Query\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\MissingQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
@@ -27,7 +27,7 @@ class VariantFilter extends AbstractSingleValue
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $filter = new MissingFilter($this->getField());
-        $search->addFilter($filter, BoolFilter::MUST);
+        $filter = new MissingQuery($this->getField());
+        $search->addFilter($filter, BoolQuery::MUST);
     }
 }
