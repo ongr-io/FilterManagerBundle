@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.5",
         "symfony/symfony": "~2.7|~3.0",
-        "ongr/elasticsearch-bundle": "dev-master"
+        "ongr/elasticsearch-bundle": "~1.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.0",
@@ -22,6 +22,13 @@
         "satooshi/php-coveralls": "~1.0"
     },
     "autoload": {
-        "psr-4": { "ONGR\\FilterManagerBundle\\": "" }
+        "psr-4": { "ONGR\\FilterManagerBundle\\": "" },
+        "exclude-from-classmap": ["/Test/", "/Tests/"]
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
     }
 }
