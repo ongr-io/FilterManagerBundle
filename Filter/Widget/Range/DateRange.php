@@ -62,11 +62,11 @@ class DateRange extends AbstractRange
     {
         /** @var $data RangeAwareViewData */
         $data->setMinBounds(
-            new \DateTime('@' . (int) ($result->getAggregation('date_range_agg')->getValue()['min'] / 1000))
+            new \DateTime('@' . (int) ($result->getAggregation('date_range_agg')['min'] / 1000))
         );
 
         $data->setMaxBounds(
-            new \DateTime('@' . (int) ($result->getAggregation('date_range_agg')->getValue()['max'] / 1000))
+            new \DateTime('@' . (int) ($result->getAggregation('date_range_agg')['max'] / 1000))
         );
 
         return $data;

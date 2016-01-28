@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filter\FooRange;
 
 use ONGR\ElasticsearchDSL\Aggregation\StatsAggregation;
-use ONGR\ElasticsearchDSL\Filter\RangeFilter;
+use ONGR\ElasticsearchDSL\Query\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
@@ -74,7 +74,7 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $filter = new RangeFilter($this->getField(), $state->getValue());
+            $filter = new RangeQuery($this->getField(), $state->getValue());
             $search->addPostFilter($filter);
         }
     }
@@ -103,8 +103,8 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         /** @var $data ViewData\RangeAwareViewData */
-        $data->setMinBounds($result->getAggregation('range_agg')->getValue()['min']);
-        $data->setMaxBounds($result->getAggregation('range_agg')->getValue()['max']);
+        $data->setMinBounds($result->getAggregation('range_agg')['min']);
+        $data->setMaxBounds($result->getAggregation('range_agg')['max']);
 
         return $data;
     }

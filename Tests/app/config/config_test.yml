@@ -1,6 +1,7 @@
 framework:
     secret: "supersecret"
     test: ~
+    assets: ~
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: "%kernel.debug%"
