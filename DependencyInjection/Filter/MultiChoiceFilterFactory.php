@@ -18,18 +18,6 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class MultiChoiceFilterFactory extends ChoiceFilterFactory
 {
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure(Definition $definition, array $configuration)
-    {
-        parent::configure($definition, $configuration);
-
-        $definition->addMethodCall('setBooleanOperation', [$configuration['boolean_operation']]);
-    }
-
-
     /**
      * {@inheritdoc}
      */

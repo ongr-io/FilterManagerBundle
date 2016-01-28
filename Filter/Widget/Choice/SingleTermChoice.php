@@ -13,9 +13,8 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Choice;
 
 use ONGR\ElasticsearchDSL\Aggregation\FilterAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
-use ONGR\ElasticsearchDSL\Filter\TermFilter;
+use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
-use ONGR\ElasticsearchBundle\Result\Aggregation\ValueAggregation;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Helper\SizeAwareTrait;
@@ -61,7 +60,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $search->addPostFilter(new TermFilter($this->getField(), $state->getValue()));
+            $search->addPostFilter(new TermQuery($this->getField(), $state->getValue()));
         }
     }
 
@@ -109,9 +108,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
 
         $unsortedChoices = [];
 
-        /** @var ValueAggregation $bucket */
         foreach ($this->fetchAggregation($result, $data->getName()) as $bucket) {
-            $bucket = $bucket->getValue();
             $active = $this->isChoiceActive($bucket['key'], $data);
             $choice = new ViewData\Choice();
             $choice->setLabel($bucket['key']);
@@ -172,10 +169,9 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
             return $aggregation;
         }
 
-        $buckets = $result->getAggregations()->find(sprintf('%s-filter.%s', $name, $name));
-
-        if (isset($buckets)) {
-            return $buckets;
+        $aggregation = $result->getAggregation(sprintf('%s-filter', $name));
+        if (isset($aggregation)) {
+            return $aggregation->find($name);
         }
 
         return [];

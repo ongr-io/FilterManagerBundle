@@ -70,8 +70,8 @@ class Range extends AbstractRange
     {
         $name = $data->getState()->getName();
         /** @var $data ViewData\RangeAwareViewData */
-        $data->setMinBounds($result->getAggregation($name)->getValue()['min']);
-        $data->setMaxBounds($result->getAggregation($name)->getValue()['max']);
+        $data->setMinBounds($result->getAggregation($name)['min']);
+        $data->setMaxBounds($result->getAggregation($name)['max']);
 
         return $data;
     }

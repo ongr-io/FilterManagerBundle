@@ -12,6 +12,8 @@
 namespace ONGR\FilterManagerBundle\Tests\Unit\Filter\Widget\Range;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
+use ONGR\ElasticsearchBundle\Service\Manager;
+use ONGR\ElasticsearchDSL\Aggregation\AbstractAggregation;
 use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Range\DateRange;
 
@@ -25,6 +27,7 @@ class DateRangeTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetViewData()
     {
+        /** @var Manager|\PHPUnit_Framework_MockObject_MockObject $managerMock */
         $managerMock = $this->getMockBuilder('ONGR\ElasticsearchBundle\Service\Manager')
             ->disableOriginalConstructor()
             ->setMethods(['getConverter', 'getConfig'])
@@ -41,7 +44,7 @@ class DateRangeTest extends \PHPUnit_Framework_TestCase
         $iterator = new DocumentIterator(
             [
                 'aggregations' => [
-                    'agg_date_range_agg' => [
+                    'date_range_agg' => [
                         'min' => $minDate->getTimestamp() * 1000,
                         'max' => $maxDate->getTimestamp() * 1000,
                     ],

@@ -78,7 +78,7 @@ class FilterManager implements FilterManagerInterface
                 $request->get($name)
             );
         }
-
+//        print_r(json_encode($search->toArray()));
         $result = $this->repository->execute($search);
 
         return new SearchResponse(

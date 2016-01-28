@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Range;
 
-use ONGR\ElasticsearchDSL\Filter\RangeFilter;
+use ONGR\ElasticsearchDSL\Query\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareInterface;
@@ -69,7 +69,7 @@ abstract class AbstractRange extends AbstractSingleRequestValueFilter implements
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $filter = new RangeFilter($this->getField(), $state->getValue());
+            $filter = new RangeQuery($this->getField(), $state->getValue());
             $search->addPostFilter($filter);
         }
     }

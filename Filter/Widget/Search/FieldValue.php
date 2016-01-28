@@ -13,6 +13,7 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Search;
 
 use ONGR\ElasticsearchDSL\Filter\TermFilter;
 use ONGR\ElasticsearchDSL\Query\MatchQuery;
+use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareInterface;
@@ -62,6 +63,6 @@ class FieldValue extends AbstractSingleValue implements RelationAwareInterface
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $search->addPostFilter(new TermFilter($this->getField(), $this->value));
+        $search->addPostFilter(new TermQuery($this->getField(), $this->value));
     }
 }

@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\Twig;
 
+use ONGR\FilterManagerBundle\Pager\PagerService;
 use ONGR\FilterManagerBundle\Twig\PagerExtension;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -58,11 +59,16 @@ class PagerExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testPaginate()
     {
-        $twigEnvironment = $this->getMock('\Twig_Environment');
+        /** @var \Twig_Environment|\PHPUnit_Framework_MockObject_MockObject $managerMock */
+        $twigEnvironment = $this->getMockBuilder('\Twig_Environment')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $twigEnvironment->expects($this->once())
             ->method('render')
             ->will($this->returnValue('result'));
 
+        /** @var PagerService|\PHPUnit_Framework_MockObject_MockObject $managerMock */
         $pager = $this->getMockBuilder('ONGR\FilterManagerBundle\Pager\PagerService')
             ->disableOriginalConstructor()
             ->getMock();

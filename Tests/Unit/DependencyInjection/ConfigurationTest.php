@@ -105,8 +105,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $expectedBaseConfig['filters']['multi_choice'] = [
             'multi_choice' => [
                 'request_field' => 'choice',
-                'tags' => ['badged'],
-                'boolean_operation' => 'or'
+                'tags' => ['badged']
             ]
         ];
         $expectedBaseConfig['filters']['fuzzy'] = [];
