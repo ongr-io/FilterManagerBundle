@@ -72,7 +72,7 @@ class UrlParametersTest extends AbstractElasticsearchTestCase
         $filter->setRequestField('d');
         $container->set('description_match', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**

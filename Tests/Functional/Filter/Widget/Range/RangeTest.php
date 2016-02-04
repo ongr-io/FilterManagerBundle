@@ -149,7 +149,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
      * @param bool             $assertOrder Set true if order of results lso should be asserted.
      * @param FilterManager[] $managers    Set of filter managers to test.
      *
-     * @dataProvider getTestResultsData()
+     * @dataProvider getTestResultsData
      */
     public function testViewData(Request $request, $ids, $assertOrder = false, $managers = [])
     {
@@ -195,7 +195,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
 
         $managers['range'] = new FilterManager(
             $container,
-            $this->getManager()->getRepository('AcmeTestBundle:Product')
+            $this->getManager()->getRepository('TestBundle:Product')
         );
 
         $managers['bar_range'] = $this->getContainer()->get('ongr_filter_manager.bar_filters');
@@ -211,7 +211,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
      * @param bool             $assertOrder Set true if order of results lso should be asserted.
      * @param FilterManager[] $managers    Set of filter managers to test.
      *
-     * @dataProvider getTestResultsData()
+     * @dataProvider getTestResultsData
      */
     public function testResults(Request $request, $ids, $assertOrder = false, $managers = [])
     {

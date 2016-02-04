@@ -67,7 +67,7 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
 
         $container->set('document_value', $documentValue);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**

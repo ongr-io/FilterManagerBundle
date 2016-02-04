@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Document;
+namespace ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
 use ONGR\FilterManagerBundle\SerializableInterface;

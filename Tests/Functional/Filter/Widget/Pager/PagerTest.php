@@ -93,7 +93,7 @@ class PagerTest extends AbstractElasticsearchTestCase
         $sort->setChoices($choices);
         $container->set('sorting', $sort);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**

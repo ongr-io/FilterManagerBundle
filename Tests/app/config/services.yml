@@ -1,6 +1,6 @@
 services:
   ongr_filter_manager.filter.foo_range:
-    class: ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filter\FooRange\FooRange
+    class: ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange\FooRange
     arguments:
       - 'price'
       - 'price'
@@ -8,7 +8,7 @@ services:
         - { name: ongr_filter_manager.filter, filter_name: foo_range }
 
   ongr_filter_manager.filter.bar_range:
-      class: ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filter\FooRange\FooRange
+      class: ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange\FooRange
       arguments:
         - 'range'
         - 'price'

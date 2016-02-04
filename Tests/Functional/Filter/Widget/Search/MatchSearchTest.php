@@ -60,7 +60,7 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
 
         $container->set('match', $match);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**
