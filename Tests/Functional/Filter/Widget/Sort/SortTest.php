@@ -152,7 +152,7 @@ class SortTest extends AbstractElasticsearchTestCase
         // Case #6: mode set to avg on integer array.
         $out[] = [
             new Request(['sort' => 5]),
-            ['1', '3', '4', '2'],
+            ['3', '1', '4', '2'],
         ];
 
         // Case #7: mode set to sum on integer array.

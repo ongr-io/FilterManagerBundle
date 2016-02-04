@@ -92,8 +92,8 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('pager'))
                         ->append($this->buildFilterTree('range'))
                         ->append($this->buildFilterTree('date_range'))
-                        ->append($this->buildFilterTree('variant'))
                         ->append($this->buildFilterTree('field_value'))
+                        ->append($this->buildFilterTree('document_value'))
                     ->end()
                 ->end()
             ->end();
@@ -263,8 +263,16 @@ class Configuration implements ConfigurationInterface
                             ->isRequired()
                     ->end();
                 break;
+            case 'document_value':
+                $node
+                    ->children()
+                        ->scalarNode('document_field')
+                            ->info('Field name from document object to pass to the filter.')
+                            ->isRequired()
+                    ->end();
+                break;
             default:
-                // Should not happen.
+                // Default config is enough.
                 break;
         }
 
