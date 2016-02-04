@@ -176,7 +176,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
 
         $container->set('choice', $filter);
 
-        $manager = new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        $manager = new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
 
         /** @var ChoicesAwareViewData $result */
         $result = $manager->handleRequest(new Request())->getFilters()['choice'];
@@ -204,7 +204,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
 
         $container->set('choice', $filter);
 
-        $manager = new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        $manager = new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
 
         /** @var ChoicesAwareViewData $result */
         $result = $manager->handleRequest(new Request())->getFilters()['choice'];

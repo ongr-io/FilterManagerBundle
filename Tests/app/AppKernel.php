@@ -21,7 +21,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new ONGR\ElasticsearchBundle\ONGRElasticsearchBundle(),
             new ONGR\FilterManagerBundle\ONGRFilterManagerBundle(),
-            new ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\AcmeTestBundle(),
+            new ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\TestBundle(),
         ];
     }
 

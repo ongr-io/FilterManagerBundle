@@ -59,7 +59,7 @@ class FieldValueTest extends AbstractFilterManagerResultsTest
         $container = new FilterContainer();
         $container->set('field_value', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**

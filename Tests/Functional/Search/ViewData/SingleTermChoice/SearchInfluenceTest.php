@@ -72,7 +72,7 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
         $filter->setSortType(['type' => '_term', 'order' => 'asc', 'priorities' => []]);
         $container->set('manufacturer', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**

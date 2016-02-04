@@ -64,7 +64,7 @@ class MatchSearchTest extends AbstractFilterManagerResultsTest
         $container = new FilterContainer();
         $container->set('title_match', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**

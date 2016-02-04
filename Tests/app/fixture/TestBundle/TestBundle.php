@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle;
+namespace ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AcmeTestBundle extends Bundle
+class TestBundle extends Bundle
 {
 }

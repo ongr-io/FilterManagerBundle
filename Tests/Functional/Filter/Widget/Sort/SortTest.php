@@ -101,7 +101,7 @@ class SortTest extends AbstractElasticsearchTestCase
         $filter->setChoices($choices);
         $container->set('sorting', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('AcmeTestBundle:Product'));
+        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
     }
 
     /**

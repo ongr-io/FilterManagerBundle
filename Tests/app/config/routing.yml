@@ -3,7 +3,7 @@ foo_list:
     defaults:
         _controller: ONGRFilterManagerBundle:Manager:manager
         managerName: "foo_filters"
-        template: "AcmeTestBundle:Manager:default.html.twig"
+        template: "TestBundle:Manager:default.html.twig"
 
 app_list_json:
     path: /list.json
