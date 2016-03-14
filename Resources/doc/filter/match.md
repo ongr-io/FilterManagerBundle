@@ -27,6 +27,20 @@ ongr_filter_manager:
                 request_field: 'q'
                 field: title
 ```
+It also has to be mentioned that more than one field can be specified. If you want to apply the filter
+to more than one field you can specify it by separating them with commas like so:
+
+```yaml
+....
+#    search:
+#        request_field: 'q'
+#        field: title, description
+#    search-with-heights:
+#        request_field: 'q'
+#        field: title^3, description^2, longdesc
+....
+```
+In the example above ^ sign denotes the boost that is assigned to a specific field
 
 ## Twig view data
 
