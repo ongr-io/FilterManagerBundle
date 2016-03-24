@@ -46,4 +46,14 @@ class ViewDataTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $viewData->getSerializableData());
     }
+
+    /**
+     * Tests Tags getter and setter
+     */
+    public function testTagGetterAndSetter()
+    {
+        $viewData = new ViewData();
+        $viewData->setTags('tags');
+        $this->assertEquals('tags', $viewData->getTags());
+    }
 }
