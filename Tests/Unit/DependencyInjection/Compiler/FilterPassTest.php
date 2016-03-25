@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use ONGR\FilterManagerBundle\DependencyInjection\Compiler\FilterPass;
-use ONGR\FilterManagerBundle\Tests\app\fixture\Acme\TestBundle\Filter\FooRange\FooRange;
+use ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange\FooRange;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -133,6 +133,29 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
             ],
             []
         );
+        $compilerPass = new FilterPass();
+        $compilerPass->process($this->container);
+    }
+
+    /**
+     * Tests if the FilterPass process action
+     * passes without exceptions
+     */
+    public function testCorrectConfiguration()
+    {
+        $this->setContainerConfig(
+            [
+                'ongr_filter_manager.foo_filters' => [
+                    [
+                        'filter_name' => 'bar_filter'
+                    ],
+                ],
+            ],
+            []
+        );
+        $manager = $this->container->get('ongr_filter_manager.foo_filters');
+        $compiler = $manager->getArgument(0);
+        $compiler->addMethodCall('set');
 
         $compilerPass = new FilterPass();
         $compilerPass->process($this->container);
