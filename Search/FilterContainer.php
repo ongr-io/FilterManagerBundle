@@ -62,7 +62,7 @@ class FilterContainer extends ParameterBag
 
     /**
      * Sets cache engine
-     * 
+     *
      * @param Cache|null $cache
      */
     public function setCache(Cache $cache = null)

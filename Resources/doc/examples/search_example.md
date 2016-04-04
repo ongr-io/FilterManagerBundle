@@ -114,9 +114,19 @@ ongr_filter_manager:
                   - { label: No sorting, key: score, field: _score }
                   - { label: Heaviest to lightest, key: weight_desc, field: weight, order: desc }
                   - { label: Lightest to heaviest, key: weight_asc, field: weight, order: asc  }
+```
+
+## Caching
+
+Filter manager builds filter list from configuration. In this process there are many recursions and blocks rebuilding operations, just to make sure build correctly relations on selected filters. Built filters might be cached using `es.cache_engine`. Filters, that are more likely to be different most of the time, should be excluded from caching (in this case we have filter `search` excluded).
+
+```yaml
+ongr_filter_manager:
     cache:
+    	engine: 'es.cache_engine' # cache engine, set null to disable caching
+        life_time: 1080 # cache life time in seconds, 3 hours default
         exclude:
-            - search
+        	- search
 ```
 
 ## Define route
