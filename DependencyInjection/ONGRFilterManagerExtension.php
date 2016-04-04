@@ -140,6 +140,12 @@ class ONGRFilterManagerExtension extends Extension
     {
         foreach ($config['managers'] as $name => $manager) {
             $filterContainer = new Definition('ONGR\FilterManagerBundle\Search\FilterContainer');
+            $cacheEngine = $config['cache']['engine'] ? new Reference($config['cache']['engine']) : null;
+            
+            $filterContainer
+                ->addMethodCall('setCache', [$cacheEngine])
+                ->addMethodCall('setExclude', [$config['cache']['exclude']])
+                ->addMethodCall('setLifeTime', [$config['cache']['life_time']]);
 
             foreach ($manager['filters'] as $filter) {
                 $filterContainer->addMethodCall(

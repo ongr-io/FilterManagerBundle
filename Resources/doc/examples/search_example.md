@@ -114,6 +114,9 @@ ongr_filter_manager:
                   - { label: No sorting, key: score, field: _score }
                   - { label: Heaviest to lightest, key: weight_desc, field: weight, order: desc }
                   - { label: Lightest to heaviest, key: weight_asc, field: weight, order: asc  }
+    cache:
+        exclude:
+            - search
 ```
 
 ## Define route
