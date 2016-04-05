@@ -14,7 +14,6 @@ namespace ONGR\FilterManagerBundle\Search;
 use Doctrine\Common\Cache\Cache;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterInterface;
-use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Relation\FilterIterator;
 use ONGR\FilterManagerBundle\Relation\RelationInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -28,7 +27,7 @@ class FilterContainer extends ParameterBag
     /**
      * @var Cache
      */
-    private $cache = null;
+    private $cache;
 
     /**
      * @var int
@@ -127,24 +126,22 @@ class FilterContainer extends ParameterBag
     /**
      * Builds elastic search query by given SearchRequest and filters.
      *
-     * @param SearchRequest          $request
-     * @param FilterInterface[]|null $filters
+     * @param SearchRequest       $request
+     * @param \ArrayIterator|null $filters
      *
      * @return Search
      */
     public function buildSearch(SearchRequest $request, $filters = null)
     {
+        /** @var \ArrayIterator $filters */
+        $filters = $filters ? $filters : $this->getIterator();
         $search = new Search();
-
-        /** @var FilterInterface[] $filters */
-        $filters = $filters ? $filters : $this->all();
-
         $cachedFilters = [];
 
         if ($this->cache) {
             foreach ($filters as $name => $filter) {
                 if (!in_array($name, $this->exclude)) {
-                    $cachedFilters[$name] = ['filter' => $filter, 'state' => $request->get($name)];
+                    $cachedFilters[$name] = $request->get($name)->getSerializableData();
                 }
             }
 
@@ -153,16 +150,15 @@ class FilterContainer extends ParameterBag
             if ($this->cache->contains($searchHash)) {
                 $search = $this->cache->fetch($searchHash);
             } else {
-                foreach ($cachedFilters as $name => $cachedFilter) {
-                    /** @var FilterInterface[]|FilterState[] $cachedFilter */
-                    $cachedFilter['filter']->modifySearch($search, $cachedFilter['state'], $request);
+                foreach ($cachedFilters as $name => $state) {
+                    $filters->offsetGet($name)->modifySearch($search, $request->get($name), $request);
                 }
                 $this->cache->save($searchHash, $search, $this->lifeTime);
             }
         }
 
         foreach ($filters as $name => $filter) {
-            if (!in_array($name, array_keys($cachedFilters))) {
+            if (!array_key_exists($name, $cachedFilters)) {
                 $filter->modifySearch($search, $request->get($name), $request);
             }
         }

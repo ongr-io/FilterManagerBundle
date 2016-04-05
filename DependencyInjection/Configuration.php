@@ -120,7 +120,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->integerNode('life_time')
                             ->info('Cached search life time.')
-                            ->defaultValue(3 * 60 * 60)
+                            ->defaultValue(10800)
                         ->end()
                     ->end()
                 ->end()
