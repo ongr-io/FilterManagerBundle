@@ -17,6 +17,7 @@ use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Relation\ExcludeRelation;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class FilterStateTest extends AbstractElasticsearchTestCase
@@ -73,7 +74,11 @@ class FilterStateTest extends AbstractElasticsearchTestCase
         $filter->setRequestField('d');
         $container->set('description_match', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**

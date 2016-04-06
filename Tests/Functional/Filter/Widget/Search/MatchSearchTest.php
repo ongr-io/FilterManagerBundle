@@ -15,6 +15,7 @@ use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class MatchSearchTest extends AbstractElasticsearchTestCase
@@ -60,7 +61,11 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
 
         $container->set('match', $match);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**

@@ -15,6 +15,7 @@ use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -64,7 +65,11 @@ class MatchSearchTest extends AbstractFilterManagerResultsTest
         $container = new FilterContainer();
         $container->set('title_match', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**

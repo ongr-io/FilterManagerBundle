@@ -17,6 +17,7 @@ use ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
@@ -103,7 +104,11 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
 
         $container->set('choice', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**

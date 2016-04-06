@@ -16,6 +16,7 @@ use ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager;
 use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class PagerTest extends AbstractElasticsearchTestCase
@@ -93,7 +94,11 @@ class PagerTest extends AbstractElasticsearchTestCase
         $sort->setChoices($choices);
         $container->set('sorting', $sort);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**
