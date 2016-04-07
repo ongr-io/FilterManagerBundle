@@ -165,6 +165,17 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end();
                 break;
+            case 'match':
+                $node
+                    ->children()
+                        ->scalarNode('operator')
+                            ->info('The operator flag.')
+                        ->end()
+                        ->scalarNode('fuzziness')
+                            ->info('The maximum edit distance.')
+                        ->end()
+                    ->end();
+                break;
             case 'fuzzy':
                 $node
                     ->children()

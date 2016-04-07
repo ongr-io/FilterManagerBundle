@@ -23,6 +23,11 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
 class MatchSearch extends AbstractSingleValue
 {
     /**
+     * @var array
+     */
+    private $parameters = [];
+
+    /**
      * {@inheritdoc}
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
@@ -32,17 +37,44 @@ class MatchSearch extends AbstractSingleValue
                 $subQuery = new BoolQuery();
                 foreach (explode(',', $this->getField()) as $field) {
                     if (strpos($field, '^') === false) {
-                        $subQuery->add(new MatchQuery($field, $state->getValue()), 'should');
+                        $subQuery->add(new MatchQuery($field, $state->getValue(), $this->parameters), 'should');
                     } else {
                         list ($field, $boost) = explode('^', $field);
 
-                        $subQuery->add(new MatchQuery($field, $state->getValue(), ['boost' => $boost]), 'should');
+                        $subQuery->add(
+                            new MatchQuery(
+                                $field,
+                                $state->getValue(),
+                                array_merge($this->parameters, ['boost' => $boost])
+                            ),
+                            'should'
+                        );
                     }
                 }
                 $search->addQuery($subQuery, 'must');
             } else {
-                $search->addQuery(new MatchQuery($this->getField(), $state->getValue()), 'must');
+                $search->addQuery(new MatchQuery($this->getField(), $state->getValue(), $this->parameters), 'must');
             }
         }
+    }
+
+    /**
+     * Sets operator
+     *
+     * @param string $operator
+     */
+    public function setOperator($operator)
+    {
+        $this->parameters['operator'] = $operator;
+    }
+
+    /**
+     * Sets the maximum edit distance
+     *
+     * @param string|int|float $fuzziness
+     */
+    public function setFuzziness($fuzziness)
+    {
+        $this->parameters['fuzziness'] = $fuzziness;
     }
 }
