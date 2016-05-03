@@ -50,7 +50,7 @@ class DocumentValueFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Search\DocumentValue';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Search\DocumentValue';
     }
 
     /**
