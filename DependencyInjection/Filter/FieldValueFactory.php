@@ -50,7 +50,7 @@ class FieldValueFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Search\FieldValue';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Search\FieldValue';
     }
 
     /**
