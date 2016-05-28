@@ -95,11 +95,6 @@ class PagerExtension extends \Twig_Extension
             unset($parameters['_page']);
         }
 
-        // Do not include default values into parameters.
-        if ($page <= 1) {
-            return $this->router->generate($route, $parameters);
-        }
-
         $parameters[$fieldName] = $page;
 
         return $this->router->generate($route, $parameters);
