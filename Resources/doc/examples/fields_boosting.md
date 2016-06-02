@@ -2,7 +2,7 @@
 
 In this example simple search page will be implemented. Multiple fields with different boosting will be used in search.
 In configuration we will search in `title` and `color` fields. `color` will be boosted by `2` and `title` by `0.5` (deboosting).
-Boosting is done by suffixing field name with `^{boost_factor}`, e.g `title^2` ,`color^0.5`. 
+Boosting is done by suffixing field name with `^{boost_factor}`, e.g `title^0.5` ,`color^2`.
 
 ## Preparation
 
@@ -32,7 +32,7 @@ ongr_filter_manager:
         match:
             boosted_search:
                 request_field: 'q'
-                field: title^2,color^0.5                
+                field: title^0.5,color^2
 ```
 
 Next step is to define document:

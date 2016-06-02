@@ -8,7 +8,7 @@ The example below will provide real use case of `document_value` filter. Two dif
  
 ## Configuration
  
- First of Elasticsearch, FilterManager and Router bundles has to be configured.
+ First of Elasticsearch, FilterManager and Router bundles have to be configured.
  
 ```yaml
  # app/config/config.yml
