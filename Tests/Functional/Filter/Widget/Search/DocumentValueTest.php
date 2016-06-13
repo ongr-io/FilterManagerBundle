@@ -16,6 +16,7 @@ use ONGR\FilterManagerBundle\Filter\Widget\Search\DocumentValue;
 use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class DocumentValueTest extends AbstractElasticsearchTestCase
@@ -67,7 +68,11 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
 
         $container->set('document_value', $documentValue);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**

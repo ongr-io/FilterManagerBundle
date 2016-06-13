@@ -13,6 +13,7 @@ namespace ONGR\FilterManagerBundle\Tests\Unit\Search;
 
 use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class FilterManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -63,7 +64,8 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
 
         $filterManager = new FilterManager(
             $mockFilterContainer,
-            $mockRepository
+            $mockRepository,
+            new EventDispatcher()
         );
         $filterManager->handleRequest($this->getMock('Symfony\Component\HttpFoundation\Request'));
     }

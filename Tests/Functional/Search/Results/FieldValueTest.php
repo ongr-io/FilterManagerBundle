@@ -15,6 +15,7 @@ use ONGR\FilterManagerBundle\Filter\Widget\Search\FieldValue;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -59,7 +60,11 @@ class FieldValueTest extends AbstractFilterManagerResultsTest
         $container = new FilterContainer();
         $container->set('field_value', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**

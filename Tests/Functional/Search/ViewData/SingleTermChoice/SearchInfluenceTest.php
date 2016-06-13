@@ -16,6 +16,7 @@ use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class SearchInfluenceTest extends AbstractElasticsearchTestCase
@@ -72,7 +73,11 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
         $filter->setSortType(['type' => '_term', 'order' => 'asc', 'priorities' => []]);
         $container->set('manufacturer', $filter);
 
-        return new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        return new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
     }
 
     /**

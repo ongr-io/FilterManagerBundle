@@ -11,6 +11,7 @@
 - [Using as JSON API](examples/json_api.md)
 - [Writing custom filter](examples/custom_filter.md)
 - [Searching in specific fields with boosting](examples/fields_boosting.md)
+- [Creating event listener](examples/event_listener.md)
 
 ## Filters
 

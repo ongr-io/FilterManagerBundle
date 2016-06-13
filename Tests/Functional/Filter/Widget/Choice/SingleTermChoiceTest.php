@@ -17,6 +17,7 @@ use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class SingleTermChoiceTest extends AbstractElasticsearchTestCase
@@ -176,7 +177,11 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
 
         $container->set('choice', $filter);
 
-        $manager = new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        $manager = new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
 
         /** @var ChoicesAwareViewData $result */
         $result = $manager->handleRequest(new Request())->getFilters()['choice'];
@@ -204,7 +209,11 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
 
         $container->set('choice', $filter);
 
-        $manager = new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        $manager = new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
 
         /** @var ChoicesAwareViewData $result */
         $result = $manager->handleRequest(new Request())->getFilters()['choice'];

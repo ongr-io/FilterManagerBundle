@@ -159,6 +159,7 @@ class ONGRFilterManagerExtension extends Extension
                 [
                     $filterContainer,
                     new Reference($manager['repository']),
+                    new Reference('event_dispatcher'),
                 ]
             );
             $managerDefinition->addTag('es.filter_manager');

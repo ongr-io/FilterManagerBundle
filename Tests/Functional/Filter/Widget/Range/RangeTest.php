@@ -17,6 +17,7 @@ use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -195,7 +196,8 @@ class RangeTest extends AbstractFilterManagerResultsTest
 
         $managers['range'] = new FilterManager(
             $container,
-            $this->getManager()->getRepository('TestBundle:Product')
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
         );
 
         $managers['bar_range'] = $this->getContainer()->get('ongr_filter_manager.bar_filters');

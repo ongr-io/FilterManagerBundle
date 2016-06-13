@@ -13,13 +13,17 @@ namespace ONGR\FilterManagerBundle\Search;
 
 use ONGR\ElasticsearchBundle\Service\Repository;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
+use ONGR\FilterManagerBundle\Event\PreSearchEvent;
+use ONGR\FilterManagerBundle\Event\SearchResponseEvent;
 use ONGR\FilterManagerBundle\Filter\FilterInterface;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData;
+use ONGR\FilterManagerBundle\ONGRFilterManagerEvents;
 use ONGR\FilterManagerBundle\Relation\ExcludeRelation;
 use ONGR\FilterManagerBundle\Relation\FilterIterator;
 use ONGR\FilterManagerBundle\Relation\LogicalJoin\AndRelation;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -38,13 +42,23 @@ class FilterManager implements FilterManagerInterface
     private $repository;
 
     /**
-     * @param FilterContainer $container
-     * @param Repository       $repository
+     * @var EventDispatcherInterface
      */
-    public function __construct(FilterContainer $container, Repository $repository)
-    {
+    private $eventDispatcher;
+    
+    /**
+     * @param FilterContainer          $container
+     * @param Repository               $repository
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct(
+        FilterContainer $container,
+        Repository $repository,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->container = $container;
         $this->repository = $repository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -64,6 +78,8 @@ class FilterManager implements FilterManagerInterface
      */
     public function search(SearchRequest $request)
     {
+        $this->eventDispatcher->dispatch(ONGRFilterManagerEvents::PRE_SEARCH, new PreSearchEvent($request));
+
         $search = $this->container->buildSearch($request);
 
         /** @var FilterInterface $filter */
@@ -80,6 +96,7 @@ class FilterManager implements FilterManagerInterface
         }
 
         $result = $this->repository->execute($search);
+        $this->eventDispatcher->dispatch(ONGRFilterManagerEvents::SEARCH_RESPONSE, new SearchResponseEvent($result));
 
         return new SearchResponse(
             $this->getFiltersViewData($result, $request),

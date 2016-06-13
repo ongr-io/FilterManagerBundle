@@ -15,6 +15,7 @@ use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class FuzzySearchTest extends AbstractElasticsearchTestCase
@@ -89,7 +90,11 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
 
         $container->set('fuzzy', $fuzzy);
 
-        $fmb = new FilterManager($container, $this->getManager()->getRepository('TestBundle:Product'));
+        $fmb = new FilterManager(
+            $container,
+            $this->getManager()->getRepository('TestBundle:Product'),
+            new EventDispatcher()
+        );
         $result = $fmb->handleRequest($request);
 
         $actual = [];
