@@ -66,6 +66,8 @@ ongr_filter_manager:
         match:
             phrase:
                 request_field: 'q'
+                operator: 'and'
+                fuzziness: 0
         pager:
             pager:
                 request_field: 'page'

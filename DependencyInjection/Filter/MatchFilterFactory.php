@@ -26,6 +26,11 @@ class MatchFilterFactory extends AbstractFilterFactory
         parent::configure($definition, $configuration);
 
         !isset($configuration['field']) ? : $definition->addMethodCall('setField', [$configuration['field']]);
+
+        !isset($configuration['operator']) ? : $definition
+            ->addMethodCall('setOperator', [$configuration['operator']]);
+        !isset($configuration['fuzziness']) ? : $definition
+            ->addMethodCall('setFuzziness', [$configuration['fuzziness']]);
     }
 
     /**
