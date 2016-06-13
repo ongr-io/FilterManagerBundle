@@ -32,6 +32,7 @@ class Configuration implements ConfigurationInterface
 
         $this->addManagersSection($rootNode);
         $this->addFiltersSection($rootNode);
+        $this->addCacheSection($rootNode);
 
         return $treeBuilder;
     }
@@ -99,6 +100,33 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
+    /**
+     * @param ArrayNodeDefinition $rootNode
+     */
+    private function addCacheSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('cache')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('engine')
+                            ->info('Caching engine service name.')
+                            ->defaultValue('es.cache_engine')
+                        ->end()
+                        ->arrayNode('exclude')
+                            ->info('Array of filter names to exclude from caching.')
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->integerNode('life_time')
+                            ->info('Cached search life time.')
+                            ->defaultValue(10800)
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+    
     /**
      * Builds filter config tree for given filter name.
      *
