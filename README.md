@@ -9,8 +9,8 @@ It is important to mention that filtering is everything what has impact on list,
 - Documents list sorting. Same as paging - sorting is filter in this bundle.
 - Any custom factor which has influence (not always directly visible) on result list. It can exclude, boost, modify some results, collect some metrics or any other action you can imagine.
 
-If you have any questions, don't hesitate to ask them on [![Join the chat at https://gitter.im/ongr-io/support](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ongr-io/support)
- chat, or just come to say Hi ;).
+If you need any help, [stack overflow](http://stackoverflow.com/questions/tagged/ongr)
+is the preffered and recommended way to ask ONGR support questions.
 
 [![Build Status](https://travis-ci.org/ongr-io/FilterManagerBundle.svg?branch=master)](https://travis-ci.org/ongr-io/FilterManagerBundle)
 [![Coverage Status](https://coveralls.io/repos/ongr-io/FilterManagerBundle/badge.svg?branch=master&service=github)](https://coveralls.io/github/ongr-io/FilterManagerBundle?branch=master)
