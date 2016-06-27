@@ -4,13 +4,15 @@ This filter searches for a matching value in the specified field. Usual use case
 
 ## Configuration
 
-| Setting name           | Meaning                                                                              |
-|------------------------|--------------------------------------------------------------------------------------|
-| `request_field`        | Request field used to specify filter value. (e.g. `www.page.com/?request_field=4`)   |
-| `field`                | Specifies the field in repository to apply this filter on. (e.g. `item_color`)       |
-| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
+| Setting name           | Meaning                                                                                        |
+|------------------------|------------------------------------------------------------------------------------------------|
+| `request_field`        | Request field used to specify filter value. (e.g. `www.page.com/?request_field=4`)             |
+| `field`                | Specifies the field in repository to apply this filter on. (e.g. `item_color`)                 |
+| `fuzziness`            | Enables inexact matching of the results.                                                       |
+| `operator`             | Controls the clauses of the inner boolean query. Can be set to `or` or `and`, defaults to `or` |
+| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.                       |
   
-Example:
+Example of the configuration:
   
 ```yaml
 # app/config/config.yml
@@ -26,6 +28,9 @@ ongr_filter_manager:
             search:
                 request_field: 'q'
                 field: title
+                operator: and
+                fuzziness: 2
+
 ```
 It also has to be mentioned that more than one field can be specified. If you want to apply the filter
 to more than one field you can specify it by separating them with commas like so:
