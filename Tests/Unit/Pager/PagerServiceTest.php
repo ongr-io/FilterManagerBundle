@@ -269,6 +269,58 @@ class PagerServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Data provider for testGettersAndSetters().
+     *
+     * @return array
+     */
+    public function getTestGettersAndSettersData()
+    {
+        $result = [];
+        // #0
+        $result[] = [
+            [
+                'limit' => 2,
+                'page' => 4,
+            ],
+            2,
+            4
+        ];
+        // #1
+        $result[] = [
+            [
+                'limit' => 0,
+                'page' => 15,
+            ],
+            1,
+            10
+        ];
+        // #2
+        $result[] = [
+            [
+                'limit' => 11,
+                'page' => 15,
+            ],
+            11,
+            1
+        ];
+        return $result;
+    }
+
+    /**
+     * Tests Limit and Page getters and setters
+     *
+     * @dataProvider getTestGettersAndSettersData
+     */
+    public function testGettersAndSetters($options, $limit, $page)
+    {
+        $adapter = $this->getMock('ONGR\FilterManagerBundle\Pager\PagerAdapterInterface');
+        $adapter->expects($this->any())->method('getTotalResults')->will($this->returnValue(10));
+        $pager = new PagerService($adapter, $options);
+        $this->assertEquals($limit, $pager->getLimit());
+        $this->assertEquals($page, $pager->getPage());
+    }
+
+    /**
      * Data provider for testGetOffset().
      *
      * @return array
