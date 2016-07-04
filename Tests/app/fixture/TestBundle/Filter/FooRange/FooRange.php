@@ -60,8 +60,15 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
             return $state;
         }
 
-        $normalized['gt'] = floatval($values[0]);
-        $normalized['lt'] = floatval($values[1]);
+        $normalized = [];
+        $values[0] == '-' ? : $normalized['gt'] = floatval($values[0]);
+        $values[1] == '-' ? : $normalized['lt'] = floatval($values[1]);
+
+        if (empty($normalized)) {
+            $state->setActive(false);
+
+            return $state;
+        }
 
         $state->setValue($normalized);
 
