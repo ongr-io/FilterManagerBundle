@@ -31,15 +31,36 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
                     [
                         '_id' => 1,
                         'title' => 'Foo',
+                        'variants' => [
+                            [
+                                'title' => 'acme'
+                            ],
+                            [
+                                'title' => 'test'
+                            ],
+                        ],
                     ],
                     [
                         '_id' => 2,
                         'title' => 'Baz',
                         'description' => 'tuna fish',
+                        'variants' => [
+                            [
+                                'title' => 'bar bar'
+                            ],
+                            [
+                                'title' => 'testing'
+                            ],
+                        ],
                     ],
                     [
                         '_id' => 3,
                         'title' => 'Foo bar',
+                        'variants' => [
+                            [
+                                'title' => 'acme'
+                            ]
+                        ]
                     ],
                 ],
             ],
@@ -57,7 +78,7 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
 
         $match = new MatchSearch();
         $match->setRequestField('q');
-        $match->setField('title,description');
+        $match->setField('title,description^2,variants+variants.title^3');
 
         $container->set('match', $match);
 
@@ -77,12 +98,16 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
     {
         $out = [];
 
-        // Case #0: simple from title field.
+        // Case #0: search a value that only exists in the variant title.
+        $out[] = [[1, 3], new Request(['q' => 'acme'])];
+        // Case #1: search a non existing value.
+        $out[] = [[], new Request(['q' => 'none-existing'])];
+        // Case #2: search a value that exists in both document and variant titles.
+        $out[] = [[2, 3], new Request(['q' => 'bar'])];
+        // Case #3: search a value that only exists in the document title.
         $out[] = [[1, 3], new Request(['q' => 'Foo'])];
-        // Case #1: simple from description field.
+        // Case #4: search a value that only exists in the document description.
         $out[] = [[2], new Request(['q' => 'fish'])];
-        // Case #2: empty parameter.
-        $out[] = [[1, 2, 3], new Request(['q' => ''])];
 
         return $out;
     }
