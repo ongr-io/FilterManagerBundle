@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Choice;
 
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use ONGR\ElasticsearchDSL\Aggregation\FilterAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\TermQuery;
@@ -60,6 +61,9 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
+            if (is_array($state->getValue())) {
+                throw new InvalidArgumentException('Value given to `SingleTermChoice` filter must not be an array');
+            }
             $search->addPostFilter(new TermQuery($this->getField(), $state->getValue()));
         }
     }

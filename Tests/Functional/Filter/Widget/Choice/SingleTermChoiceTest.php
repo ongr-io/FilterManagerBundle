@@ -211,4 +211,17 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
 
         $this->assertEquals(11, count($result->getChoices()));
     }
+
+    /**
+     * Tests bad request sent to manager
+     */
+    public function testArrayValueException()
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/list?single_choice[]=blue+black');
+        $this->assertContains(
+            'Value given to `SingleTermChoice` filter must not be an array',
+            $crawler->html()
+        );
+    }
 }
