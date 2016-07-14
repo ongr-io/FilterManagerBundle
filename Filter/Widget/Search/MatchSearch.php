@@ -55,21 +55,21 @@ class MatchSearch extends AbstractSingleValue
      */
     private function buildMatchPart($field, FilterState $state)
     {
-        if (false === strpos($field, '+')) {
-            if (strpos($field, '^') !== false) {
-                list ($field, $boost) = explode('^', $field);
-            }
-            $query =  new MatchQuery($field, $state->getValue(), $this->parameters);
-            !isset($boost) ? : $query->addParameter('boost', $boost);
-        } else {
+        if (strpos($field, '+') !== false) {
             list ($path, $field) = explode('+', $field);
-            if (strpos($field, '^') !== false) {
-                list ($field, $boost) = explode('^', $field);
-            }
-            $mQuery =  new MatchQuery($field, $state->getValue(), $this->parameters);
-            !isset($boost) ? : $mQuery->addParameter('boost', $boost);
-            $query = new NestedQuery($path, $mQuery);
         }
+
+        if (strpos($field, '^') !== false) {
+            list ($field, $boost) = explode('^', $field);
+        }
+
+        $query =  new MatchQuery($field, $state->getValue(), $this->parameters);
+        !isset($boost) ? : $query->addParameter('boost', $boost);
+
+        if (isset($path)) {
+            $query = new NestedQuery($path, $query);
+        }
+
         return $query;
     }
 
