@@ -12,13 +12,14 @@
 namespace ONGR\FilterManagerBundle\Filter\Widget\Dynamic;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
+use ONGR\ElasticsearchBundle\Mapping\Caser;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterInterface;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareTrait;
 use ONGR\FilterManagerBundle\Filter\ViewData;
-use ONGR\FilterManagerBundle\Relation\RelationInterface;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -53,11 +54,37 @@ class Dynamic implements FilterInterface
      */
     public function getState(Request $request)
     {
+        $state = new FilterState();
         $value = $request->get($this->getRequestField());
 
-        if (isset($value) && $value !== '') {
-
+        if (isset($value) && is_array($value)) {
+            $filter = new $this->filterNamespaces[$value['filter']];
+            $filter->setRequestField($this->requestField);
+            $filter->setField($value['field']);
+            if (isset($this->getParameters()[$value['filter']])) {
+                foreach ($this->getParameters() as $key => $parameter) {
+                    $setter = 'set'.ucfirst(Caser::camel($key));
+                    $setter = $setter == 'setSort' ? 'setSortType' : $setter;
+                    try {
+                        $filter->$setter($parameter);
+                    } catch(\Exception $e) {
+                        throw new InvalidConfigurationException(
+                            sprintf(
+                                'Invalid parameter %s provided to Dynamic filters %s configuration.',
+                                [$key,$value['filter']]
+                            )
+                        );
+                    }
+                }
+            }
+            $this->filter = $filter;
+            $request = new Request(
+                [$this->getRequestField() => $value['value']]
+            );
+            $state = $this->filter->getState($request);
         }
+
+        return $state;
     }
 
     /**
