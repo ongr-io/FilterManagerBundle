@@ -29,11 +29,25 @@ class Dynamic implements FilterInterface
     use RelationAwareTrait;
 
     /**
+     * @var string
+     */
+    private $requestField;
+
+    /**
+     * @var FilterInterface
+     */
+    private $filter;
+
+    /**
      * {@inheritdoc}
      */
     public function getState(Request $request)
     {
-        // TODO: Implement getState() method.
+        $value = $request->get($this->getRequestField());
+
+        if (isset($value) && $value !== '') {
+
+        }
     }
 
     /**
@@ -66,5 +80,37 @@ class Dynamic implements FilterInterface
     public function getTags()
     {
         // TODO: Implement getTags() method.
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestField()
+    {
+        return $this->requestField;
+    }
+
+    /**
+     * @param mixed $requestField
+     */
+    public function setRequestField($requestField)
+    {
+        $this->requestField = $requestField;
+    }
+
+    /**
+     * @return FilterInterface
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    /**
+     * @param FilterInterface $filter
+     */
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
     }
 }
