@@ -50,6 +50,11 @@ class Dynamic implements FilterInterface
     private $parameters;
 
     /**
+     * @var array
+     */
+    private $tags = [];
+
+    /**
      * {@inheritdoc}
      */
     public function getState(Request $request)
@@ -67,7 +72,7 @@ class Dynamic implements FilterInterface
                     $setter = $setter == 'setSort' ? 'setSortType' : $setter;
                     try {
                         $filter->$setter($parameter);
-                    } catch(\Exception $e) {
+                    } catch (\Exception $e) {
                         throw new InvalidConfigurationException(
                             sprintf(
                                 'Invalid parameter %s provided to Dynamic filters %s configuration.',
@@ -116,7 +121,15 @@ class Dynamic implements FilterInterface
      */
     public function getTags()
     {
-        return $this->filter->getTags();
+        return $this->tags;
+    }
+
+    /**
+     * @param array $tags
+     */
+    public function setTags(array $tags)
+    {
+        $this->tags = $tags;
     }
 
     /**
@@ -133,22 +146,6 @@ class Dynamic implements FilterInterface
     public function setRequestField($requestField)
     {
         $this->requestField = $requestField;
-    }
-
-    /**
-     * @return FilterInterface
-     */
-    public function getFilter()
-    {
-        return $this->filter;
-    }
-
-    /**
-     * @param FilterInterface $filter
-     */
-    public function setFilter($filter)
-    {
-        $this->filter = $filter;
     }
 
     /**
