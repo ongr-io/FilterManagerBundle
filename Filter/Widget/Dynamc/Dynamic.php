@@ -65,7 +65,7 @@ class Dynamic implements FilterInterface
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        // TODO: Implement modifySearch() method.
+        $this->filter->modifySearch($search, $state, $request);
     }
 
     /**
@@ -73,7 +73,7 @@ class Dynamic implements FilterInterface
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        // TODO: Implement preProcessSearch() method.
+        return $this->filter->preProcessSearch($search, $relatedSearch, $state);
     }
 
     /**
@@ -81,7 +81,7 @@ class Dynamic implements FilterInterface
      */
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
-        // TODO: Implement getViewData() method.
+        return $this->getViewData($result, $data);
     }
 
     /**
@@ -89,7 +89,7 @@ class Dynamic implements FilterInterface
      */
     public function getTags()
     {
-        // TODO: Implement getTags() method.
+        return $this->filter->getTags();
     }
 
     /**
