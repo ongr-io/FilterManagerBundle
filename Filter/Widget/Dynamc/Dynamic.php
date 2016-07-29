@@ -39,6 +39,16 @@ class Dynamic implements FilterInterface
     private $filter;
 
     /**
+     * @var array
+     */
+    private $filterNamespaces;
+
+    /**
+     * @var array $parameters
+     */
+    private $parameters;
+
+    /**
      * {@inheritdoc}
      */
     public function getState(Request $request)
@@ -112,5 +122,37 @@ class Dynamic implements FilterInterface
     public function setFilter($filter)
     {
         $this->filter = $filter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilterNamespaces()
+    {
+        return $this->filterNamespaces;
+    }
+
+    /**
+     * @param array $filterNamespaces
+     */
+    public function setFilterNamespaces($filterNamespaces)
+    {
+        $this->filterNamespaces = $filterNamespaces;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param mixed $parameters
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
     }
 }
