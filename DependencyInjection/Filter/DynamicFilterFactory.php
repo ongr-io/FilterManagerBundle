@@ -21,7 +21,17 @@ class DynamicFilterFactory extends AbstractFilterFactory
     /**
      * @var array
      */
-    private $filterNamespaces;
+    private $filterNamespaces = [
+        'choice' => 'ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice',
+        'multi_choice' => 'ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice',
+        'match' => 'ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch',
+        'fuzzy' => 'ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch',
+        'sort' => 'ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort',
+        'pager' => 'ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager',
+        'range' => 'ONGR\FilterManagerBundle\Filter\Widget\Range\Range',
+        'field_value' => 'ONGR\FilterManagerBundle\Filters\Widget\Search\FieldValue',
+        'document_value' => 'ONGR\FilterManagerBundle\Filters\Widget\Search\DocumentValue',
+    ];
 
     /**
      * {@inheritdoc}
@@ -30,21 +40,7 @@ class DynamicFilterFactory extends AbstractFilterFactory
     {
         parent::configure($definition, $configuration);
         $definition->addMethodCall('setParameters', [$configuration['parameters']]);
-        $definition->addMethodCall('setFilterNamespaces', [$configuration['filter_namespaces']]);
-    }
-
-    /**
-     * Sets configuraton for filter.
-     *
-     * @param array $filterNamespaces
-     *
-     * @return AbstractFilterFactory
-     */
-    public function setFilterNamespaces(array $filterNamespaces)
-    {
-        $this->filterNamespaces = $filterNamespaces;
-
-        return $this;
+        $definition->addMethodCall('setFilterNamespaces', [$this->filterNamespaces]);
     }
 
     /**
@@ -52,7 +48,7 @@ class DynamicFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filters\Widget\Dynamic\Dynamic';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Dynamic\Dynamic';
     }
 
     /**
