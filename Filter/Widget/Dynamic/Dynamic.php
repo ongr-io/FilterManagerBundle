@@ -137,15 +137,17 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
 
                 foreach ($data->getChoices() as $choice) {
                     $urlParameters = $this->urlParameters;
+                    $choiceParameters = $choice->getUrlParameters();
                     $value = null;
 
-                    if (!empty($choice->getUrlParameters())) {
-                        $value = $choice->getUrlParameters()[$this->getRequestField()];
+                    if (isset($choiceParameters[$this->getRequestField()])) {
+                        $value = $choiceParameters[$this->getRequestField()];
                     }
 
                     $urlParameters[$this->getRequestField()]['value'] = $value;
+                    $choiceParameters[$this->getRequestField()] = $urlParameters[$this->getRequestField()];
 
-                    $choice->setUrlParameters($urlParameters);
+                    $choice->setUrlParameters($choiceParameters);
                     $choices[] = $choice;
                 }
 
