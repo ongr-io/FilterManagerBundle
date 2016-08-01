@@ -19,6 +19,7 @@ use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareTrait;
 use ONGR\FilterManagerBundle\Filter\ViewData;
+use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,14 +42,9 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
     private $filter;
 
     /**
-     * @var array
+     * @var FilterInterface[]
      */
-    private $filterNamespaces;
-
-    /**
-     * @var array
-     */
-    private $parameters;
+    private $filters;
 
     /**
      * @var array
@@ -67,32 +63,37 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
     {
         $state = new FilterState();
         $value = $request->get($this->getRequestField());
-        $this->setUrlParameters($value);
+        $this->urlParameters[$this->getRequestField()] = $value;
 
         if (isset($value) && is_array($value)) {
-            $filter = new $this->filterNamespaces[$value['filter']];
-            $filter->setRequestField($this->requestField);
-            $filter->setField($value['field']);
-            if (isset($this->getParameters()[$value['filter']])) {
-                foreach ($this->getParameters() as $key => $parameter) {
-                    $setter = 'set'.ucfirst(Caser::camel($key));
-                    $setter = $setter == 'setSort' ? 'setSortType' : $setter;
-                    try {
-                        $filter->$setter($parameter);
-                    } catch (\Exception $e) {
-                        throw new InvalidConfigurationException(
-                            sprintf(
-                                'Invalid parameter %s provided to Dynamic filters %s configuration.',
-                                [$key,$value['filter']]
-                            )
-                        );
-                    }
-                }
+            if (empty($this->filters)) {
+                throw new InvalidConfigurationException('No filters provided to dynamic filter');
             }
-            $this->filter = $filter;
-            $request = new Request($this->getUrlValue());
+
+            if (isset($value['filter'])) {
+                if (isset($this->filters[$value['filter']])) {
+                    $this->filter = clone $this->filters[$value['filter']];
+                } else {
+                    throw new InvalidConfigurationException(
+                        sprintf('Filter `%s`, requested in dynamic filter not defined', $value['filter'])
+                    );
+                }
+            } else {
+                $this->filter = clone reset($this->filters);
+            }
+
+            $this->filter->setRequestField($this->getRequestField());
+
+            if (isset($value['field'])) {
+                $this->filter->setField($value['field']);
+            }
+
+            $request = new Request(
+                [
+                    $this->getRequestField() => $this->urlParameters[$this->getRequestField()]['value']
+                ]
+            );
             $state = $this->filter->getState($request);
-            $state->setUrlParameters($value);
         }
 
         return $state;
@@ -104,9 +105,7 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $state->setUrlParameters($this->getUrlValue());
             $this->filter->modifySearch($search, $state, $request);
-            $state->setUrlParameters($this->urlParameters);
         }
     }
 
@@ -118,7 +117,6 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
         $out = null;
 
         if ($state && $state->isActive()) {
-            $state->setUrlParameters($this->getUrlValue());
             $out = $this->filter->preProcessSearch($search, $relatedSearch, $state);
             $state->setUrlParameters($this->urlParameters);
         }
@@ -132,18 +130,30 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         if ($this->filter) {
-            return $this->filter->getViewData($result, $data);
-        } else {
-            return $data;
-        }
-    }
+            $data = $this->filter->getViewData($result, $data);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTags()
-    {
-        return $this->tags;
+            if ($data instanceof ChoicesAwareViewData) {
+                $choices = [];
+
+                foreach ($data->getChoices() as $choice) {
+                    $urlParameters = $this->urlParameters;
+                    $value = null;
+
+                    if (!empty($choice->getUrlParameters())) {
+                        $value = $choice->getUrlParameters()[$this->getRequestField()];
+                    }
+
+                    $urlParameters[$this->getRequestField()]['value'] = $value;
+
+                    $choice->setUrlParameters($urlParameters);
+                    $choices[] = $choice;
+                }
+
+                $data->setChoices($choices);
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -158,6 +168,14 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
         }
 
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**
@@ -185,54 +203,18 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
     }
 
     /**
-     * @return array
+     * @return FilterInterface[]
      */
-    public function getFilterNamespaces()
+    public function getFilters()
     {
-        return $this->filterNamespaces;
+        return $this->filters;
     }
 
     /**
-     * @param array $filterNamespaces
+     * @param FilterInterface[] $filters
      */
-    public function setFilterNamespaces($filterNamespaces)
+    public function setFilters($filters)
     {
-        $this->filterNamespaces = $filterNamespaces;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param mixed $parameters
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * @return array
-     */
-    private function getUrlValue()
-    {
-        $value = [
-            $this->getRequestField() => $this->urlParameters[$this->getRequestField()]['value']
-        ];
-
-        return $value;
-    }
-
-    /**
-     * @param array $urlParameters
-     */
-    private function setUrlParameters($urlParameters)
-    {
-        $this->urlParameters[$this->getRequestField()] = $urlParameters;
+        $this->filters = $filters;
     }
 }

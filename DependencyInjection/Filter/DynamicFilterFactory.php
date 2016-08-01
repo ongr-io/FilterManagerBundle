@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\DependencyInjection\Filter;
 
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Factory for dynamic filter.
@@ -19,28 +20,18 @@ use Symfony\Component\DependencyInjection\Definition;
 class DynamicFilterFactory extends AbstractFilterFactory
 {
     /**
-     * @var array
-     */
-    private $filterNamespaces = [
-        'choice' => 'ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice',
-        'multi_choice' => 'ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice',
-        'match' => 'ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch',
-        'fuzzy' => 'ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch',
-        'sort' => 'ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort',
-        'pager' => 'ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager',
-        'range' => 'ONGR\FilterManagerBundle\Filter\Widget\Range\Range',
-        'field_value' => 'ONGR\FilterManagerBundle\Filters\Widget\Search\FieldValue',
-        'document_value' => 'ONGR\FilterManagerBundle\Filters\Widget\Search\DocumentValue',
-    ];
-
-    /**
      * {@inheritdoc}
      */
     public function configure(Definition $definition, array $configuration)
     {
         parent::configure($definition, $configuration);
-        $definition->addMethodCall('setParameters', [$configuration['parameters']]);
-        $definition->addMethodCall('setFilterNamespaces', [$this->filterNamespaces]);
+        $filters = [];
+
+        foreach ($configuration['filters'] as $filter) {
+            $filters[$filter] = new Reference('ongr_filter_manager.filter.'.$filter);
+        }
+
+        $definition->addMethodCall('setFilters', [$filters]);
     }
 
     /**

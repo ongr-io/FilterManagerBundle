@@ -314,9 +314,9 @@ class Configuration implements ConfigurationInterface
             case 'dynamic':
                 $node
                     ->children()
-                        ->arrayNode('parameters')
-                            ->info('Field for providing additional information about filters to be used')
-                            ->prototype('array')
+                        ->arrayNode('filters')
+                            ->info('Filter names to include in dynamic filter.')
+                            ->prototype('scalar')->end()
                         ->end()
                     ->end();
                 break;
