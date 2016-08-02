@@ -12,7 +12,6 @@
 namespace ONGR\FilterManagerBundle\Filter\Widget\Dynamic;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
-use ONGR\ElasticsearchBundle\Mapping\Caser;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterInterface;
 use ONGR\FilterManagerBundle\Filter\FilterState;
@@ -23,9 +22,10 @@ use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * This class provides sorting filter.
+ * This class a dynamic filter that can change the filter, field and value per request
  */
 class Dynamic implements FilterInterface, ViewDataFactoryInterface
 {
@@ -66,33 +66,31 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
         $this->urlParameters[$this->getRequestField()] = $value;
 
         if (isset($value) && is_array($value)) {
-            if (empty($this->filters)) {
-                throw new InvalidConfigurationException('No filters provided to dynamic filter');
+            if (!isset($value['field']) || !isset($value['filter'])) {
+                throw new BadRequestHttpException(
+                    '`field` and `filter` values must be provided to the dynamic filter'
+                );
             }
 
-            if (isset($value['filter'])) {
-                if (isset($this->filters[$value['filter']])) {
-                    $this->filter = clone $this->filters[$value['filter']];
-                } else {
-                    throw new InvalidConfigurationException(
-                        sprintf('Filter `%s`, requested in dynamic filter not defined', $value['filter'])
-                    );
-                }
+            if (isset($this->filters[$value['filter']])) {
+                $this->filter = clone $this->filters[$value['filter']];
             } else {
-                $this->filter = clone reset($this->filters);
+                throw new InvalidConfigurationException(
+                    sprintf('Filter `%s`, requested in dynamic filter is not defined', $value['filter'])
+                );
             }
 
             $this->filter->setRequestField($this->getRequestField());
+            $this->filter->setField($value['field']);
+            $requestValue = [];
 
-            if (isset($value['field'])) {
-                $this->filter->setField($value['field']);
+            if (isset($value['value'])) {
+                $requestValue = [
+                    $this->getRequestField() => $this->urlParameters[$this->getRequestField()]['value']
+                ];
             }
 
-            $request = new Request(
-                [
-                    $this->getRequestField() => $this->urlParameters[$this->getRequestField()]['value']
-                ]
-            );
+            $request = new Request($requestValue);
             $state = $this->filter->getState($request);
         }
 
@@ -116,7 +114,7 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
     {
         $out = null;
 
-        if ($state && $state->isActive()) {
+        if ($this->filter) {
             $out = $this->filter->preProcessSearch($search, $relatedSearch, $state);
             $state->setUrlParameters($this->urlParameters);
         }
