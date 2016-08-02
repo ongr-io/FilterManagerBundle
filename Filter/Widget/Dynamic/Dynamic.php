@@ -132,20 +132,20 @@ class Dynamic implements FilterInterface, ViewDataFactoryInterface
 
             if ($data instanceof ChoicesAwareViewData) {
                 $choices = [];
+                $resetUrlParameters = $data->getResetUrlParameters();
+                $resetUrlParameters[$this->getRequestField()] = $this->urlParameters[$this->getRequestField()];
+                unset($resetUrlParameters[$this->getRequestField()]['value']);
+                $data->setResetUrlParameters($resetUrlParameters);
 
                 foreach ($data->getChoices() as $choice) {
-                    $urlParameters = $this->urlParameters;
-                    $choiceParameters = $choice->getUrlParameters();
-                    $value = null;
-
-                    if (isset($choiceParameters[$this->getRequestField()])) {
-                        $value = $choiceParameters[$this->getRequestField()];
+                    if (isset($choice->getUrlParameters()[$this->getRequestField()])) {
+                        $choiceParameters = $choice->getUrlParameters();
+                        $choiceParameters[$this->getRequestField()] = $this->urlParameters[$this->getRequestField()];
+                        $choiceParameters[$this->getRequestField()]['value'] =
+                            $choice->getUrlParameters()[$this->getRequestField()];
+                        $choice->setUrlParameters($choiceParameters);
                     }
 
-                    $urlParameters[$this->getRequestField()]['value'] = $value;
-                    $choiceParameters[$this->getRequestField()] = $urlParameters[$this->getRequestField()];
-
-                    $choice->setUrlParameters($choiceParameters);
                     $choices[] = $choice;
                 }
 
