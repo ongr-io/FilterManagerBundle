@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Search;
 
+use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Service\Repository;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Event\PreSearchEvent;
@@ -84,13 +85,19 @@ class FilterManager implements FilterManagerInterface
 
         /** @var FilterInterface $filter */
         foreach ($this->container->all() as $name => $filter) {
-            // We simply exclude not related filters and current filter itself.
-            $relatedFilters = $this->container->getFiltersByRelation(
-                new AndRelation([$filter->getSearchRelation(), new ExcludeRelation([$name])])
-            );
+            $relatedSearch = new Search();
+
+            if ($filter->isRelated()) {
+                // We simply exclude not related filters and current filter itself.
+                $relatedFilters = $this->container->getFiltersByRelation(
+                    new AndRelation([$filter->getSearchRelation(), new ExcludeRelation([$name])])
+                );
+                $relatedSearch = $this->container->buildSearch($request, $relatedFilters);
+            }
+
             $filter->preProcessSearch(
                 $search,
-                $this->container->buildSearch($request, $relatedFilters),
+                $relatedSearch,
                 $request->get($name)
             );
         }
