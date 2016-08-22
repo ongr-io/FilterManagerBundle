@@ -71,4 +71,12 @@ interface FilterInterface extends RelationAwareInterface
      * @return array
      */
     public function getTags();
+
+    /**
+     * Defines whether its necessary to build a related search for
+     * the filters preProcessSearch() method
+     *
+     * @return bool
+     */
+    public function isRelated();
 }
