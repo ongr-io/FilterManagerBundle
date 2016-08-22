@@ -73,4 +73,12 @@ abstract class AbstractRange extends AbstractSingleRequestValueFilter implements
             $search->addPostFilter($filter);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRelated()
+    {
+        return false;
+    }
 }

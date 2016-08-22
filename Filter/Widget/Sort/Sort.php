@@ -112,6 +112,14 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isRelated()
+    {
+        return false;
+    }
+
+    /**
      * @param string   $key
      * @param ViewData $data
      *

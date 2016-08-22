@@ -108,4 +108,12 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
 
         return $data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRelated()
+    {
+        return true;
+    }
 }

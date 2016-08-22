@@ -137,4 +137,12 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
 
         return $data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRelated()
+    {
+        return false;
+    }
 }

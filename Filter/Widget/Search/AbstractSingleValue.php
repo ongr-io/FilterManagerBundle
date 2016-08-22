@@ -41,4 +41,12 @@ abstract class AbstractSingleValue extends AbstractSingleRequestValueFilter impl
     {
         // Nothing more to do here.
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRelated()
+    {
+        return false;
+    }
 }
