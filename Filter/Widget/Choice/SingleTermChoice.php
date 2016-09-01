@@ -135,6 +135,14 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isRelated()
+    {
+        return true;
+    }
+
+    /**
      * Adds prioritized choices.
      *
      * @param array                $unsortedChoices

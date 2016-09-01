@@ -31,6 +31,9 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
         $mockFilterInterface->expects($this->once())
             ->method('preProcessSearch');
         $mockFilterInterface->expects($this->once())
+            ->method('isRelated')
+            ->will($this->returnValue(true));
+        $mockFilterInterface->expects($this->once())
             ->method('getSearchRelation')
             ->will($this->returnValue(null));
 
