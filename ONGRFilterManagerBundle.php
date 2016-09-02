@@ -15,6 +15,7 @@ use ONGR\FilterManagerBundle\DependencyInjection\Compiler\FilterPass;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\ChoiceFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\DateRangeFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\DocumentValueFactory;
+use ONGR\FilterManagerBundle\DependencyInjection\Filter\DynamicAggregateFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\FieldValueFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\FuzzyFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\MatchFilterFactory;
@@ -50,6 +51,7 @@ class ONGRFilterManagerBundle extends Bundle
         $extension->addFilterFactory(new DateRangeFilterFactory());
         $extension->addFilterFactory(new FieldValueFactory());
         $extension->addFilterFactory(new DocumentValueFactory());
+        $extension->addFilterFactory(new DynamicAggregateFilterFactory());
 
         $container->addCompilerPass(new FilterPass());
     }
