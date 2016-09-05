@@ -135,7 +135,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         if ($state->isActive()) {
             foreach ($state->getValue() as $key => $term) {
                 $terms = $state->getValue();
-                unset($terms[$key]);
+                array_splice($terms, $key, 1);
 
                 if (!count($terms)) {
                     break;
@@ -155,9 +155,9 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
                 $state->getValue(),
                 'all-selected'
             );
+        } else {
+            $filterAggregation->addAggregation($aggregation);
         }
-
-        $filterAggregation->addAggregation($aggregation);
 
         $search->addAggregation($filterAggregation);
     }
@@ -223,10 +223,9 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      */
     private function fetchAggregation(DocumentIterator $result, $name)
     {
-        $aggregation = $result->getAggregation($name);
+        $aggregation = $result->getAggregation(sprintf('%s-filter', $name));
 
         if (!$aggregation) {
-            $aggregation = $result->getAggregation(sprintf('%s-filter', $name));
             $aggregation = $aggregation->getAggregation($name);
         }
 
