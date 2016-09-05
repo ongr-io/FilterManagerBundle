@@ -95,6 +95,7 @@ class Configuration implements ConfigurationInterface
                         ->append($this->buildFilterTree('date_range'))
                         ->append($this->buildFilterTree('field_value'))
                         ->append($this->buildFilterTree('document_value'))
+                        ->append($this->buildFilterTree('dynamic'))
                     ->end()
                 ->end()
             ->end();
@@ -308,6 +309,15 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('document_field')
                             ->info('Field name from document object to pass to the filter.')
                             ->isRequired()
+                    ->end();
+                break;
+            case 'dynamic':
+                $node
+                    ->children()
+                        ->arrayNode('filters')
+                            ->info('Filter names to include in dynamic filter.')
+                            ->prototype('scalar')->end()
+                        ->end()
                     ->end();
                 break;
             default:
