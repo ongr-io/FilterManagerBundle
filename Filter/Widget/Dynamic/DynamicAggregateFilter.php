@@ -17,9 +17,9 @@ use ONGR\ElasticsearchDSL\Aggregation\NestedAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
 use ONGR\ElasticsearchDSL\BuilderInterface;
 use ONGR\ElasticsearchDSL\Query\BoolQuery;
-use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\NestedQuery;
 use ONGR\ElasticsearchDSL\Query\TermQuery;
+use ONGR\ElasticsearchDSL\Query\TermsQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
@@ -131,6 +131,32 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         $aggregation->addAggregation($termsAggregation);
         $filterAggregation = new FilterAggregation($name . '-filter');
         $filterAggregation->setFilter($relatedSearch->getPostFilters());
+
+        if ($state->isActive()) {
+            foreach ($state->getValue() as $key => $term) {
+                $terms = $state->getValue();
+                unset($terms[$key]);
+
+                if (!count($terms)) {
+                    break;
+                }
+
+                $this->addSubFilterAggregation(
+                    $filterAggregation,
+                    $aggregation,
+                    $terms,
+                    $term
+                );
+            }
+
+            $this->addSubFilterAggregation(
+                $filterAggregation,
+                $aggregation,
+                $state->getValue(),
+                'all-selected'
+            );
+        }
+
         $filterAggregation->addAggregation($aggregation);
 
         $search->addAggregation($filterAggregation);
@@ -171,6 +197,8 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
             $choiceViewData = new ViewData\ChoicesAwareViewData();
             $choiceViewData->setName($name);
             $choiceViewData->setChoices($choices);
+            $choiceViewData->setUrlParameters([]);
+            $choiceViewData->setResetUrlParameters([]);
             $data->addItem($choiceViewData);
         }
 
@@ -210,27 +238,32 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
     }
 
     /**
-     * @param array  $values
-     * @param string $currentValue
+     * A method used to add an additional filter to the aggregations
+     * in preProcessSearch
+     *
+     * @param FilterAggregation $filterAggregation
+     * @param NestedAggregation $deepLevelAggregation
+     * @param array             $terms Terms of additional filter
+     * @param string            $aggName
      *
      * @return BuilderInterface
      */
-    private function createFilterQuery($values, $currentValue)
-    {
-        unset($values[array_search($currentValue, $values)]);
-
-        if (empty($values)) {
-            return new MatchAllQuery();
-        }
-
+    private function addSubFilterAggregation(
+        $filterAggregation,
+        $deepLevelAggregation,
+        $terms,
+        $aggName
+    ) {
         list($path, $field) = explode('>', $this->getField());
-        $boolQuery = new BoolQuery();
-
-        foreach ($values as $value) {
-            $boolQuery->add(new TermQuery($field, $value));
-        }
-
-        return new NestedQuery($path, $boolQuery);
+        $innerFilterAggregation = new FilterAggregation(
+            $aggName,
+            new NestedQuery(
+                $path,
+                new TermsQuery($field, $terms)
+            )
+        );
+        $innerFilterAggregation->addAggregation($deepLevelAggregation);
+        $filterAggregation->addAggregation($innerFilterAggregation);
     }
 
     /**
@@ -239,7 +272,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      *
      * @return array
      */
-    protected function getOptionUrlParameters($key, ViewData $data)
+    private function getOptionUrlParameters($key, ViewData $data)
     {
         $parameters = $data->getResetUrlParameters();
         $parameters[$this->getRequestField()][] = $key;
@@ -257,7 +290,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      */
     private function getUnsetUrlParameters($key, ViewData $data)
     {
-        return [];//$data->getResetUrlParameters();
+        return $data->getResetUrlParameters();
     }
 
     /**
@@ -268,7 +301,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      *
      * @return bool
      */
-    protected function isChoiceActive($key, ViewData $data)
+    private function isChoiceActive($key, ViewData $data)
     {
         return $data->getState()->isActive() && in_array($key, $data->getState()->getValue());
     }
