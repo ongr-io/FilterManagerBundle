@@ -51,6 +51,11 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
     private $nameField;
 
     /**
+     * @var array
+     */
+    private $valueArray;
+
+    /**
      * @param array $sortType
      */
     public function setSortType($sortType)
@@ -133,6 +138,8 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         $filterAggregation->setFilter($relatedSearch->getPostFilters());
 
         if ($state->isActive()) {
+            $this->valueArray = $state->getValue();
+
             foreach ($state->getValue() as $key => $term) {
                 $terms = $state->getValue();
                 array_splice($terms, $key, 1);
@@ -223,14 +230,24 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      */
     private function fetchAggregation(DocumentIterator $result, $name)
     {
+        $data = [];
         $aggregation = $result->getAggregation(sprintf('%s-filter', $name));
 
-        if (!$aggregation) {
-            $aggregation = $aggregation->getAggregation($name);
+        if ($result->getAggregation($name)) {
+            $aggregation = $aggregation->find($name.'.query');
+            $data['unfiltered'] = $aggregation;
+
+            return $data;
         }
 
-        if ($aggregation) {
-            return $aggregation->getAggregation('query');
+        if (isset($this->valueArray)) {
+            foreach ($this->valueArray as $value) {
+                $data[$value] = $aggregation->find($value.'.query');
+            }
+
+            $data['all-selected'] = $aggregation->find('all-selected.query');
+
+            return $data;
         }
 
         return [];
