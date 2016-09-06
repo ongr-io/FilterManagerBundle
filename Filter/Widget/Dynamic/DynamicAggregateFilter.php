@@ -85,6 +85,23 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
     /**
      * {@inheritdoc}
      */
+    public function getState(Request $request)
+    {
+        $state = new FilterState();
+        $value = $request->get($this->getRequestField());
+
+        if (isset($value) && is_array($value)) {
+            $state->setActive(true);
+            $state->setValue($value);
+            $state->setUrlParameters([$this->getRequestField() => $value]);
+        }
+
+        return $state;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         list($path, $field) = explode('>', $this->getField());
@@ -135,7 +152,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         if ($state->isActive()) {
             foreach ($state->getValue() as $key => $term) {
                 $terms = $state->getValue();
-                array_splice($terms, $key, 1);
+                unset($terms[$key]);
 
                 $this->addSubFilterAggregation(
                     $filterAggregation,
@@ -173,10 +190,12 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
     {
         $activeNames = [];
         $unsortedChoices = [];
+        $filterAggregations = $this->fetchAggregation($result, $data->getName(), $data->getState()->getValue());
 
         /** @var AggregationValue $bucket */
-        foreach ($this->fetchAggregation($result, $data->getName(), $data->getState()->getValue()) as $aggName => $aggregation) {
+        foreach ($filterAggregations as $aggName => $aggregation) {
             foreach ($aggregation as $bucket) {
+                $name = $bucket->getAggregation('name')->getBuckets()[0]['key'];
                 $active = $this->isChoiceActive($bucket['key'], $data);
                 $choice = new ViewData\Choice();
                 $choice->setLabel($bucket->getValue('key'));
@@ -184,14 +203,14 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
                 $choice->setActive($active);
 
                 $choice->setUrlParameters(
-                    $this->getOptionUrlParameters($bucket['key'], $data, $active)
+                    $this->getOptionUrlParameters($bucket['key'], $name, $data, $active)
                 );
 
                 if ($active && !isset($activeNames[$aggName]) && $aggName == $choice->getLabel()) {
-                    $activeNames[$aggName] = $bucket->getAggregation('name')->getBuckets()[0]['key'];
+                    $activeNames[$aggName] = $name;
                 }
 
-                $unsortedChoices[$aggName][$bucket->getAggregation('name')->getBuckets()[0]['key']][] = $choice;
+                $unsortedChoices[$aggName][$name][] = $choice;
             }
         }
 
@@ -306,12 +325,13 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
 
     /**
      * @param string   $key
+     * @param string   $name
      * @param ViewData $data
      * @param bool     $active True when the choice is active
      *
      * @return array
      */
-    private function getOptionUrlParameters($key, ViewData $data, $active)
+    private function getOptionUrlParameters($key, $name, ViewData $data, $active)
     {
         $value = $data->getState()->getValue();
         $parameters = $data->getResetUrlParameters();
@@ -319,12 +339,15 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         if (!empty($value)) {
             if ($active) {
                 unset($value[array_search($key, $value)]);
+                $parameters[$this->getRequestField()] = $value;
+
+                return $parameters;
             }
 
             $parameters[$this->getRequestField()] = $value;
         }
 
-        $parameters[$this->getRequestField()][] = $key;
+        $parameters[$this->getRequestField()][$name] = $key;
 
         return $parameters;
     }
