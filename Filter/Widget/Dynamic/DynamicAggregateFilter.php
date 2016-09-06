@@ -183,27 +183,19 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
                 $choice->setCount($bucket['doc_count']);
                 $choice->setActive($active);
 
-                if ($active) {
-                    $choice->setUrlParameters(
-                        $this->getUnsetUrlParameters(
-                            $data->getState()->getValue(),
-                            $bucket['key'],
-                            $data
-                        )
-                    );
+                $choice->setUrlParameters(
+                    $this->getOptionUrlParameters(
+                        $data->getState()->getValue(),
+                        $bucket['key'],
+                        $data,
+                        $active
+                    )
+                );
 
-                    if (!isset($activeNames[$aggName]) && $aggName == $choice->getLabel()) {
-                        $activeNames[$aggName] = $bucket->getAggregation('name')->getBuckets()[0]['key'];
-                    }
-                } else {
-                    $choice->setUrlParameters(
-                        $this->getOptionUrlParameters(
-                            $data->getState()->getValue(),
-                            $bucket['key'],
-                            $data
-                        )
-                    );
+                if ($active && !isset($activeNames[$aggName]) && $aggName == $choice->getLabel()) {
+                    $activeNames[$aggName] = $bucket->getAggregation('name')->getBuckets()[0]['key'];
                 }
+
                 $unsortedChoices[$aggName][$bucket->getAggregation('name')->getBuckets()[0]['key']][] = $choice;
             }
         }
@@ -321,39 +313,23 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      * @param array    $value State value array
      * @param string   $key
      * @param ViewData $data
+     * @param bool     $active True when the choice is active
      *
      * @return array
      */
-    private function getOptionUrlParameters($value, $key, ViewData $data)
+    private function getOptionUrlParameters($value, $key, ViewData $data, $active)
     {
         $parameters = $data->getResetUrlParameters();
 
         if (!empty($value)) {
+            if ($active) {
+                unset($value[array_search($key, $value)]);
+            }
+
             $parameters[$this->getRequestField()] = $value;
         }
 
         $parameters[$this->getRequestField()][] = $key;
-
-        return $parameters;
-    }
-
-    /**
-     * Returns url with selected term disabled.
-     *
-     * @param array    $value State value array
-     * @param string   $key
-     * @param ViewData $data
-     *
-     * @return array
-     */
-    private function getUnsetUrlParameters($value, $key, ViewData $data)
-    {
-        $parameters = $data->getResetUrlParameters();
-
-        if (!empty($value)) {
-            unset($value[array_search($key, $value)]);
-            $parameters[$this->getRequestField()] = $value;
-        }
 
         return $parameters;
     }
