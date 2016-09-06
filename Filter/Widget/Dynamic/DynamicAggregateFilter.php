@@ -17,6 +17,7 @@ use ONGR\ElasticsearchDSL\Aggregation\NestedAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
 use ONGR\ElasticsearchDSL\BuilderInterface;
 use ONGR\ElasticsearchDSL\Query\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\NestedQuery;
 use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
@@ -48,11 +49,6 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      * @var string
      */
     private $nameField;
-
-    /**
-     * @var array
-     */
-    private $valueArray;
 
     /**
      * @param array $sortType
@@ -137,15 +133,9 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         $filterAggregation->setFilter($relatedSearch->getPostFilters());
 
         if ($state->isActive()) {
-            $this->valueArray = $state->getValue();
-
             foreach ($state->getValue() as $key => $term) {
                 $terms = $state->getValue();
                 array_splice($terms, $key, 1);
-
-                if (!count($terms)) {
-                    break;
-                }
 
                 $this->addSubFilterAggregation(
                     $filterAggregation,
@@ -185,7 +175,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         $unsortedChoices = [];
 
         /** @var AggregationValue $bucket */
-        foreach ($this->fetchAggregation($result, $data->getName()) as $aggName => $aggregation) {
+        foreach ($this->fetchAggregation($result, $data->getName(), $data->getState()->getValue()) as $aggName => $aggregation) {
             foreach ($aggregation as $bucket) {
                 $active = $this->isChoiceActive($bucket['key'], $data);
                 $choice = new ViewData\Choice();
@@ -218,17 +208,21 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
             }
         }
 
-        foreach ($activeNames as $agg => $activeName) {
-            $unsortedChoices[$activeName] = $unsortedChoices[$agg][$activeName];
-            unset($unsortedChoices[$agg]);
-            unset($unsortedChoices['all-selected'][$activeName]);
-        }
+        if ($data->getState()->isActive()) {
+            foreach ($activeNames as $agg => $activeName) {
+                $unsortedChoices[$activeName] = $unsortedChoices[$agg][$activeName];
+                unset($unsortedChoices[$agg]);
+                unset($unsortedChoices['all-selected'][$activeName]);
+            }
 
-        foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
-            $unsortedChoices[$name] = $buckets;
-        }
+            foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
+                $unsortedChoices[$name] = $buckets;
+            }
 
-        unset($unsortedChoices['all-selected']);
+            unset($unsortedChoices['all-selected']);
+        } else {
+            $unsortedChoices = $unsortedChoices['unfiltered'];
+        }
 
         /** @var AggregateViewData $data */
         foreach ($unsortedChoices as $name => $choices) {
@@ -256,23 +250,24 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      *
      * @param DocumentIterator $result Search results.
      * @param string           $name   Filter name.
+     * @param array            $values Values from the state object
      *
      * @return array Buckets.
      */
-    private function fetchAggregation(DocumentIterator $result, $name)
+    private function fetchAggregation(DocumentIterator $result, $name, $values)
     {
         $data = [];
         $aggregation = $result->getAggregation(sprintf('%s-filter', $name));
 
-        if ($result->getAggregation($name)) {
+        if ($aggregation->getAggregation($name)) {
             $aggregation = $aggregation->find($name.'.query');
             $data['unfiltered'] = $aggregation;
 
             return $data;
         }
 
-        if (isset($this->valueArray)) {
-            foreach ($this->valueArray as $value) {
+        if (!empty($values)) {
+            foreach ($values as $value) {
                 $data[$value] = $aggregation->find(sprintf('%s.%s.query', $value, $name));
             }
 
@@ -308,6 +303,10 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
             $boolQuery->add(
                 new NestedQuery($path, new TermQuery($field, $term))
             );
+        }
+
+        if ($boolQuery->getQueries() == []) {
+            $boolQuery->add(new MatchAllQuery());
         }
 
         $innerFilterAggregation = new FilterAggregation(
