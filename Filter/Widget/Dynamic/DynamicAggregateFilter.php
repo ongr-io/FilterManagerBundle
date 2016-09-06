@@ -184,12 +184,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
                 $choice->setActive($active);
 
                 $choice->setUrlParameters(
-                    $this->getOptionUrlParameters(
-                        $data->getState()->getValue(),
-                        $bucket['key'],
-                        $data,
-                        $active
-                    )
+                    $this->getOptionUrlParameters($bucket['key'], $data, $active)
                 );
 
                 if ($active && !isset($activeNames[$aggName]) && $aggName == $choice->getLabel()) {
@@ -310,15 +305,15 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
     }
 
     /**
-     * @param array    $value State value array
      * @param string   $key
      * @param ViewData $data
      * @param bool     $active True when the choice is active
      *
      * @return array
      */
-    private function getOptionUrlParameters($value, $key, ViewData $data, $active)
+    private function getOptionUrlParameters($key, ViewData $data, $active)
     {
+        $value = $data->getState()->getValue();
         $parameters = $data->getResetUrlParameters();
 
         if (!empty($value)) {
