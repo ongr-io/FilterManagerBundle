@@ -147,7 +147,12 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
         );
         $aggregation->addAggregation($termsAggregation);
         $filterAggregation = new FilterAggregation($name . '-filter');
-        $filterAggregation->setFilter($relatedSearch->getPostFilters());
+
+        if (!empty($relatedSearch->getPostFilters())) {
+            $filterAggregation->setFilter($relatedSearch->getPostFilters());
+        } else {
+            $filterAggregation->setFilter(new MatchAllQuery());
+        }
 
         if ($state->isActive()) {
             foreach ($state->getValue() as $key => $term) {
