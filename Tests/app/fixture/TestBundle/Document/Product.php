@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
+use ONGR\ElasticsearchBundle\Collection\Collection;
 use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
@@ -130,6 +131,18 @@ class Product implements SerializableInterface
      * @ES\Property(type="date")
      */
     public $date;
+
+    /**
+     * @var Attribute[]
+     *
+     * @ES\Embedded(class="TestBundle:Attribute", multiple=true)
+     */
+    public $attributes;
+
+    public function __construct()
+    {
+        $this->attributes = new Collection();
+    }
 
     /**
      * {@inheritdoc}

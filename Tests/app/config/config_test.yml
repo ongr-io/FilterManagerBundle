@@ -62,6 +62,9 @@ ongr_filter_manager:
         range_filters:
             filters: ['date']
             repository: 'es.manager.default.product'
+        dynamic_filters:
+            filters: ['dynamic_aggregate']
+            repository: 'es.manager.default.product'
     filters:
         match:
             phrase:
@@ -122,3 +125,8 @@ ongr_filter_manager:
                 choices:
                     - { label: foo, field: price, default: true, order: asc }
                     - { label: bar, fields: [{field: price, order: asc}, {field: date, order: desc}]}
+        dynamic_aggregate:
+            dynamic_aggregate:
+                request_field: 'dynamic_aggregate'
+                field: 'attributes>attributes.value'
+                name_field: 'attributes.name'
