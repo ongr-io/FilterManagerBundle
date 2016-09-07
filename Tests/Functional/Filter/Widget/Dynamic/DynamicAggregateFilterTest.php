@@ -196,4 +196,50 @@ class DynamicAggregateFilterTest extends AbstractElasticsearchTestCase
             ],
         ];
     }
+
+    /**
+     * Check if choices are sorted as expected using configuration settings.
+     */
+    public function testChoicesConfiguration()
+    {
+        /** @var AggregateViewData $result */
+        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
+            ->handleRequest(new Request())->getFilters()['dynamic_aggregate'];
+        $this->assertTrue($result instanceof AggregateViewData);
+
+        $actualChoices = [];
+        $expectedChoices = [
+            'Color' => [
+                'Green' => 2,
+                'Red' => 2,
+                'Black' => 1,
+            ],
+            'Made in' => [
+                'USA' => 3,
+                'China' => 4,
+                'Germany' => 3,
+                'Lithuania' => 1,
+            ],
+            'Condition' => [
+                'Excelent' => 2,
+                'Fair' => 2,
+                'Good' => 2,
+            ],
+            'Group' => [
+                'Accessories' => 3,
+                'Utilities' => 2,
+                'Maintenance' => 1,
+            ],
+        ];
+
+        $items = $result->getItems();
+
+        foreach ($items as $choiceViewData) {
+            foreach ($choiceViewData->getChoices() as $choice) {
+                $actualChoices[$choiceViewData->getName()][$choice->getLabel()] = $choice->getCount();
+            }
+        }
+
+        $this->assertEquals($expectedChoices, $actualChoices);
+    }
 }
