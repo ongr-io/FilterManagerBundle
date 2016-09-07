@@ -11,6 +11,10 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\DependencyInjection\Filter;
 
+use ONGR\FilterManagerBundle\DependencyInjection\Filter\DynamicAggregateFilterFactory;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
 class DynamicAggregateFilterFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -18,5 +22,32 @@ class DynamicAggregateFilterFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testConfigure()
     {
+        $container = new ContainerBuilder();
+        $extension = new ONGRFilterManagerExtension();
+        $matchFilterFactory = new DynamicAggregateFilterFactory();
+
+        $config = [
+            'ongr_filter_manager' => [
+                'filters' => [
+                    'dynamic_aggregate' => [
+                        'test' => [
+                            'request_field' => 'test',
+                            'field' => 'foo',
+                            'name_field' => 'bar',
+                            'size' => 5,
+                            'sort' => ['priorities' => ['foo']]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $extension->addFilterFactory($matchFilterFactory);
+        $extension->load($config, $container);
+
+        $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setField'));
+        $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setNameField'));
+        $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setSortType'));
+        $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setSize'));
     }
 }
