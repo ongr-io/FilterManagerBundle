@@ -36,8 +36,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class provides single terms choice.
  */
-class DynamicAggregateFilter extends AbstractSingleRequestValueFilter
-    implements FieldAwareInterface, ViewDataFactoryInterface
+class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
+    FieldAwareInterface,
+    ViewDataFactoryInterface
 {
     use FieldAwareTrait, SizeAwareTrait;
 
@@ -234,6 +235,7 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter
         }
 
         unset($unsortedChoices['all-selected']);
+        ksort($unsortedChoices);
 
         /** @var AggregateViewData $data */
         foreach ($unsortedChoices as $name => $choices) {
