@@ -36,7 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class provides single terms choice.
  */
-class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
+class DynamicAggregateFilter extends AbstractSingleRequestValueFilter
+    implements FieldAwareInterface, ViewDataFactoryInterface
 {
     use FieldAwareTrait, SizeAwareTrait;
 
@@ -193,14 +194,19 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
      */
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
-        $activeNames = [];
         $unsortedChoices = [];
+        $activeNames = $data->getState()->isActive() ? array_keys($data->getState()->getValue()) : [];
         $filterAggregations = $this->fetchAggregation($result, $data->getName(), $data->getState()->getValue());
 
         /** @var AggregationValue $bucket */
-        foreach ($filterAggregations as $aggName => $aggregation) {
+        foreach ($filterAggregations as $activeName => $aggregation) {
             foreach ($aggregation as $bucket) {
                 $name = $bucket->getAggregation('name')->getBuckets()[0]['key'];
+
+                if ($name != $activeName && $activeName != 'all-selected') {
+                    continue;
+                }
+
                 $active = $this->isChoiceActive($bucket['key'], $data);
                 $choice = new ViewData\Choice();
                 $choice->setLabel($bucket->getValue('key'));
@@ -211,29 +217,23 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
                     $this->getOptionUrlParameters($bucket['key'], $name, $data, $active)
                 );
 
-                if ($active && !isset($activeNames[$aggName]) && $aggName == $choice->getLabel()) {
-                    $activeNames[$aggName] = $name;
+                if ($activeName == 'all-selected') {
+                    $unsortedChoices[$activeName][$name][] = $choice;
+                } else {
+                    $unsortedChoices[$activeName][] = $choice;
                 }
-
-                $unsortedChoices[$aggName][$name][] = $choice;
             }
         }
 
-        if ($data->getState()->isActive()) {
-            foreach ($activeNames as $agg => $activeName) {
-                $unsortedChoices[$activeName] = $unsortedChoices[$agg][$activeName];
-                unset($unsortedChoices[$agg]);
-                unset($unsortedChoices['all-selected'][$activeName]);
+        foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
+            if (in_array($name, $activeNames)) {
+                continue;
             }
 
-            foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
-                $unsortedChoices[$name] = $buckets;
-            }
-
-            unset($unsortedChoices['all-selected']);
-        } else {
-            $unsortedChoices = $unsortedChoices['unfiltered'];
+            $unsortedChoices[$name] = $buckets;
         }
+
+        unset($unsortedChoices['all-selected']);
 
         /** @var AggregateViewData $data */
         foreach ($unsortedChoices as $name => $choices) {
@@ -259,30 +259,30 @@ class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
     /**
      * Fetches buckets from search results.
      *
-     * @param DocumentIterator $result Search results.
-     * @param string           $name   Filter name.
-     * @param array            $values Values from the state object
+     * @param DocumentIterator $result     Search results.
+     * @param string           $filterName Filter name.
+     * @param array            $values     Values from the state object
      *
      * @return array Buckets.
      */
-    private function fetchAggregation(DocumentIterator $result, $name, $values)
+    private function fetchAggregation(DocumentIterator $result, $filterName, $values)
     {
         $data = [];
-        $aggregation = $result->getAggregation(sprintf('%s-filter', $name));
+        $aggregation = $result->getAggregation(sprintf('%s-filter', $filterName));
 
-        if ($aggregation->getAggregation($name)) {
-            $aggregation = $aggregation->find($name.'.query');
-            $data['unfiltered'] = $aggregation;
+        if ($aggregation->getAggregation($filterName)) {
+            $aggregation = $aggregation->find($filterName.'.query');
+            $data['all-selected'] = $aggregation;
 
             return $data;
         }
 
         if (!empty($values)) {
-            foreach ($values as $value) {
-                $data[$value] = $aggregation->find(sprintf('%s.%s.query', $value, $name));
+            foreach ($values as $name => $value) {
+                $data[$name] = $aggregation->find(sprintf('%s.%s.query', $value, $filterName));
             }
 
-            $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.query', $name));
+            $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.query', $filterName));
 
             return $data;
         }
