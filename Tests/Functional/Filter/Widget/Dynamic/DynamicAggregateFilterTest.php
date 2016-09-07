@@ -200,14 +200,13 @@ class DynamicAggregateFilterTest extends AbstractElasticsearchTestCase
     /**
      * Check if choices are sorted as expected using configuration settings.
      */
-    public function testChoicesConfiguration()
+    public function testChoicesConfigurationWithoutRequest()
     {
         /** @var AggregateViewData $result */
         $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
             ->handleRequest(new Request())->getFilters()['dynamic_aggregate'];
         $this->assertTrue($result instanceof AggregateViewData);
 
-        $actualChoices = [];
         $expectedChoices = [
             'Color' => [
                 'Green' => 2,
@@ -232,14 +231,61 @@ class DynamicAggregateFilterTest extends AbstractElasticsearchTestCase
             ],
         ];
 
-        $items = $result->getItems();
+        $actualChoices = $this->extractActualChoices($result);
 
-        foreach ($items as $choiceViewData) {
+        $this->assertEquals($expectedChoices, $actualChoices);
+    }
+
+    /**
+     * Check if choices are sorted as expected using configuration settings.
+     */
+    public function testChoicesConfigurationWithRequest()
+    {
+        /** @var AggregateViewData $result */
+        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
+            ->handleRequest(
+                new Request(['dynamic_aggregate' => ['Made in' => 'China', 'Group' => 'Accessories']])
+            )
+            ->getFilters()['dynamic_aggregate'];
+        $this->assertTrue($result instanceof AggregateViewData);
+
+        $expectedChoices = [
+            'Made in' => [
+                'USA' => 1,
+                'China' => 1,
+                'Germany' => 1,
+            ],
+            'Condition' => [
+                'Good' => 1,
+            ],
+            'Group' => [
+                'Accessories' => 1,
+                'Utilities' => 1,
+            ],
+        ];
+        $actualChoices = $this->extractActualChoices($result);
+
+        $this->assertEquals($expectedChoices, $actualChoices);
+    }
+
+    /**
+     * Extracts actualChoices array with the right
+     * configuration from the result
+     *
+     * @param AggregateViewData $result
+     *
+     * @return array
+     */
+    private function extractActualChoices($result)
+    {
+        $actualChoices = [];
+
+        foreach ($result->getItems() as $choiceViewData) {
             foreach ($choiceViewData->getChoices() as $choice) {
                 $actualChoices[$choiceViewData->getName()][$choice->getLabel()] = $choice->getCount();
             }
         }
 
-        $this->assertEquals($expectedChoices, $actualChoices);
+        return $actualChoices;
     }
 }
