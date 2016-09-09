@@ -222,15 +222,18 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
             }
         }
 
-        foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
-            if (in_array($name, $activeNames)) {
-                continue;
+        if (isset($unsortedChoices['all-selected'])) {
+            foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
+                if (in_array($name, $activeNames)) {
+                    continue;
+                }
+
+                $unsortedChoices[$name] = $buckets;
             }
 
-            $unsortedChoices[$name] = $buckets;
+            unset($unsortedChoices['all-selected']);
         }
 
-        unset($unsortedChoices['all-selected']);
         ksort($unsortedChoices);
 
         /** @var AggregateViewData $data */
