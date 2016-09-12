@@ -178,6 +178,7 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('size')
                             ->info('Result size to return.')
                         ->end()
+                        ->booleanNode('show_zero_choices')->defaultFalse()->end()
                         ->arrayNode('sort')
                         ->children()
                             ->enumNode('type')

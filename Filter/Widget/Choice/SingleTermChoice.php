@@ -39,6 +39,11 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     private $sortType;
 
     /**
+     * @var bool
+     */
+    private $showZeroChoices;
+
+    /**
      * @param array $sortType
      */
     public function setSortType($sortType)
@@ -52,6 +57,22 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
     public function getSortType()
     {
         return $this->sortType;
+    }
+
+    /**
+     * @param bool $showZeroChoices
+     */
+    public function setShowZeroChoices($showZeroChoices)
+    {
+        $this->showZeroChoices = $showZeroChoices;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowZeroChoices()
+    {
+        return $this->showZeroChoices;
     }
 
     /**
