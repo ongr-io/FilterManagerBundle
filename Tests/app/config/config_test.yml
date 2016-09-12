@@ -54,7 +54,7 @@ ongr_elasticsearch:
 ongr_filter_manager:
     managers:
         foo_filters:
-            filters: ['phrase', 'single_choice', 'foo_range']
+            filters: ['phrase', 'single_choice', 'foo_range', 'zero_choices']
             repository: 'es.manager.default.product'
         bar_filters:
             filters: ['sort', 'inclusive_range', 'bar_range']
@@ -105,6 +105,10 @@ ongr_filter_manager:
                   order: asc
                   priorities:
                      - red
+            zero_choices:
+                request_field: 'zero'
+                field: 'sku'
+                show_zero_choices: true
         fuzzy:
             fuzzy:
                 request_field: 'fuzzy'
