@@ -34,7 +34,6 @@ class DynamicAggregateFactoryTest extends \PHPUnit_Framework_TestCase
                             'request_field' => 'test',
                             'field' => 'foo',
                             'name_field' => 'bar',
-                            'size' => 5,
                             'sort' => ['priorities' => ['foo']]
                         ]
                     ]
@@ -48,6 +47,5 @@ class DynamicAggregateFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setField'));
         $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setNameField'));
         $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setSortType'));
-        $this->assertTrue($container->getDefinition('ongr_filter_manager.filter.test')->hasMethodCall('setSize'));
     }
 }

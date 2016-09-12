@@ -197,9 +197,6 @@ class Configuration implements ConfigurationInterface
             case 'dynamic_aggregate':
                 $node
                     ->children()
-                        ->integerNode('size')
-                            ->info('Result size to return.')
-                        ->end()
                         ->scalarNode('name_field')
                             ->info('Name of the field to provide the aggregated values from.')
                         ->end()

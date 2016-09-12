@@ -40,7 +40,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
     FieldAwareInterface,
     ViewDataFactoryInterface
 {
-    use FieldAwareTrait, SizeAwareTrait;
+    use FieldAwareTrait;
 
     /**
      * @var array
@@ -138,10 +138,6 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
 
         if ($this->getSortType()) {
             $termsAggregation->addParameter('order', [$this->getSortType()['type'] => $this->getSortType()['order']]);
-        }
-
-        if ($this->getSize() > 0) {
-            $termsAggregation->addParameter('size', $this->getSize());
         }
 
         $termsAggregation->addAggregation(
