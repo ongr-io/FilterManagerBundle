@@ -14,6 +14,7 @@ namespace ONGR\FilterManagerBundle\Search;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Service\Repository;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
+use ONGR\FilterManagerBundle\Event\PreProcessSearchEvent;
 use ONGR\FilterManagerBundle\Event\PreSearchEvent;
 use ONGR\FilterManagerBundle\Event\SearchResponseEvent;
 use ONGR\FilterManagerBundle\Filter\FilterInterface;
@@ -94,6 +95,11 @@ class FilterManager implements FilterManagerInterface
                 );
                 $relatedSearch = $this->container->buildSearch($request, $relatedFilters);
             }
+
+            $this->eventDispatcher->dispatch(
+                ONGRFilterManagerEvents::PRE_PROCESS_SEARCH,
+                new PreProcessSearchEvent($filter, $relatedSearch)
+            );
 
             $filter->preProcessSearch(
                 $search,
