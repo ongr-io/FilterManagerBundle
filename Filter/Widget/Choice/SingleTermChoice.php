@@ -107,6 +107,12 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
             $filterAggregation->setFilter($relatedSearch->getPostFilters());
             $filterAggregation->addAggregation($aggregation);
             $search->addAggregation($filterAggregation);
+
+            if ($this->showZeroChoices) {
+                $unfilteredAggregation = clone $aggregation;
+                $unfilteredAggregation->setName($name . '-unfiltered');
+                $search->addAggregation($unfilteredAggregation);
+            }
         } else {
             $search->addAggregation($aggregation);
         }
@@ -128,6 +134,13 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         /** @var ChoicesAwareViewData $data */
 
         $unsortedChoices = [];
+        $zeroValueChoices = [];
+
+        if ($this->showZeroChoices && $agg = $result->getAggregation($data->getName() . '-unfiltered')) {
+            foreach ($agg as $bucket) {
+                $zeroValueChoices[$bucket['key']] = $bucket['doc_count'];
+            }
+        }
 
         foreach ($this->fetchAggregation($result, $data->getName()) as $bucket) {
             $active = $this->isChoiceActive($bucket['key'], $data);
@@ -141,6 +154,19 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
                 $choice->setUrlParameters($this->getOptionUrlParameters($bucket['key'], $data));
             }
             $unsortedChoices[$bucket['key']] = $choice;
+
+            if (!empty($zeroValueChoices)) {
+                unset($zeroValueChoices[$bucket['key']]);
+            }
+        }
+
+        foreach ($zeroValueChoices as $choiceLabel => $value) {
+            $choice = new ViewData\Choice();
+            $choice->setLabel($choiceLabel);
+            $choice->setCount(0);
+            $choice->setActive(false);
+            $choice->setUrlParameters($data->getResetUrlParameters());
+            $unsortedChoices[$choiceLabel] = $choice;
         }
 
         // Add the prioritized choices first.
