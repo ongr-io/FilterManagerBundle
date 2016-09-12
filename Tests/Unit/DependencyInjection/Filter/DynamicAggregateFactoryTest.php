@@ -11,11 +11,11 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\DependencyInjection\Filter;
 
-use ONGR\FilterManagerBundle\DependencyInjection\Filter\DynamicAggregateFilterFactory;
+use ONGR\FilterManagerBundle\DependencyInjection\Filter\DynamicAggregateFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class DynamicAggregateFilterFactoryTest extends \PHPUnit_Framework_TestCase
+class DynamicAggregateFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests configure method
@@ -24,7 +24,7 @@ class DynamicAggregateFilterFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $container = new ContainerBuilder();
         $extension = new ONGRFilterManagerExtension();
-        $matchFilterFactory = new DynamicAggregateFilterFactory();
+        $matchFilterFactory = new DynamicAggregateFactory();
 
         $config = [
             'ongr_filter_manager' => [

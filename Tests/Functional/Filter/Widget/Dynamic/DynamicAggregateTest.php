@@ -15,7 +15,7 @@ use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
 use Symfony\Component\HttpFoundation\Request;
 
-class DynamicAggregateFilterTest extends AbstractElasticsearchTestCase
+class DynamicAggregateTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array

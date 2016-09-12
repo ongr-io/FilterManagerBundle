@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class provides single terms choice.
  */
-class DynamicAggregateFilter extends AbstractSingleRequestValueFilter implements
+class DynamicAggregate extends AbstractSingleRequestValueFilter implements
     FieldAwareInterface,
     ViewDataFactoryInterface
 {

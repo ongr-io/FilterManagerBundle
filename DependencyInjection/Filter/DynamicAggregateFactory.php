@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * Factory for choice filter.
  */
-class DynamicAggregateFilterFactory extends AbstractFilterFactory
+class DynamicAggregateFactory extends AbstractFilterFactory
 {
     /**
      * {@inheritdoc}
@@ -42,7 +42,7 @@ class DynamicAggregateFilterFactory extends AbstractFilterFactory
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filter\Widget\Dynamic\DynamicAggregateFilter';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Dynamic\DynamicAggregate';
     }
 
     /**
