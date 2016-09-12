@@ -10,6 +10,7 @@ If you select one or more of the options, *multi choice filter* will return item
 |------------------------|--------------------------------------------------------------------------------------------------|
 | `request_field`        | Request field used to view the selected page. (e.g. `www.page.com/?request_field=4`)             |
 | `field`                | Specifies the field in repository to apply this filter on. (e.g. `item_color`)                   |
+| `show_zero_choices`    | Includes choices that have 0 documents in the choice array (defaults to `false`)                 |
 | `sort`                 | Choices can also be sorted. You can read more about this [here](choice.md#sorting-configuration).|
 | `tags`                 | Array of filter specific tags that will be accessible at Twig view data.                         |
   

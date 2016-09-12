@@ -10,6 +10,7 @@ If you select one of the options, *choice filter* will return item list filtered
 | `request_field`        | Request field used to view the selected page. (e.g. `www.page.com/?request_field=4`) |
 | `field`                | Specifies the field in repository to apply this filter on. (e.g. `item_color`)       |
 | `sort`                 | Sorts the choices based on your configuration.                                       |
+| `show_zero_choices`    | Includes choices that have 0 documents in the choice array (defaults to `false`)     |
 | `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
   
 Sorting configuration  
