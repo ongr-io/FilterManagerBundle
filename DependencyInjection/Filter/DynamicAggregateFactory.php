@@ -27,6 +27,7 @@ class DynamicAggregateFactory extends AbstractFilterFactory
 
         $definition->addMethodCall('setField', [$configuration['field']]);
         $definition->addMethodCall('setNameField', [$configuration['name_field']]);
+        $definition->addMethodCall('setShowZeroChoices', [$configuration['show_zero_choices']]);
 
         if (isset($configuration['sort']) && count($configuration['sort']) > 0) {
             $definition->addMethodCall('setSortType', [$configuration['sort']]);

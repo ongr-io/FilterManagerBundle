@@ -202,6 +202,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('name_field')
                             ->info('Name of the field to provide the aggregated values from.')
                         ->end()
+                        ->booleanNode('show_zero_choices')->defaultFalse()->end()
                         ->arrayNode('sort')
                         ->children()
                             ->enumNode('type')
