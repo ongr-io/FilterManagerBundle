@@ -198,71 +198,120 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
     }
 
     /**
-     * Check if choices are sorted as expected using configuration settings.
+     * Data provider for testChoices().
+     *
+     * @return array
      */
-    public function testChoicesConfigurationWithoutRequest()
+    public function getChoicesSortData()
     {
-        /** @var AggregateViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
-            ->handleRequest(new Request())->getFilters()['dynamic_aggregate'];
-        $this->assertTrue($result instanceof AggregateViewData);
+        $out = [];
 
-        $expectedChoices = [
-            'Color' => [
-                'Green' => 2,
-                'Red' => 2,
-                'Black' => 1,
+        // Case #0, without any request parameters.
+        $out[] = [
+            'filterParams' => [],
+            'expectedChoices' => [
+                'Color' => [
+                    'Green' => 2,
+                    'Red' => 2,
+                    'Black' => 1,
+                ],
+                'Made in' => [
+                    'USA' => 3,
+                    'China' => 4,
+                    'Germany' => 3,
+                    'Lithuania' => 1,
+                ],
+                'Condition' => [
+                    'Excelent' => 2,
+                    'Fair' => 2,
+                    'Good' => 2,
+                ],
+                'Group' => [
+                    'Accessories' => 3,
+                    'Utilities' => 2,
+                    'Maintenance' => 1,
+                ],
             ],
-            'Made in' => [
-                'USA' => 3,
-                'China' => 4,
-                'Germany' => 3,
-                'Lithuania' => 1,
+            'filter' => 'dynamic_aggregate',
+        ];
+        // Case #1, 2 parameters from different groups.
+        $out[] = [
+            'filterParams' => [
+                'dynamic_aggregate' => [
+                    'Made in' => 'China',
+                    'Group' => 'Accessories',
+                ]
             ],
-            'Condition' => [
-                'Excelent' => 2,
-                'Fair' => 2,
-                'Good' => 2,
+            'expectedChoices' => [
+                'Made in' => [
+                    'USA' => 1,
+                    'China' => 1,
+                    'Germany' => 1,
+                ],
+                'Condition' => [
+                    'Good' => 1,
+                ],
+                'Group' => [
+                    'Accessories' => 1,
+                    'Utilities' => 1,
+                ],
             ],
-            'Group' => [
-                'Accessories' => 3,
-                'Utilities' => 2,
-                'Maintenance' => 1,
+            'filter' => 'dynamic_aggregate',
+        ];
+        // Case #2, same group parameters.
+        $out[] = [
+            'filterParams' => [
+                'zero_aggregate' => [
+                    'Made in' => 'USA',
+                    'Color' => 'Green',
+                ]
             ],
+            'expectedChoices' => [
+                'Color' => [
+                    'Green' => 1,
+                    'Red' => 1,
+                    'Black' => 0,
+                ],
+                'Made in' => [
+                    'USA' => 1,
+                    'China' => 0,
+                    'Germany' => 0,
+                    'Lithuania' => 1,
+                ],
+                'Condition' => [
+                    'Excelent' => 1,
+                    'Fair' => 0,
+                    'Good' => 0,
+                ],
+                'Group' => [
+                    'Accessories' => 1,
+                    'Utilities' => 0,
+                    'Maintenance' => 0,
+                ],
+            ],
+            'filter' => 'zero_choice_aggregate',
         ];
 
-        $actualChoices = $this->extractActualChoices($result);
-
-        $this->assertEquals($expectedChoices, $actualChoices);
+        return $out;
     }
 
     /**
-     * Check if choices are sorted as expected using configuration settings.
+     * Check if choices are formed as expected.
+     *
+     * @param array $filterParams
+     * @param array $expectedChoices
+     * @param string $filter
+     *
+     * @dataProvider getChoicesSortData()
      */
-    public function testChoicesConfigurationWithRequest()
+    public function testChoices($filterParams, $expectedChoices, $filter)
     {
         /** @var AggregateViewData $result */
         $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
-            ->handleRequest(
-                new Request(['dynamic_aggregate' => ['Made in' => 'China', 'Group' => 'Accessories']])
-            )
-            ->getFilters()['dynamic_aggregate'];
+            ->handleRequest(new Request($filterParams))->getFilters()[$filter];
+
         $this->assertTrue($result instanceof AggregateViewData);
 
-        $expectedChoices = [
-            'Made in' => [
-                'USA' => 1,
-                'China' => 1,
-                'Germany' => 1,
-            ],
-            'Condition' => [
-                'Good' => 1,
-            ],
-            'Group' => [
-                'Accessories' => 1,
-                'Utilities' => 1,
-            ],
-        ];
         $actualChoices = $this->extractActualChoices($result);
 
         $this->assertEquals($expectedChoices, $actualChoices);
