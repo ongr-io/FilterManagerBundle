@@ -197,7 +197,10 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
         }
 
         $search->addAggregation($filterAggregation);
-        $search->addAggregation($aggregation);
+
+        if ($this->getShowZeroChoices()) {
+            $search->addAggregation($aggregation);
+        }
     }
 
     /**
