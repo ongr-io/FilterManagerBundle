@@ -12,8 +12,8 @@
 namespace ONGR\FilterManagerBundle\Tests\Unit\Event;
 
 use ONGR\ElasticsearchDSL\Search;
-use ONGR\FilterManagerBundle\Filter\Widget\Range\Range;
 use ONGR\FilterManagerBundle\Event\PreProcessSearchEvent;
+use ONGR\FilterManagerBundle\Filter\FilterState;
 
 class PreProcessSearchEventTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,17 +28,17 @@ class PreProcessSearchEventTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->event = new PreProcessSearchEvent(new Range(), new Search());
+        $this->event = new PreProcessSearchEvent(new FilterState(), new Search());
     }
 
     public function testConstruct()
     {
-        $this->assertEquals($this->event, new PreProcessSearchEvent(new Range(), new Search()));
+        $this->assertEquals($this->event, new PreProcessSearchEvent(new FilterState(), new Search()));
     }
 
     public function testGetters()
     {
         $this->assertEquals(new Search(), $this->event->getRelatedSearch());
-        $this->assertEquals(new Range(), $this->event->getFilter());
+        $this->assertEquals(new FilterState(), $this->event->getState());
     }
 }
