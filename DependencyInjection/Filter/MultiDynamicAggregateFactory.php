@@ -14,14 +14,14 @@ namespace ONGR\FilterManagerBundle\DependencyInjection\Filter;
 /**
  * Factory for choice filter.
  */
-class MultiDynamicAggregateFilterFactory extends DynamicAggregateFilterFactory
+class MultiDynamicAggregateFactory extends DynamicAggregateFactory
 {
     /**
      * {@inheritdoc}
      */
     protected function getNamespace()
     {
-        return 'ONGR\FilterManagerBundle\Filter\Widget\Dynamic\MultiDynamicAggregateFilter';
+        return 'ONGR\FilterManagerBundle\Filter\Widget\Dynamic\MultiDynamicAggregate';
     }
 
     /**

@@ -19,7 +19,7 @@ use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
 
-class MultiDynamicAggregateFilter extends DynamicAggregateFilter
+class MultiDynamicAggregate extends DynamicAggregate
 {
     /**
      * {@inheritdoc}

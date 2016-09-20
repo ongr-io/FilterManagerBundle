@@ -20,7 +20,7 @@ use ONGR\FilterManagerBundle\DependencyInjection\Filter\FieldValueFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\FuzzyFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\MatchFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\MultiChoiceFilterFactory;
-use ONGR\FilterManagerBundle\DependencyInjection\Filter\MultiDynamicAggregateFilterFactory;
+use ONGR\FilterManagerBundle\DependencyInjection\Filter\MultiDynamicAggregateFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\PagerFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\RangeFilterFactory;
 use ONGR\FilterManagerBundle\DependencyInjection\Filter\SortFilterFactory;
@@ -53,7 +53,7 @@ class ONGRFilterManagerBundle extends Bundle
         $extension->addFilterFactory(new FieldValueFactory());
         $extension->addFilterFactory(new DocumentValueFactory());
         $extension->addFilterFactory(new DynamicAggregateFactory());
-        $extension->addFilterFactory(new MultiDynamicAggregateFilterFactory());
+        $extension->addFilterFactory(new MultiDynamicAggregateFactory());
         $extension->addFilterFactory(new DynamicAggregateFactory());
 
         $container->addCompilerPass(new FilterPass());
