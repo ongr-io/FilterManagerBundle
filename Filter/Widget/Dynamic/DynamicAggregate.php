@@ -410,12 +410,16 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
     private function formInitialUnsortedChoices($result, $data)
     {
         $unsortedChoices = [];
+        $urlParameters = array_merge(
+            $data->getResetUrlParameters(),
+            $data->getState()->getUrlParameters()
+        );
 
         foreach ($result->getAggregation($data->getName())->getAggregation('query') as $bucket) {
             $groupName = $bucket->getAggregation('name')->getBuckets()[0]['key'];
             $choice = new ViewData\Choice();
             $choice->setActive(false);
-            $choice->setUrlParameters($data->getResetUrlParameters());
+            $choice->setUrlParameters($urlParameters);
             $choice->setLabel($bucket['key']);
             $choice->setCount(0);
             $unsortedChoices[$groupName][$bucket['key']] = $choice;
