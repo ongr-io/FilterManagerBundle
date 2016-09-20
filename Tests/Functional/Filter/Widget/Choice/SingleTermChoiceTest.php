@@ -34,66 +34,77 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
                         '_id' => 1,
                         'color' => 'red',
                         'manufacturer' => 'a',
+                        'sku' => 'foo',
                         'title' => 'm1',
                     ],
                     [
                         '_id' => 2,
                         'color' => 'blue',
                         'manufacturer' => 'a',
+                        'sku' => 'foo',
                         'title' => 'm2',
                     ],
                     [
                         '_id' => 3,
                         'color' => 'red',
                         'manufacturer' => 'b',
+                        'sku' => 'foo',
                         'title' => 'm3',
                     ],
                     [
                         '_id' => 4,
                         'color' => 'blue',
                         'manufacturer' => 'b',
+                        'sku' => 'foo',
                         'title' => 'm4',
                     ],
                     [
                         '_id' => 5,
                         'color' => 'green',
                         'manufacturer' => 'b',
+                        'sku' => 'acme',
                         'title' => 'm5',
                     ],
                     [
                         '_id' => 6,
                         'color' => 'blue',
                         'manufacturer' => 'a',
+                        'sku' => 'acme',
                         'title' => 'm6',
                     ],
                     [
                         '_id' => 7,
                         'color' => 'yellow',
                         'manufacturer' => 'a',
+                        'sku' => 'bar',
                         'title' => 'm7',
                     ],
                     [
                         '_id' => 8,
                         'color' => 'red',
                         'manufacturer' => 'a',
+                        'sku' => 'bar',
                         'title' => 'm8',
                     ],
                     [
                         '_id' => 9,
                         'color' => 'blue',
                         'manufacturer' => 'a',
+                        'sku' => 'bar',
                         'title' => 'm9',
                     ],
                     [
                         '_id' => 10,
                         'color' => 'red',
                         'manufacturer' => 'a',
+                        'sku' => 'foo',
                         'title' => 'm10',
                     ],
                     [
                         '_id' => 11,
                         'color' => 'blue',
                         'manufacturer' => 'a',
+                        'sku' => 'bar',
                         'title' => 'm11',
                     ],
                 ],
@@ -219,5 +230,29 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
         $result = $manager->handleRequest(new Request())->getFilters()['choice'];
 
         $this->assertEquals(11, count($result->getChoices()));
+    }
+
+    /**
+     * Check if fetches choices that represent 0 documents
+     */
+    public function testZeroChoicesSize()
+    {
+        /** @var ChoicesAwareViewData $result */
+        $result = $this->getContainer()->get('ongr_filter_manager.foo_filters')
+            ->handleRequest(new Request(['single_choice' => 'red']))->getFilters()['zero_choices'];
+
+        $expectedChoices = [
+            'foo' => 3,
+            'bar' => 1,
+            'acme' => 0,
+        ];
+
+        $actualChoices = [];
+
+        foreach ($result->getChoices() as $choice) {
+            $actualChoices[$choice->getLabel()] = $choice->getCount();
+        }
+
+        $this->assertEquals($expectedChoices, $actualChoices);
     }
 }

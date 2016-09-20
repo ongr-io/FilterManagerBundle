@@ -26,6 +26,7 @@ class ChoiceFilterFactory extends AbstractFilterFactory
         parent::configure($definition, $configuration);
 
         $definition->addMethodCall('setField', [$configuration['field']]);
+        $definition->addMethodCall('setShowZeroChoices', [$configuration['show_zero_choices']]);
         
         if (isset($configuration['size'])) {
             $definition->addMethodCall('setSize', [$configuration['size']]);
