@@ -16,6 +16,7 @@ to the *choice filter*.
 | `field`                | Specifies the field in repository to apply this filter on.                           |
 | `sort`                 | Sorts the choices based on your configuration.                                       |
 | `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
+| `show_zero_choices`    | If set to true enables the display of choices with zero available documents.         |
 
 > Important note! Here `name_field` and `field` values should both point to the fields in the nested object of the
 document, however the `field` must specify both the `path` and the `field` properties separated by the `>` sign 
@@ -39,6 +40,7 @@ ongr_filter_manager:
                 request_field: 'attributes'
                 name_field: attributes.name
                 field: attributes>attributes.value
+                show_zero_choices: false
 ```  
 
 ## Twig view data
