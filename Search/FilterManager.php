@@ -98,7 +98,7 @@ class FilterManager implements FilterManagerInterface
 
             $this->eventDispatcher->dispatch(
                 ONGRFilterManagerEvents::PRE_PROCESS_SEARCH,
-                new PreProcessSearchEvent($filter, $relatedSearch)
+                new PreProcessSearchEvent($request->get($name), $relatedSearch)
             );
 
             $filter->preProcessSearch(
