@@ -180,8 +180,14 @@ class MultiDynamicAggregate extends DynamicAggregate
      */
     protected function isChoiceActive($key, ViewData $data, $activeName)
     {
-        return $data->getState()->isActive() &&
-            isset($data->getState()->getValue()[$activeName]) &&
-            in_array($key, $data->getState()->getValue()[$activeName]);
+        if ($data->getState()->isActive()) {
+            $value = $data->getState()->getValue();
+
+            if (isset($value[$activeName]) && in_array($key, $value[$activeName])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
