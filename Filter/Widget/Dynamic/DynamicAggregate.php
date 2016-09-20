@@ -161,7 +161,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
                     $filterAggregation,
                     $aggregation,
                     $terms,
-                    $term
+                    $key
                 );
             }
 
@@ -204,7 +204,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
                     continue;
                 }
 
-                $active = $this->isChoiceActive($bucket['key'], $data);
+                $active = $this->isChoiceActive($bucket['key'], $data, $activeName);
                 $choice = new ViewData\Choice();
                 $choice->setLabel($bucket->getValue('key'));
                 $choice->setCount($bucket['doc_count']);
@@ -222,15 +222,18 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
             }
         }
 
-        foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
-            if (in_array($name, $activeNames)) {
-                continue;
+        if (isset($unsortedChoices['all-selected'])) {
+            foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
+                if (in_array($name, $activeNames)) {
+                    continue;
+                }
+
+                $unsortedChoices[$name] = $buckets;
             }
 
-            $unsortedChoices[$name] = $buckets;
+            unset($unsortedChoices['all-selected']);
         }
 
-        unset($unsortedChoices['all-selected']);
         ksort($unsortedChoices);
 
         /** @var AggregateViewData $data */
@@ -263,7 +266,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
      *
      * @return array Buckets.
      */
-    private function fetchAggregation(DocumentIterator $result, $filterName, $values)
+    protected function fetchAggregation(DocumentIterator $result, $filterName, $values)
     {
         $data = [];
         $aggregation = $result->getAggregation(sprintf('%s-filter', $filterName));
@@ -277,7 +280,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
 
         if (!empty($values)) {
             foreach ($values as $name => $value) {
-                $data[$name] = $aggregation->find(sprintf('%s.%s.query', $value, $filterName));
+                $data[$name] = $aggregation->find(sprintf('%s.%s.query', $name, $filterName));
             }
 
             $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.query', $filterName));
@@ -299,7 +302,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
      *
      * @return BuilderInterface
      */
-    private function addSubFilterAggregation(
+    protected function addSubFilterAggregation(
         $filterAggregation,
         $deepLevelAggregation,
         $terms,
@@ -334,7 +337,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
      *
      * @return array
      */
-    private function getOptionUrlParameters($key, $name, ViewData $data, $active)
+    protected function getOptionUrlParameters($key, $name, ViewData $data, $active)
     {
         $value = $data->getState()->getValue();
         $parameters = $data->getResetUrlParameters();
@@ -360,10 +363,11 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
      *
      * @param string   $key
      * @param ViewData $data
+     * @param string   $activeName
      *
      * @return bool
      */
-    private function isChoiceActive($key, ViewData $data)
+    protected function isChoiceActive($key, ViewData $data, $activeName)
     {
         return $data->getState()->isActive() && in_array($key, $data->getState()->getValue());
     }

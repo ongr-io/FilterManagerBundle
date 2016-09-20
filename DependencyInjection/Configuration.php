@@ -87,6 +87,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->append($this->buildFilterTree('choice'))
                         ->append($this->buildFilterTree('dynamic_aggregate'))
+                        ->append($this->buildFilterTree('multi_dynamic_aggregate'))
                         ->append($this->buildFilterTree('multi_choice'))
                         ->append($this->buildFilterTree('match'))
                         ->append($this->buildFilterTree('fuzzy'))
@@ -195,6 +196,7 @@ class Configuration implements ConfigurationInterface
                     ->end();
                 break;
             case 'dynamic_aggregate':
+            case 'multi_dynamic_aggregate':
                 $node
                     ->children()
                         ->scalarNode('name_field')
