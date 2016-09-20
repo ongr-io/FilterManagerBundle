@@ -82,4 +82,12 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
     {
         $this->tags = $tags;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRelated()
+    {
+        return false;
+    }
 }
