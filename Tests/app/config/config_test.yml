@@ -63,7 +63,7 @@ ongr_filter_manager:
             filters: ['date']
             repository: 'es.manager.default.product'
         dynamic_filters:
-            filters: ['dynamic_aggregate', 'multi_dynamic_aggregate']
+            filters: ['dynamic_aggregate', 'zero_choice_aggregate', 'multi_dynamic_aggregate']
             repository: 'es.manager.default.product'
     filters:
         match:
@@ -130,6 +130,11 @@ ongr_filter_manager:
                 request_field: 'dynamic_aggregate'
                 field: 'attributes>attributes.value'
                 name_field: 'attributes.name'
+            zero_choice_aggregate:
+                request_field: 'zero_aggregate'
+                field: 'attributes>attributes.value'
+                name_field: 'attributes.name'
+                show_zero_choices: true
         multi_dynamic_aggregate:
             multi_dynamic_aggregate:
                 request_field: 'multi_dynamic_aggregate'

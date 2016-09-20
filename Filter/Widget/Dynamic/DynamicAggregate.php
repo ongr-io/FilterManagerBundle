@@ -53,6 +53,11 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
     private $nameField;
 
     /**
+     * @var bool
+     */
+    private $showZeroChoices;
+
+    /**
      * @param array $sortType
      */
     public function setSortType($sortType)
@@ -82,6 +87,22 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
     public function setNameField($nameField)
     {
         $this->nameField = $nameField;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowZeroChoices()
+    {
+        return $this->showZeroChoices;
+    }
+
+    /**
+     * @param bool $showZeroChoices
+     */
+    public function setShowZeroChoices($showZeroChoices)
+    {
+        $this->showZeroChoices = $showZeroChoices;
     }
 
     /**
@@ -176,6 +197,10 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
         }
 
         $search->addAggregation($filterAggregation);
+
+        if ($this->getShowZeroChoices()) {
+            $search->addAggregation($aggregation);
+        }
     }
 
     /**
@@ -194,6 +219,10 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
         $unsortedChoices = [];
         $activeNames = $data->getState()->isActive() ? array_keys($data->getState()->getValue()) : [];
         $filterAggregations = $this->fetchAggregation($result, $data->getName(), $data->getState()->getValue());
+
+        if ($this->getShowZeroChoices() && $data->getState()->isActive()) {
+            $unsortedChoices = $this->formInitialUnsortedChoices($result, $data);
+        }
 
         /** @var AggregationValue $bucket */
         foreach ($filterAggregations as $activeName => $aggregation) {
@@ -215,9 +244,9 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
                 );
 
                 if ($activeName == 'all-selected') {
-                    $unsortedChoices[$activeName][$name][] = $choice;
+                    $unsortedChoices[$activeName][$name][$bucket['key']] = $choice;
                 } else {
-                    $unsortedChoices[$activeName][] = $choice;
+                    $unsortedChoices[$activeName][$bucket['key']] = $choice;
                 }
             }
         }
@@ -370,5 +399,36 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
     protected function isChoiceActive($key, ViewData $data, $activeName)
     {
         return $data->getState()->isActive() && in_array($key, $data->getState()->getValue());
+    }
+
+    /**
+     * Forms $unsortedChoices array with all possible choices.
+     * 0 is assigned to the document count of the choices.
+     *
+     * @param DocumentIterator $result
+     * @param ViewData         $data
+     *
+     * @return array
+     */
+    private function formInitialUnsortedChoices($result, $data)
+    {
+        $unsortedChoices = [];
+        $urlParameters = array_merge(
+            $data->getResetUrlParameters(),
+            $data->getState()->getUrlParameters()
+        );
+
+        foreach ($result->getAggregation($data->getName())->getAggregation('query') as $bucket) {
+            $groupName = $bucket->getAggregation('name')->getBuckets()[0]['key'];
+            $choice = new ViewData\Choice();
+            $choice->setActive(false);
+            $choice->setUrlParameters($urlParameters);
+            $choice->setLabel($bucket['key']);
+            $choice->setCount(0);
+            $unsortedChoices[$groupName][$bucket['key']] = $choice;
+            $unsortedChoices['all-selected'][$groupName][$bucket['key']] = $choice;
+        }
+
+        return $unsortedChoices;
     }
 }
