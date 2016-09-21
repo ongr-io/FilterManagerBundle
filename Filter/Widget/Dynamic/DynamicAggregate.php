@@ -321,7 +321,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
      */
     protected function addSubFilterAggregation(
         $filterAggregation,
-        $deepLevelAggregation,
+        &$deepLevelAggregation,
         $terms,
         $aggName
     ) {
@@ -398,7 +398,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
      *
      * @return array
      */
-    private function formInitialUnsortedChoices($result, $data)
+    protected function formInitialUnsortedChoices($result, $data)
     {
         $unsortedChoices = [];
         $urlParameters = array_merge(

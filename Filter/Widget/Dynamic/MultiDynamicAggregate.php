@@ -81,7 +81,7 @@ class MultiDynamicAggregate extends DynamicAggregate
      */
     protected function addSubFilterAggregation(
         $filterAggregation,
-        $deepLevelAggregation,
+        &$deepLevelAggregation,
         $terms,
         $aggName
     ) {
