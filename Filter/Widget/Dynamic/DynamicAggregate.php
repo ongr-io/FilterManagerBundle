@@ -269,7 +269,7 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
             $choiceViewData->setName($name);
             $choiceViewData->setChoices($choices);
             $choiceViewData->setUrlParameters([]);
-            $choiceViewData->setResetUrlParameters([]);
+            $choiceViewData->setResetUrlParameters($data->getResetUrlParameters());
             $data->addItem($choiceViewData);
         }
 
