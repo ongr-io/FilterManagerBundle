@@ -185,16 +185,14 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
                     $key
                 );
             }
-
-            $this->addSubFilterAggregation(
-                $filterAggregation,
-                $aggregation,
-                $state->getValue(),
-                'all-selected'
-            );
-        } else {
-            $filterAggregation->addAggregation($aggregation);
         }
+
+        $this->addSubFilterAggregation(
+            $filterAggregation,
+            $aggregation,
+            $state->getValue() ? $state->getValue() : [],
+            'all-selected'
+        );
 
         $search->addAggregation($filterAggregation);
 
@@ -298,26 +296,16 @@ class DynamicAggregate extends AbstractSingleRequestValueFilter implements
     protected function fetchAggregation(DocumentIterator $result, $filterName, $values)
     {
         $data = [];
+        $values = empty($values) ? [] : $values;
         $aggregation = $result->getAggregation(sprintf('%s-filter', $filterName));
 
-        if ($aggregation->getAggregation($filterName)) {
-            $aggregation = $aggregation->find($filterName.'.query');
-            $data['all-selected'] = $aggregation;
-
-            return $data;
+        foreach ($values as $name => $value) {
+            $data[$name] = $aggregation->find(sprintf('%s.%s.query', $name, $filterName));
         }
 
-        if (!empty($values)) {
-            foreach ($values as $name => $value) {
-                $data[$name] = $aggregation->find(sprintf('%s.%s.query', $name, $filterName));
-            }
+        $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.query', $filterName));
 
-            $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.query', $filterName));
-
-            return $data;
-        }
-
-        return [];
+        return $data;
     }
 
     /**

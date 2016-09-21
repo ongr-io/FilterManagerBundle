@@ -69,40 +69,6 @@ class MultiDynamicAggregate extends DynamicAggregate
     }
 
     /**
-     * Fetches buckets from search results.
-     *
-     * @param DocumentIterator $result     Search results.
-     * @param string           $filterName Filter name.
-     * @param array            $values     Values from the state object
-     *
-     * @return array Buckets.
-     */
-    protected function fetchAggregation(DocumentIterator $result, $filterName, $values)
-    {
-        $data = [];
-        $aggregation = $result->getAggregation(sprintf('%s-filter', $filterName));
-
-        if ($aggregation->getAggregation($filterName)) {
-            $aggregation = $aggregation->find($filterName.'.query');
-            $data['all-selected'] = $aggregation;
-
-            return $data;
-        }
-
-        if (!empty($values)) {
-            foreach ($values as $name => $value) {
-                $data[$name] = $aggregation->find(sprintf('%s.%s.query', $name, $filterName));
-            }
-
-            $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.query', $filterName));
-
-            return $data;
-        }
-
-        return [];
-    }
-
-    /**
      * A method used to add an additional filter to the aggregations
      * in preProcessSearch
      *
