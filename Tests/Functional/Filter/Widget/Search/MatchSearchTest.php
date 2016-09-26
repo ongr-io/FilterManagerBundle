@@ -78,7 +78,7 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
 
         $match = new MatchSearch();
         $match->setRequestField('q');
-        $match->setField('title,description^2,variants+variants.title^3');
+        $match->setField('title,description^2,variants>variants.title^3');
 
         $container->set('match', $match);
 

@@ -55,8 +55,8 @@ class MatchSearch extends AbstractSingleValue
      */
     private function buildMatchPart($field, FilterState $state)
     {
-        if (strpos($field, '+') !== false) {
-            list ($path, $field) = explode('+', $field);
+        if (strpos($field, '>') !== false) {
+            list ($path, $field) = explode('>', $field);
         }
 
         if (strpos($field, '^') !== false) {
