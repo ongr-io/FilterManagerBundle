@@ -44,4 +44,6 @@ View data returned by this filter to be used in template:
 | getUrlParameters()      | Url parameters representing current filter state |
 | getTags()               | Lists all tags specified at filter configuration |
 | hasTag($tag)            | Checks if filter has the specific tag            |
-  
+
+
+In twig template, the filter is used similarly to `match` filter.

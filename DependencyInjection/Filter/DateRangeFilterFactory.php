@@ -13,6 +13,8 @@ namespace ONGR\FilterManagerBundle\DependencyInjection\Filter;
 
 /**
  * Factory for range filter on date fields.
+ *
+ * @deprecated Filter factories will be deleted in 2.0
  */
 class DateRangeFilterFactory extends RangeFilterFactory
 {
