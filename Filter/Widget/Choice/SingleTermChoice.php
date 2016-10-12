@@ -11,77 +11,31 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Choice;
 
-use ONGR\ElasticsearchDSL\Aggregation\FilterAggregation;
-use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
+use ONGR\ElasticsearchBundle\Result\Aggregation\AggregationValue;
+use ONGR\ElasticsearchDSL\Aggregation\Bucketing\FilterAggregation;
+use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\Helper\SizeAwareTrait;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\AbstractSingleRequestValueFilter;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareInterface;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareTrait;
+use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
  * This class provides single terms choice.
  */
-class SingleTermChoice extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
+class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterface
 {
-    use FieldAwareTrait, SizeAwareTrait;
-
-    /**
-     * @var array
-     */
-    private $sortType;
-
-    /**
-     * @var bool
-     */
-    private $showZeroChoices;
-
-    /**
-     * @param array $sortType
-     */
-    public function setSortType($sortType)
-    {
-        $this->sortType = $sortType;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSortType()
-    {
-        return $this->sortType;
-    }
-
-    /**
-     * @param bool $showZeroChoices
-     */
-    public function setShowZeroChoices($showZeroChoices)
-    {
-        $this->showZeroChoices = $showZeroChoices;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getShowZeroChoices()
-    {
-        return $this->showZeroChoices;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $search->addPostFilter(new TermQuery($this->getField(), $state->getValue()));
+            $search->addPostFilter(new TermQuery($this->getDocumentField(), $state->getValue()));
         }
     }
 
@@ -90,16 +44,18 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        $name = $state ? $state->getName() : $this->getField();
-        $aggregation = new TermsAggregation($name, $this->getField());
+        $name = $state ? $state->getName() : $this->getDocumentField();
+        $aggregation = new TermsAggregation($name, $this->getDocumentField());
 
-        if ($this->getSortType()) {
-            $aggregation->addParameter('order', [$this->getSortType()['type'] => $this->getSortType()['order']]);
+        if ($this->getOption('sort_order')) {
+            $aggregation->addParameter('order', [
+                $this->getOption('sort_type', '_count') => $this->getOption('sort_order')
+            ]);
         }
 
         $aggregation->addParameter('size', 0);
-        if ($this->getSize() > 0) {
-            $aggregation->addParameter('size', $this->getSize());
+        if ($this->getOption('size') > 0) {
+            $aggregation->addParameter('size', $this->getOption('size'));
         }
 
         if ($relatedSearch->getPostFilters()) {
@@ -108,7 +64,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
             $filterAggregation->addAggregation($aggregation);
             $search->addAggregation($filterAggregation);
 
-            if ($this->showZeroChoices) {
+            if ($this->getOption('show_zero_choices')) {
                 $unfilteredAggregation = clone $aggregation;
                 $unfilteredAggregation->setName($name . '-unfiltered');
                 $search->addAggregation($unfilteredAggregation);
@@ -136,7 +92,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         $unsortedChoices = [];
         $zeroValueChoices = [];
 
-        if ($this->showZeroChoices && $agg = $result->getAggregation($data->getName() . '-unfiltered')) {
+        if ($this->getOption('show_zero_choices') && $agg = $result->getAggregation($data->getName() . '-unfiltered')) {
             foreach ($agg as $bucket) {
                 $zeroValueChoices[$bucket['key']] = $bucket['doc_count'];
             }
@@ -170,7 +126,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
         }
 
         // Add the prioritized choices first.
-        if ($this->getSortType()) {
+        if ($this->getOption('sort_priority')) {
             $unsortedChoices = $this->addPriorityChoices($unsortedChoices, $data);
         }
 
@@ -199,7 +155,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
      */
     protected function addPriorityChoices(array $unsortedChoices, ChoicesAwareViewData $data)
     {
-        foreach ($this->getSortType()['priorities'] as $name) {
+        foreach ($this->getOption('sort_priority') as $name) {
             if (array_key_exists($name, $unsortedChoices)) {
                 $data->addChoice($unsortedChoices[$name]);
                 unset($unsortedChoices[$name]);
@@ -215,7 +171,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
      * @param DocumentIterator $result Search results.
      * @param string           $name   Filter name.
      *
-     * @return array Buckets.
+     * @return AggregationValue.
      */
     protected function fetchAggregation(DocumentIterator $result, $name)
     {
@@ -229,7 +185,7 @@ class SingleTermChoice extends AbstractSingleRequestValueFilter implements Field
             return $aggregation->find($name);
         }
 
-        return [];
+        return null;
     }
 
     /**

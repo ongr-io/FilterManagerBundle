@@ -92,8 +92,6 @@ class PagerService
     public function setLimit($limit)
     {
         $this->limit = $limit > 0 ? $limit : 1;
-
-        $this->setPage($this->page);
     }
 
     /**

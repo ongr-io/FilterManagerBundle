@@ -33,14 +33,14 @@ class MatchSearch extends AbstractSingleValue
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            if (strpos($this->getField(), ',') !== false) {
+            if (strpos($this->getDocumentField(), ',') !== false) {
                 $subQuery = new BoolQuery();
-                foreach (explode(',', $this->getField()) as $field) {
+                foreach (explode(',', $this->getDocumentField()) as $field) {
                     $subQuery->add($this->buildMatchPart($field, $state), 'should');
                 }
                 $search->addQuery($subQuery, 'must');
             } else {
-                $search->addQuery($this->buildMatchPart($this->getField(), $state), 'must');
+                $search->addQuery($this->buildMatchPart($this->getDocumentField(), $state), 'must');
             }
         }
     }

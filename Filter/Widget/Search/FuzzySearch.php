@@ -33,15 +33,15 @@ class FuzzySearch extends AbstractSingleValue
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            if (strpos($this->getField(), ',') !== false) {
+            if (strpos($this->getDocumentField(), ',') !== false) {
                 $subQuery = new BoolQuery();
-                foreach (explode(',', $this->getField()) as $field) {
+                foreach (explode(',', $this->getDocumentField()) as $field) {
                     $subQuery->add(new FuzzyQuery($field, $state->getValue(), $this->getParameters()), 'should');
                 }
                 $search->addQuery($subQuery, 'must');
             } else {
                 $search->addQuery(
-                    new FuzzyQuery($this->getField(), $state->getValue(), $this->getParameters()),
+                    new FuzzyQuery($this->getDocumentField(), $state->getValue(), $this->getParameters()),
                     'must'
                 );
             }

@@ -13,6 +13,9 @@ namespace ONGR\FilterManagerBundle\Filter\Widget;
 
 use ONGR\FilterManagerBundle\Filter\FilterInterface;
 use ONGR\FilterManagerBundle\Filter\FilterState;
+use ONGR\FilterManagerBundle\Filter\Helper\DocumentFieldAwareTrait;
+use ONGR\FilterManagerBundle\Filter\Helper\OptionsAwareTrait;
+use ONGR\FilterManagerBundle\Filter\Helper\RequestFieldAwareTrait;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,14 +24,12 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @deprecated Will be renamed to AbstractFilter.
  */
-abstract class AbstractSingleRequestValueFilter implements FilterInterface
+abstract class AbstractFilter implements FilterInterface
 {
     use RelationAwareTrait;
-
-    /**
-     * @var string
-     */
-    private $requestField;
+    use RequestFieldAwareTrait;
+    use DocumentFieldAwareTrait;
+    use OptionsAwareTrait;
 
     /**
      * @var array
@@ -53,21 +54,6 @@ abstract class AbstractSingleRequestValueFilter implements FilterInterface
         return $state;
     }
 
-    /**
-     * @return string
-     */
-    public function getRequestField()
-    {
-        return $this->requestField;
-    }
-
-    /**
-     * @param string $requestField
-     */
-    public function setRequestField($requestField)
-    {
-        $this->requestField = $requestField;
-    }
 
     /**
      * @return string
