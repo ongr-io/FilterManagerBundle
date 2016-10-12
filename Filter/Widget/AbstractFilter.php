@@ -21,8 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class generalises filters using single field value from request.
- *
- * @deprecated Will be renamed to AbstractFilter.
  */
 abstract class AbstractFilter implements FilterInterface
 {
