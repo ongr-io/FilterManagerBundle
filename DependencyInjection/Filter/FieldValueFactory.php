@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Factory for field_value factory.
+ *
+ * @deprecated Filter factories will be deleted in 2.0
  */
 class FieldValueFactory extends AbstractFilterFactory
 {
