@@ -13,6 +13,7 @@ namespace Tests\Functional\Filter\Widget\Dynamic;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -295,7 +296,7 @@ class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
     public function testChoices($sortParams, $expectedChoices)
     {
         /** @var AggregateViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
+        $result = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('dynamic_filters'))
             ->handleRequest(new Request($sortParams))->getFilters()['multi_dynamic_aggregate'];
         $this->assertTrue($result instanceof AggregateViewData);
         $this->assertEquals($expectedChoices, $this->extractActualChoices($result));
@@ -307,7 +308,7 @@ class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
     public function testFiltering()
     {
         /** @var DocumentIterator $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
+        $result = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('dynamic_filters'))
             ->handleRequest(new Request(
                 ['multi_dynamic_aggregate' => ['Made in' => ['China', 'USA'], 'Condition' => ['Good']]]
             ))->getResult();

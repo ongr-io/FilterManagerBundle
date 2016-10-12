@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Choice;
 
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice;
@@ -95,20 +96,10 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
      */
     protected function getFilterManager()
     {
-        $container = new FilterContainer();
+        /** @var FilterManager $manager */
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('multiple'));
 
-        $filter = new MultiTermChoice();
-        $filter->setRequestField('choice');
-        $filter->setTags(['badged']);
-        $filter->setField('color');
-
-        $container->set('choice', $filter);
-
-        return new FilterManager(
-            $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
-        );
+        return $manager;
     }
 
     /**
@@ -184,7 +175,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
         $result = $this->getFilterManager()->handleRequest($request);
 
         /** @var ChoicesAwareViewData $viewData */
-        $viewData = $result->getFilters()['choice'];
+        $viewData = $result->getFilters()['m_choices'];
         $actualUrls = [];
 
         foreach ($viewData->getChoices() as $choice) {

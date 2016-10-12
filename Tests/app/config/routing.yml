@@ -2,14 +2,14 @@ foo_list:
     path: /list
     defaults:
         _controller: ONGRFilterManagerBundle:Manager:manager
-        managerName: "foo_filters"
-        template: "TestBundle:Manager:default.html.twig"
+        managerName: default
+        template: TestBundle:Manager:default.html.twig
 
 app_list_json:
     path: /list.json
     defaults:
         _controller: ONGRFilterManagerBundle:Manager:json
-        managerName: "foo_filters"
+        managerName: default
 
 test_page:
     path: /

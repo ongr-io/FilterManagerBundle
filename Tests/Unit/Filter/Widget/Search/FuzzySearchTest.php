@@ -32,7 +32,7 @@ class FuzzySearchTest extends \PHPUnit_Framework_TestCase
             ->method('addQuery')
             ->with($this->isInstanceOf('ONGR\ElasticsearchDSL\Query\FuzzyQuery'), $this->equalTo('must'));
 
-        $fuzzySearch->setField('name');
+        $fuzzySearch->setDocumentField('name');
         $fuzzySearch->modifySearch($mockSearch, $mockFilterState);
 
         $mockSearch = $this->getMockBuilder('ONGR\ElasticsearchDSL\Search')->getMock();
@@ -40,7 +40,7 @@ class FuzzySearchTest extends \PHPUnit_Framework_TestCase
             ->method('addQuery')
             ->with($this->isInstanceOf('ONGR\ElasticsearchDSL\Query\BoolQuery'), $this->equalTo('must'));
 
-        $fuzzySearch->setField('name,age,address');
+        $fuzzySearch->setDocumentField('name,age,address');
         $fuzzySearch->modifySearch($mockSearch, $mockFilterState);
     }
 }

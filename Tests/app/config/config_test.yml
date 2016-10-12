@@ -29,118 +29,150 @@ ongr_elasticsearch:
                 type: custom
                 tokenizer: keyword
                 filter: [lowercase]
-    connections:
-        default:
-            hosts:
-                - 127.0.0.1:9200
-            index_name: filter_manager_testing
-            settings:
-                refresh_interval: -1
-                number_of_shards: 2
-                number_of_replicas: 0
-            analysis:
-                tokenizer:
-                    - pathTokenizer
-                filter:
-                    - incremental_filter
-                analyzer:
-                    - urlAnalyzer
     managers:
         default:
-            connection: default
+            index:
+                hosts:
+                    - 127.0.0.1:9200
+                index_name: filter_manager_testing
+                settings:
+                    refresh_interval: -1
+                    number_of_shards: 2
+                    number_of_replicas: 0
+                analysis:
+                    tokenizer:
+                        - pathTokenizer
+                    filter:
+                        - incremental_filter
+                    analyzer:
+                        - urlAnalyzer
             mappings:
                 - TestBundle
 
 ongr_filter_manager:
     managers:
-        foo_filters:
-            filters: ['phrase', 'single_choice', 'foo_range', 'zero_choices']
+        default:
+            filters: ['phrase', 'single_choice', 'zero_choices']
             repository: 'es.manager.default.product'
-        bar_filters:
-            filters: ['sort', 'inclusive_range', 'bar_range']
+        multiple:
+            filters: ['m_choices']
             repository: 'es.manager.default.product'
         range_filters:
-            filters: ['date']
+            filters: ['sort_filter', 'inclusive_range', 'bar_range', 'date']
             repository: 'es.manager.default.product'
+#        range_filters:
+#            filters: ['date']
+#            repository: 'es.manager.default.product'
         dynamic_filters:
-            filters: ['dynamic_aggregate', 'zero_choice_aggregate', 'multi_dynamic_aggregate']
+            filters: ['dynamic_aggregate_filter', 'zero_choice_aggregate_filter', 'multi_dynamic_aggregate_filter']
             repository: 'es.manager.default.product'
     filters:
-        match:
-            phrase:
-                request_field: 'q'
+        single_choice:
+            type: choice
+            request_field: color
+            document_field: color
+            options:
+                size: 3
+                sort_type: _term
+                sort_order: asc
+                sort_priority:
+                    - red
+        zero_choices:
+            type: choice
+            request_field: zero
+            document_field: sku
+            options:
+                show_zero_choices: true
+        phrase:
+            type: match
+            request_field: q
+            document_field: title
+            options:
                 operator: 'and'
                 fuzziness: 0
-        pager:
-            pager:
-                request_field: 'page'
+        page:
+            type: pager
+            request_field: page
+            document_field: ~
+            options:
                 count_per_page: 12
                 max_pages: 3
-        range:
-            range:
-                request_field: 'range'
-                field: 'price'
-                tags:
-                    - badged
-                    - permanent
-            inclusive_range:
-                request_field: 'inclusive_range'
-                field: 'price'
+        price_range:
+            type: range
+            request_field: range
+            document_field: price
+            tags:
+                - badged
+                - permanent
+        inclusive_range:
+            type: range
+            request_field: inclusive_range
+            document_field: price
+            options:
                 inclusive: true
-        date_range:
-            date:
-                request_field: 'date_range'
-                field: 'date'
-        multi_choice:
-            choice:
-                request_field: 'choice'
-                field: 'choice'
-                size: 2
-                tags:
-                    - badged
-        choice:
-            single_choice:
-                request_field: 'single_choice'
-                field: 'color'
-                size: 3
-                sort:
-                  type: _term
-                  order: asc
-                  priorities:
-                     - red
-            zero_choices:
-                request_field: 'zero'
-                field: 'sku'
-                show_zero_choices: true
-        fuzzy:
-            fuzzy:
-                request_field: 'fuzzy'
-                field: 'color'
-                fuzziness: 5
-                prefix_length: 0
-                max_expansions: 50
-        field_value:
-            only_active:
-                field: 'active'
-                value: true
-        sort:
-            sort:
-                request_field: 'sort'
+        date:
+            type: date_range
+            request_field: date_range
+            document_field: date
+        bar_range:
+            type: foo_range
+            request_field: range
+            document_field: price
+        m_choices:
+            type: multi_choice
+            request_field: choice
+            document_field: color
+            tags:
+                - badged
+#        choice:
+#            single_choice:
+#                request_field: 'single_choice'
+#                field: 'color'
+#                size: 3
+#                sort:
+#                  type: _term
+#                  order: asc
+#                  priorities:
+#                     - red
+#            zero_choices:
+#                request_field: 'zero'
+#                field: 'sku'
+#                show_zero_choices: true
+#        fuzzy:
+#            fuzzy:
+#                request_field: 'fuzzy'
+#                field: 'color'
+#                fuzziness: 5
+#                prefix_length: 0
+#                max_expansions: 50
+#        field_value:
+#            only_active:
+#                field: 'active'
+#                value: true
+        sort_filter:
+            type: sort
+            request_field: 'sort'
+            document_field: ~
+            options:
                 choices:
                     - { label: foo, field: price, default: true, order: asc }
                     - { label: bar, fields: [{field: price, order: asc}, {field: date, order: desc}]}
-        dynamic_aggregate:
-            dynamic_aggregate:
-                request_field: 'dynamic_aggregate'
-                field: 'attributes>attributes.value'
-                name_field: 'attributes.name'
-            zero_choice_aggregate:
-                request_field: 'zero_aggregate'
-                field: 'attributes>attributes.value'
-                name_field: 'attributes.name'
+        dynamic_aggregate_filter:
+            type: dynamic_aggregate
+            request_field: dynamic_aggregate
+            document_field: attributes>attributes.value
+            options:
+                name_field: attributes.name
+        zero_choice_aggregate_filter:
+            type: dynamic_aggregate
+            request_field: zero_aggregate
+            document_field: attributes>attributes.value
+            options:
+                name_field: attributes.name
                 show_zero_choices: true
-        multi_dynamic_aggregate:
-            multi_dynamic_aggregate:
-                request_field: 'multi_dynamic_aggregate'
-                field: 'attributes>attributes.value'
+        multi_dynamic_aggregate_filter:
+            type: multi_dynamic_aggregate
+            request_field: multi_dynamic_aggregate
+            document_field: attributes>attributes.value
+            options:
                 name_field: 'attributes.name'

@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Range\Range;
 use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
@@ -74,13 +75,12 @@ class RangeTest extends AbstractFilterManagerResultsTest
     public function getTestResultsData()
     {
         $out = [];
-        $managers = $this->getFilterManager();
+
         // Case #0 range includes everything.
         $out[] = [
             'request' => new Request(['range' => '0;50', 'sort' => '0', 'mode' => null]),
             'ids' => ['1', '2', '3', '4', '5'],
             'assertOrder' => true,
-            'managers' => $managers,
         ];
 
         // Case #1 two elements.
@@ -88,7 +88,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'request' => new Request(['range' => '1;4', 'sort' => '0', 'mode' => null]),
             'ids' => ['2', '3'],
             'assertOrder' => true,
-            'managers' => $managers,
         ];
 
         // Case #2 no elements.
@@ -96,7 +95,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'request' => new Request(['range' => '2;3', 'sort' => '0', 'mode' => null]),
             'ids' => [],
             'assertOrder' => true,
-            'managers' => $managers,
         ];
 
         // Case #3 invalid range specified.
@@ -104,7 +102,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'request' => new Request(['range' => '2', 'sort' => '0', 'mode' => null]),
             'ids' => ['1', '2', '3', '4', '5'],
             'assertOrder' => true,
-            'managers' => $managers,
         ];
 
         // Case #4 no range specified.
@@ -112,7 +109,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
             new Request(['sort' => '0', 'mode' => null]),
             ['1', '2', '3', '4', '5'],
             true,
-            $managers,
         ];
 
         // Case #5 test with float shouldn't list anything.
@@ -120,7 +116,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'request' => new Request(['range' => '4.3;50', 'sort' => '0', 'mode' => null]),
             'ids' => [],
             'assertOrder' => true,
-            'managers' => $managers,
         ];
 
         // Case #6 test with float should list.
@@ -128,7 +123,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'request' => new Request(['range' => '4.1;50', 'sort' => '0', 'mode' => null]),
             'ids' => ['5'],
             'assertOrder' => true,
-            'managers' => $managers,
         ];
 
         // Case #7 Inclusive filter.
@@ -136,7 +130,6 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'request' => new Request(['inclusive_range' => '1;2', 'sort' => '0', 'mode' => null]),
             'ids' => ['1', '2'],
             'assertOrder' => true,
-            'managers' => $managers,
         ];
 
         return $out;
@@ -156,7 +149,7 @@ class RangeTest extends AbstractFilterManagerResultsTest
     {
         foreach ($managers as $filter => $filterManager) {
             /** @var RangeAwareViewData $viewData */
-            $viewData = $filterManager->handleRequest($request)->getFilters()[$filter];
+            $viewData = $this->getFilterManager()->handleRequest($request)->getFilters()[$filter];
 
             $this->assertInstanceOf('ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData', $viewData);
             $this->assertEquals(1, $viewData->getMinBounds());
@@ -167,11 +160,10 @@ class RangeTest extends AbstractFilterManagerResultsTest
     /**
      * Returns filter managers.
      *
-     * @return FilterManager[]
+     * @return FilterManager
      */
     protected function getFilterManager()
     {
-        $managers = [];
         $container = new FilterContainer();
 
         $choices = [
@@ -180,13 +172,13 @@ class RangeTest extends AbstractFilterManagerResultsTest
 
         $filter = new Range();
         $filter->setRequestField('range');
-        $filter->setField('price');
+        $filter->setDocumentField('price');
         $container->set('range', $filter);
 
         $filter = new Range();
         $filter->setRequestField('inclusive_range');
-        $filter->setField('price');
-        $filter->setInclusive(true);
+        $filter->setDocumentField('price');
+        $filter->addOption('inclusive', true);
         $container->set('inclusive_range', $filter);
 
         $sort = new Sort();
@@ -194,15 +186,11 @@ class RangeTest extends AbstractFilterManagerResultsTest
         $sort->setChoices($choices);
         $container->set('sorting', $sort);
 
-        $managers['range'] = new FilterManager(
+        return new FilterManager(
             $container,
             $this->getManager()->getRepository('TestBundle:Product'),
             new EventDispatcher()
         );
-
-        $managers['bar_range'] = $this->getContainer()->get('ongr_filter_manager.bar_filters');
-
-        return $managers;
     }
 
     /**
@@ -217,18 +205,16 @@ class RangeTest extends AbstractFilterManagerResultsTest
      */
     public function testResults(Request $request, $ids, $assertOrder = false, $managers = [])
     {
-        foreach ($managers as $filterManager) {
-            $actual = array_map(
-                [$this, 'fetchDocumentId'],
-                iterator_to_array($filterManager->handleRequest($request)->getResult())
-            );
+        $actual = array_map(
+            [$this, 'fetchDocumentId'],
+            iterator_to_array($this->getFilterManager()->handleRequest($request)->getResult())
+        );
 
-            if (!$assertOrder) {
-                sort($actual);
-                sort($ids);
-            }
-
-            $this->assertEquals($ids, $actual);
+        if (!$assertOrder) {
+            sort($actual);
+            sort($ids);
         }
+
+        $this->assertEquals($ids, $actual);
     }
 }

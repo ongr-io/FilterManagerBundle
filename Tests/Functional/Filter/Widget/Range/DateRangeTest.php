@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
 use ONGR\FilterManagerBundle\Search\FilterManager;
 use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
@@ -61,14 +62,11 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
     {
         $out = [];
 
-        $managers = $this->getFilterManager();
-
         // Case #0 no active filter.
         $out[] = [
             new Request([]),
             ['1', '2', '3', '4', '5'],
             false,
-            $managers,
         ];
 
         // Case #1 Filter is active and in the middle of available range.
@@ -76,7 +74,6 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
             new Request(['date_range' => '2003-01-01;2005-12-22']),
             ['3', '4', '5'],
             false,
-            $managers,
         ];
 
         // Case #2 Range goes from beginning.
@@ -84,7 +81,6 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
             new Request(['date_range' => '2001-01-01;2003-12-22']),
             ['1', '2', '3'],
             false,
-            $managers,
         ];
 
         // Case #3 Range goes to end.
@@ -92,10 +88,22 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
             new Request(['date_range' => '2003-01-03;2005-12-22']),
             ['3', '4', '5'],
             false,
-            $managers,
         ];
 
         return $out;
+    }
+
+    /**
+     * Returns filter managers.
+     *
+     * @return FilterManager
+     */
+    protected function getFilterManager()
+    {
+        /** @var FilterManager $manager */
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range_filters'));
+
+        return $manager;
     }
 
     /**
@@ -104,40 +112,25 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
      * @param Request $request     Http request.
      * @param array   $ids         Array of document ids to assert.
      * @param bool    $assertOrder Set true if order of results lso should be asserted.
-     * @param array   $managers    Set of filter managers to test.
      *
      * @dataProvider getTestResultsData()
      */
-    public function testViewData(Request $request, $ids, $assertOrder = false, $managers = [])
+    public function testViewData(Request $request, $ids, $assertOrder = false)
     {
-        foreach ($managers as $filter => $filterManager) {
-            /** @var RangeAwareViewData $viewData */
-            $viewData = $filterManager->handleRequest($request)->getFilters()[$filter];
+        /** @var RangeAwareViewData $viewData */
+        $viewData = $this->getFilterManager()->handleRequest($request)->getFilters()['date'];
 
-            $this->assertInstanceOf('ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData', $viewData);
+        $this->assertInstanceOf('ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData', $viewData);
 
-            $this->assertEquals(
-                date_create_from_format(\DateTime::ISO8601, '2001-09-11T00:00:00+0000'),
-                $viewData->getMinBounds()
-            );
+        $this->assertEquals(
+            date_create_from_format(\DateTime::ISO8601, '2001-09-11T00:00:00+0000'),
+            $viewData->getMinBounds()
+        );
 
-            $this->assertEquals(
-                date_create_from_format(\DateTime::ISO8601, '2005-09-11T00:00:00+0000'),
-                $viewData->getMaxBounds()
-            );
-        }
-    }
-
-    /**
-     * Returns filter managers.
-     *
-     * @return FilterManager[]
-     */
-    protected function getFilterManager()
-    {
-        return [
-            'date' => $this->getContainer()->get('ongr_filter_manager.range_filters'),
-        ];
+        $this->assertEquals(
+            date_create_from_format(\DateTime::ISO8601, '2005-09-11T00:00:00+0000'),
+            $viewData->getMaxBounds()
+        );
     }
 
     /**
@@ -146,24 +139,21 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
      * @param Request $request     Http request.
      * @param array   $ids         Array of document ids to assert.
      * @param bool    $assertOrder Set true if order of results lso should be asserted.
-     * @param array   $managers    Set of filter managers to test.
      *
      * @dataProvider getTestResultsData()
      */
-    public function testResults(Request $request, $ids, $assertOrder = false, $managers = [])
+    public function testResults(Request $request, $ids, $assertOrder = false)
     {
-        foreach ($managers as $filterManager) {
-            $actual = array_map(
-                [$this, 'fetchDocumentId'],
-                iterator_to_array($filterManager->handleRequest($request)->getResult())
-            );
+        $actual = array_map(
+            [$this, 'fetchDocumentId'],
+            iterator_to_array($this->getFilterManager()->handleRequest($request)->getResult())
+        );
 
-            if (!$assertOrder) {
-                sort($actual);
-                sort($ids);
-            }
-
-            $this->assertEquals($ids, $actual);
+        if (!$assertOrder) {
+            sort($actual);
+            sort($ids);
         }
+
+        $this->assertEquals($ids, $actual);
     }
 }

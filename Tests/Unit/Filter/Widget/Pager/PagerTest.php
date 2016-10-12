@@ -50,8 +50,8 @@ class PagerTest extends \PHPUnit_Framework_TestCase
         $filterStateMock = $this->getMockBuilder('ONGR\FilterManagerBundle\Filter\FilterState')->getMock();
         $filterStateMock->expects($this->any())->method('getValue')->willReturn(1);
         $filter = new Pager();
-        $filter->setMaxPages(1);
-        $filter->setCountPerPage(2);
+        $filter->addOption('max_pages', 1);
+        $filter->addOption('count_per_page', 2);
         $result = $this->getMockBuilder('ONGR\ElasticsearchBundle\Result\DocumentIterator')
             ->disableOriginalConstructor()
             ->getMock();

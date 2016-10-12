@@ -57,7 +57,7 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
 
         $match = new MatchSearch();
         $match->setRequestField('q');
-        $match->setField('title^0.5,description^2');
+        $match->setDocumentField('title^0.5,description^2');
 
         $container->set('match', $match);
 

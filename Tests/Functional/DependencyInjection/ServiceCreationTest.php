@@ -11,11 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\DependencyInjection;
 
-use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager;
-use ONGR\FilterManagerBundle\Filter\Widget\Range\Range;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ServiceCreationTest extends AbstractElasticsearchTestCase
+class ServiceCreationTest extends WebTestCase
 {
     /**
      * Data provider for testing service creation.
@@ -28,47 +26,62 @@ class ServiceCreationTest extends AbstractElasticsearchTestCase
             [
                 'ongr_filter_manager.filter.phrase',
                 'ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch',
+                [
+                    'getRequestField' => 'q',
+                    'getDocumentField' => 'title',
+                ],
             ],
             [
-                'ongr_filter_manager.filter.pager',
+                'ongr_filter_manager.filter.page',
                 'ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager',
                 [
                     'getCountPerPage' => 12,
                     'getRequestField' => 'page',
+                    'getDocumentField' => null,
                 ],
             ],
             [
-                'ongr_filter_manager.filter.choice',
+                'ongr_filter_manager.filter.single_choice',
                 'ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice',
                 [
-                    'getSize' => 2,
+                    'getRequestField' => 'color',
+                    'getDocumentField' => 'color',
                 ],
             ],
             [
-                'ongr_filter_manager.filter.range',
+                'ongr_filter_manager.filter.zero_choices',
+                'ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice',
+                [
+                    'getRequestField' => 'zero',
+                    'getDocumentField' => 'sku',
+                ],
+            ],
+            [
+                'ongr_filter_manager.filter.price_range',
                 'ONGR\FilterManagerBundle\Filter\Widget\Range\Range',
                 [
-                    'getField' => 'price',
+                    'getDocumentField' => 'price',
                     'getRequestField' => 'range',
                     'getTags' => ['badged', 'permanent'],
                 ],
             ],
             [
-                'ongr_filter_manager.filter.choice',
-                'ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice',
+                'ongr_filter_manager.filter.inclusive_range',
+                'ONGR\FilterManagerBundle\Filter\Widget\Range\Range',
                 [
-                    'getField' => 'choice',
-                    'getRequestField' => 'choice',
-                    'getTags' => ['badged'],
+                    'getDocumentField' => 'price',
+                    'getRequestField' => 'inclusive_range',
+                    'getTags' => [],
                 ],
             ],
             [
-                'ongr_filter_manager.foo_filters',
-                'ONGR\FilterManagerBundle\Search\FilterManager',
-            ],
-            [
-                'ongr_filter_manager.filter.fuzzy',
-                'ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch',
+                'ongr_filter_manager.filter.date',
+                'ONGR\FilterManagerBundle\Filter\Widget\Range\DateRange',
+                [
+                    'getDocumentField' => 'date',
+                    'getRequestField' => 'date_range',
+                    'getTags' => [],
+                ],
             ],
         ];
     }
@@ -84,7 +97,8 @@ class ServiceCreationTest extends AbstractElasticsearchTestCase
      */
     public function testServices($id, $instance, $params = [])
     {
-        $container = $this->getContainer();
+        $client = self::createClient();
+        $container = $client->getContainer();
 
         $this->assertTrue($container->has($id));
         $service = $container->get($id);

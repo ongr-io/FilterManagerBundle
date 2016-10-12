@@ -59,7 +59,7 @@ class MatchSearchTest extends AbstractFilterManagerResultsTest
     protected function getFilterManager()
     {
         $filter = new MatchSearch();
-        $filter->setField('title');
+        $filter->setDocumentField('title');
         $filter->setRequestField('q');
 
         $container = new FilterContainer();
