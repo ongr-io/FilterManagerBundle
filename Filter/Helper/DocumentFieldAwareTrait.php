@@ -13,8 +13,6 @@ namespace ONGR\FilterManagerBundle\Filter\Helper;
 
 /**
  * This trait defines methods for Elasticsearch field value aware filters.
- *
- * @deprecated FieldAwareTrait will be changed to DocumentFieldAwareTrait in 2.0
  */
 trait DocumentFieldAwareTrait
 {
