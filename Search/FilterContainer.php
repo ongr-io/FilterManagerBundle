@@ -60,26 +60,6 @@ class FilterContainer extends ParameterBag
     }
 
     /**
-     * Sets cache engine
-     *
-     * @param Cache|null $cache
-     */
-    public function setCache(Cache $cache = null)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * Sets cached search life time
-     *
-     * @param $lifeTime
-     */
-    public function setLifeTime($lifeTime)
-    {
-        $this->lifeTime = $lifeTime;
-    }
-
-    /**
      * Sets array of filter names not to be cached
      *
      * @param array $exclude
@@ -94,7 +74,7 @@ class FilterContainer extends ParameterBag
      *
      * @param RelationInterface $relation
      *
-     * @return FilterInterface[]
+     * @return FilterInterface[]|FilterIterator
      */
     public function getFiltersByRelation(RelationInterface $relation)
     {
@@ -133,34 +113,12 @@ class FilterContainer extends ParameterBag
      */
     public function buildSearch(SearchRequest $request, $filters = null)
     {
-        /** @var \ArrayIterator $filters */
-        $filters = $filters ? $filters : $this->getIterator();
         $search = new Search();
-        $cachedFilters = [];
 
-        if ($this->cache) {
-            foreach ($filters as $name => $filter) {
-                if (!in_array($name, $this->exclude)) {
-                    $cachedFilters[$name] = $request->get($name)->getSerializableData();
-                }
-            }
-
-            $searchHash = md5(serialize($cachedFilters));
-
-            if ($this->cache->contains($searchHash)) {
-                $search = $this->cache->fetch($searchHash);
-            } else {
-                foreach ($cachedFilters as $name => $state) {
-                    $filters->offsetGet($name)->modifySearch($search, $request->get($name), $request);
-                }
-                $this->cache->save($searchHash, $search, $this->lifeTime);
-            }
-        }
-
+        /** @var FilterInterface[] $filters */
+        $filters = $filters ? $filters : $this->all();
         foreach ($filters as $name => $filter) {
-            if (!array_key_exists($name, $cachedFilters)) {
-                $filter->modifySearch($search, $request->get($name), $request);
-            }
+            $filter->modifySearch($search, $request->get($name), $request);
         }
 
         return $search;

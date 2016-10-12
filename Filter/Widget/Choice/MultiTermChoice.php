@@ -29,7 +29,7 @@ class MultiTermChoice extends SingleTermChoice
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $filter = new TermsQuery($this->getField(), $state->getValue());
+            $filter = new TermsQuery($this->getDocumentField(), $state->getValue());
             $search->addPostFilter($filter);
         }
     }

@@ -102,7 +102,7 @@ class FilterManager implements FilterManagerInterface
             );
         }
 
-        $result = $this->repository->execute($search);
+        $result = $this->repository->findDocuments($search);
         $this->eventDispatcher->dispatch(ONGRFilterManagerEvents::SEARCH_RESPONSE, new SearchResponseEvent($result));
 
         return new SearchResponse(

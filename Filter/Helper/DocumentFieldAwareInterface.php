@@ -12,19 +12,19 @@
 namespace ONGR\FilterManagerBundle\Filter\Helper;
 
 /**
- * This interface define structure for elasticsearch field aware filters.
+ * This interface define structure for Elasticsearch field aware filters.
  *
  * @deprecated FieldAwareInterface will be changed to DocumentFieldAwareInterface in 2.0
  */
-interface FieldAwareInterface
+interface DocumentFieldAwareInterface
 {
     /**
-     * @param string $field
+     * @param string $documentField
      */
-    public function setField($field);
+    public function setDocumentField($documentField);
 
     /**
      * @return string
      */
-    public function getField();
+    public function getDocumentField();
 }

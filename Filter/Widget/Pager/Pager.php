@@ -13,11 +13,11 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Pager;
 
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
-use ONGR\FilterManagerBundle\Filter\FilterInterface;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\AbstractSingleRequestValueFilter;
+use ONGR\FilterManagerBundle\Filter\ViewData\PagerAwareViewData;
+use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use ONGR\FilterManagerBundle\Pager\PagerService;
 use ONGR\FilterManagerBundle\Pager\Adapters\CountAdapter;
@@ -26,42 +26,14 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides basic functionality for pagination.
  */
-class Pager extends AbstractSingleRequestValueFilter implements FilterInterface, ViewDataFactoryInterface
+class Pager extends AbstractFilter implements ViewDataFactoryInterface
 {
-    /**
-     * @var int
-     */
-    private $countPerPage;
-
-    /**
-     * @var int
-     */
-    private $maxPages;
-
     /**
      * @return int
      */
     public function getMaxPages()
     {
-        return $this->maxPages;
-    }
-
-    /**
-     * @param int $maxPages
-     */
-    public function setMaxPages($maxPages)
-    {
-        $this->maxPages = $maxPages;
-    }
-
-    /**
-     * Sets count per page.
-     *
-     * @param int $count
-     */
-    public function setCountPerPage($count)
-    {
-        $this->countPerPage = $count;
+        return $this->getOption('max_pages', 10);
     }
 
     /**
@@ -71,7 +43,7 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
      */
     public function getCountPerPage()
     {
-        return $this->countPerPage;
+        return $this->getOption('count_per_page', 12);
     }
 
     /**
@@ -94,10 +66,10 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $search->setFrom($this->countPerPage * ($state->getValue() - 1));
+            $search->setFrom($this->getCountPerPage() * ($state->getValue() - 1));
         }
 
-        $search->setSize($this->countPerPage);
+        $search->setSize($this->getCountPerPage());
     }
 
     /**
@@ -113,7 +85,7 @@ class Pager extends AbstractSingleRequestValueFilter implements FilterInterface,
      */
     public function createViewData()
     {
-        return new ViewData\PagerAwareViewData();
+        return new PagerAwareViewData();
     }
 
     /**

@@ -61,6 +61,6 @@ class FieldValue extends AbstractSingleValue implements RelationAwareInterface
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $search->addPostFilter(new TermQuery($this->getField(), $this->value));
+        $search->addPostFilter(new TermQuery($this->getDocumentField(), $this->value));
     }
 }
