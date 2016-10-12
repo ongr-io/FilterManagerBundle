@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Filter factory abstraction.
+ *
+ * @deprecated Filter factories will be deleted in 2.0
  */
 abstract class AbstractFilterFactory
 {

@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Factory for pager filter.
+ *
+ * @deprecated Filter factories will be deleted in 2.0
  */
 class PagerFilterFactory extends AbstractFilterFactory
 {
