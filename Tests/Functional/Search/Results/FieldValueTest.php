@@ -54,7 +54,7 @@ class FieldValueTest extends AbstractFilterManagerResultsTest
     protected function getFilterManager()
     {
         $filter = new FieldValue();
-        $filter->setField('active');
+        $filter->setDocumentField('active');
         $filter->setValue(true);
 
         $container = new FilterContainer();

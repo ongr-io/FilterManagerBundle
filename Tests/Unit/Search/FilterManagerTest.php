@@ -62,7 +62,7 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $mockRepository->expects($this->once())
-            ->method('execute')
+            ->method('findDocuments')
             ->will($this->returnValue($mockDocumentIterator));
 
         $filterManager = new FilterManager(

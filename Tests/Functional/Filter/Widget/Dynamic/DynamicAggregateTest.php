@@ -12,6 +12,7 @@
 namespace Tests\Functional\Filter\Widget\Dynamic;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -307,7 +308,7 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
     public function testChoices($filterParams, $expectedChoices, $filter)
     {
         /** @var AggregateViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
+        $result = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('dynamic_filters'))
             ->handleRequest(new Request($filterParams))->getFilters()[$filter];
 
         $this->assertTrue($result instanceof AggregateViewData);

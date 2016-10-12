@@ -83,7 +83,7 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
 
         $fuzzy = new FuzzySearch();
         $fuzzy->setRequestField('q');
-        $fuzzy->setField('color');
+        $fuzzy->setDocumentField('color');
         $fuzzy->setFuzziness($fuzziness);
         $fuzzy->setPrefixLength($prefixLength);
         $fuzzy->setMaxExpansions($maxExpansions);

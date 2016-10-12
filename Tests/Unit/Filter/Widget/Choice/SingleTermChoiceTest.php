@@ -9,7 +9,7 @@ class SingleTermChoiceTest extends \PHPUnit_Framework_TestCase
     public function testShowZeroChoicesGetterAndSetter()
     {
         $filter = new SingleTermChoice();
-        $filter->setShowZeroChoices(true);
-        $this->assertTrue($filter->getShowZeroChoices());
+        $filter->addOption('show_zero_choices', true);
+        $this->assertTrue($filter->getOption('show_zero_choices'));
     }
 }

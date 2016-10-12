@@ -64,9 +64,9 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
 
         $documentValue = new DocumentValue();
         $documentValue->setDocumentField('category');
-        $documentValue->setField('categories');
+        $documentValue->addOption('field', 'categories');
 
-        $container->set('document_value', $documentValue);
+        $container->set('document_value_filter', $documentValue);
 
         return new FilterManager(
             $container,

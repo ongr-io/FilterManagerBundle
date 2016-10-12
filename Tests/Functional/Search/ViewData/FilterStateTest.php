@@ -63,14 +63,14 @@ class FilterStateTest extends AbstractElasticsearchTestCase
         $container = new FilterContainer();
 
         $filter = new MatchSearch();
-        $filter->setField('title');
+        $filter->setDocumentField('title');
         $filter->setRequestField('q');
         $filter->setResetRelation(new ExcludeRelation(['description_match']));
         $filter->setSearchRelation(new ExcludeRelation(['description_match']));
         $container->set('title_match', $filter);
 
         $filter = new MatchSearch();
-        $filter->setField('description');
+        $filter->setDocumentField('description');
         $filter->setRequestField('d');
         $container->set('description_match', $filter);
 

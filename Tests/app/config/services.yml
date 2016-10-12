@@ -1,16 +1,9 @@
 services:
-  ongr_filter_manager.filter.foo_range:
+  ongr_filter_manager.filter.custom_range:
     class: ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange\FooRange
     arguments:
       - 'price'
       - 'price'
     tags:
-        - { name: ongr_filter_manager.filter, filter_name: foo_range }
+        - { name: ongr_filter_manager.filter, type: foo_range }
 
-  ongr_filter_manager.filter.bar_range:
-      class: ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange\FooRange
-      arguments:
-        - 'range'
-        - 'price'
-      tags:
-          - { name: ongr_filter_manager.filter, filter_name: bar_range }

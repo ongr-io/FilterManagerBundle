@@ -63,14 +63,16 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
 
         $filter = new SingleTermChoice();
         $filter->setRequestField('c');
-        $filter->setField('color');
-        $filter->setSortType(['type' => '_term', 'order' => 'asc', 'priorities' => []]);
+        $filter->setDocumentField('color');
+        $filter->addOption('sort_type', '_term');
+        $filter->addOption('sort_order', 'asc');
         $container->set('color', $filter);
 
         $filter = new SingleTermChoice();
         $filter->setRequestField('m');
-        $filter->setField('manufacturer');
-        $filter->setSortType(['type' => '_term', 'order' => 'asc', 'priorities' => []]);
+        $filter->setDocumentField('manufacturer');
+        $filter->addOption('sort_type', '_term');
+        $filter->addOption('sort_order', 'asc');
         $container->set('manufacturer', $filter);
 
         return new FilterManager(

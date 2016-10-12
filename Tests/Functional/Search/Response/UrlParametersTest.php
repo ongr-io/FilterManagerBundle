@@ -64,12 +64,12 @@ class UrlParametersTest extends AbstractElasticsearchTestCase
         $container = new FilterContainer();
 
         $filter = new MatchSearch();
-        $filter->setField('title');
+        $filter->setDocumentField('title');
         $filter->setRequestField('q');
         $container->set('title_match', $filter);
 
         $filter = new MatchSearch();
-        $filter->setField('description');
+        $filter->setDocumentField('description');
         $filter->setRequestField('d');
         $container->set('description_match', $filter);
 

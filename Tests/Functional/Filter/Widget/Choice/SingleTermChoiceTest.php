@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Choice;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice;
@@ -118,7 +119,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
     public function testChoicesConfiguration()
     {
         /** @var ChoicesAwareViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.foo_filters')
+        $result = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('default'))
             ->handleRequest(new Request())->getFilters()['single_choice'];
 
         $expectedChoices = [
@@ -161,7 +162,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
         $sortParams = ['type' => '_count', 'order' => 'desc', 'priorities' => ['red']];
         $out[] = ['sortParams' => $sortParams, ['red', 'blue', 'green', 'yellow']];
 
-        // Case #3, sort items by count.
+        // Case #4, sort items by count.
         $sortParams = ['type' => '_count', 'order' => 'asc', 'priorities' => []];
         $out[] = ['sortParams' => $sortParams, ['green', 'yellow', 'red', 'blue']];
 
@@ -183,8 +184,10 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
         $filter = new SingleTermChoice();
         $filter->setRequestField('choice');
         $filter->setTags(['tagged']);
-        $filter->setField('color');
-        $filter->setSortType($sortParams);
+        $filter->setDocumentField('color');
+        $filter->addOption('sort_order', $sortParams['order']);
+        $filter->addOption('sort_type', $sortParams['type']);
+        $filter->addOption('sort_priority', $sortParams['priorities']);
 
         $container->set('choice', $filter);
 
@@ -216,7 +219,7 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
 
         $filter = new SingleTermChoice();
         $filter->setRequestField('choice');
-        $filter->setField('title');
+        $filter->setDocumentField('title');
 
         $container->set('choice', $filter);
 
@@ -238,8 +241,8 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
     public function testZeroChoicesSize()
     {
         /** @var ChoicesAwareViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.foo_filters')
-            ->handleRequest(new Request(['single_choice' => 'red']))->getFilters()['zero_choices'];
+        $result = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('default'))
+            ->handleRequest(new Request(['color' => 'red']))->getFilters()['zero_choices'];
 
         $expectedChoices = [
             'foo' => 3,

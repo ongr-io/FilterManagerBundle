@@ -16,21 +16,17 @@ use ONGR\ElasticsearchDSL\Query\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareInterface;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareTrait;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\AbstractSingleRequestValueFilter;
+use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * FooRange filter, selects documents from lower limit to upper limit.
  */
-class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInterface, ViewDataFactoryInterface
+class FooRange extends AbstractFilter implements ViewDataFactoryInterface
 {
-    use FieldAwareTrait;
-
     /**
      * @param string $requestField
      * @param string $field
@@ -38,7 +34,7 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
     public function __construct($requestField, $field)
     {
         $this->setRequestField($requestField);
-        $this->setField($field);
+        $this->setDocumentField($field);
     }
 
     /**
@@ -74,7 +70,7 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $filter = new RangeQuery($this->getField(), $state->getValue());
+            $filter = new RangeQuery($this->getDocumentField(), $state->getValue());
             $search->addPostFilter($filter);
         }
     }
@@ -85,7 +81,7 @@ class FooRange extends AbstractSingleRequestValueFilter implements FieldAwareInt
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
         $stateAgg = new StatsAggregation('range_agg');
-        $stateAgg->setField($this->getField());
+        $stateAgg->setField($this->getDocumentField());
         $search->addAggregation($stateAgg);
     }
 
