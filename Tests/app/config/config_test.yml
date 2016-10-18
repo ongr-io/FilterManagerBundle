@@ -54,17 +54,14 @@ ongr_filter_manager:
         default:
             filters: ['phrase', 'single_choice', 'zero_choices']
             repository: 'es.manager.default.product'
-        multiple:
-            filters: ['m_choices']
+        multi_choices:
+            filters: ['multi_choices_filter']
             repository: 'es.manager.default.product'
         range_filters:
             filters: ['sort_filter', 'inclusive_range', 'bar_range', 'date']
             repository: 'es.manager.default.product'
-#        range_filters:
-#            filters: ['date']
-#            repository: 'es.manager.default.product'
         dynamic_filters:
-            filters: ['dynamic_aggregate_filter', 'zero_choice_aggregate_filter', 'multi_dynamic_aggregate_filter']
+            filters: ['dynamic_aggregate_filter', 'dynamic_aggregate_with_zero_choice_filter', 'multi_dynamic_aggregate_filter']
             repository: 'es.manager.default.product'
     filters:
         single_choice:
@@ -118,37 +115,12 @@ ongr_filter_manager:
             type: foo_range
             request_field: range
             document_field: price
-        m_choices:
+        multi_choices_filter:
             type: multi_choice
             request_field: choice
             document_field: color
             tags:
                 - badged
-#        choice:
-#            single_choice:
-#                request_field: 'single_choice'
-#                field: 'color'
-#                size: 3
-#                sort:
-#                  type: _term
-#                  order: asc
-#                  priorities:
-#                     - red
-#            zero_choices:
-#                request_field: 'zero'
-#                field: 'sku'
-#                show_zero_choices: true
-#        fuzzy:
-#            fuzzy:
-#                request_field: 'fuzzy'
-#                field: 'color'
-#                fuzziness: 5
-#                prefix_length: 0
-#                max_expansions: 50
-#        field_value:
-#            only_active:
-#                field: 'active'
-#                value: true
         sort_filter:
             type: sort
             request_field: 'sort'
@@ -163,7 +135,7 @@ ongr_filter_manager:
             document_field: attributes>attributes.value
             options:
                 name_field: attributes.name
-        zero_choice_aggregate_filter:
+        dynamic_aggregate_with_zero_choice_filter:
             type: dynamic_aggregate
             request_field: zero_aggregate
             document_field: attributes>attributes.value
