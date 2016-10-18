@@ -97,7 +97,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
     protected function getFilterManager()
     {
         /** @var FilterManager $manager */
-        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('multiple'));
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('multi_choices'));
 
         return $manager;
     }
@@ -175,7 +175,7 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
         $result = $this->getFilterManager()->handleRequest($request);
 
         /** @var ChoicesAwareViewData $viewData */
-        $viewData = $result->getFilters()['m_choices'];
+        $viewData = $result->getFilters()['multi_choices_filter'];
         $actualUrls = [];
 
         foreach ($viewData->getChoices() as $choice) {
