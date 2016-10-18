@@ -70,11 +70,17 @@ class ONGRFilterManagerExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterNameGetter()
     {
-        $this->assertEquals(ONGRFilterManagerExtension::PREFIX.'.filter.acme', ONGRFilterManagerExtension::getFilterId('acme'));
+        $this->assertEquals(
+            ONGRFilterManagerExtension::PREFIX.'.filter.acme',
+            ONGRFilterManagerExtension::getFilterId('acme')
+        );
     }
 
     public function testFilterManagerNameGetter()
     {
-        $this->assertEquals(ONGRFilterManagerExtension::PREFIX.'.manager.acme', ONGRFilterManagerExtension::getFilterManagerId('acme'));
+        $this->assertEquals(
+            ONGRFilterManagerExtension::PREFIX.'.manager.acme',
+            ONGRFilterManagerExtension::getFilterManagerId('acme')
+        );
     }
 }
