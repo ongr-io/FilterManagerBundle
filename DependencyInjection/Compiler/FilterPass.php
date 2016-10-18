@@ -51,7 +51,7 @@ class FilterPass implements CompilerPassInterface
 
             if (array_key_exists($filterName, $filters)) {
                 throw new InvalidConfigurationException(
-                    "Filter name cannot be the same as the filter type. Check `{$$filterName}` filter."
+                    "Filter name cannot be the same as the filter type. Check `{$filterName}` filter."
                 );
             }
 
