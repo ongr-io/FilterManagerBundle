@@ -23,6 +23,7 @@ use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
+use ONGR\FilterManagerBundle\Filter\Helper\SortAwareTrait;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData;
@@ -35,51 +36,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterface
 {
-    /**
-     * @var array
-     */
-    private $sortType;
-
-    /**
-     * @var string
-     */
-    private $nameField;
-
-    /**
-     * @var bool
-     */
-    private $showZeroChoices;
-
-    /**
-     * @param array $sortType
-     */
-    public function setSortType($sortType)
-    {
-        $this->sortType = $sortType;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSortType()
-    {
-        return $this->sortType;
-    }
+    use SortAwareTrait;
 
     /**
      * @return string
      */
     public function getNameField()
     {
-        return $this->nameField;
-    }
-
-    /**
-     * @param string $nameField
-     */
-    public function setNameField($nameField)
-    {
-        $this->nameField = $nameField;
+        return $this->getOption('name_field', false);
     }
 
     /**
@@ -87,15 +51,7 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
      */
     public function getShowZeroChoices()
     {
-        return $this->showZeroChoices;
-    }
-
-    /**
-     * @param bool $showZeroChoices
-     */
-    public function setShowZeroChoices($showZeroChoices)
-    {
-        $this->showZeroChoices = $showZeroChoices;
+        return $this->getOption('show_zero_choices', false);
     }
 
     /**
@@ -151,12 +107,13 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
         $termsAggregation->addParameter('size', 0);
 
         if ($this->getSortType()) {
-            $termsAggregation->addParameter('order', [$this->getSortType()['type'] => $this->getSortType()['order']]);
+            $termsAggregation->addParameter('order', [$this->getSortType() => $this->getSortOrder()]);
         }
 
         $termsAggregation->addAggregation(
             new TermsAggregation('name', $this->getNameField())
         );
+
         $aggregation->addAggregation($termsAggregation);
         $filterAggregation = new FilterAggregation($name . '-filter');
 
