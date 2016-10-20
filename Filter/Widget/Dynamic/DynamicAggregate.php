@@ -80,13 +80,16 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
 
         if ($state && $state->isActive()) {
             $boolQuery = new BoolQuery();
-            foreach ($state->getValue() as $value) {
-                $boolQuery->add(
-                    new NestedQuery(
-                        $path,
-                        new TermQuery($field, $value)
-                    )
+            foreach ($state->getValue() as $groupName => $value) {
+                $innerBoolQuery = new BoolQuery();
+                $nestedQuery = new NestedQuery($path, $innerBoolQuery);
+                $innerBoolQuery->add(
+                    new TermQuery($field, $value)
                 );
+                $innerBoolQuery->add(
+                    new TermQuery($this->getNameField(), $groupName)
+                );
+                $boolQuery->add($nestedQuery);
             }
             $search->addPostFilter($boolQuery);
         }
