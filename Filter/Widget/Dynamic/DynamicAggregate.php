@@ -296,7 +296,15 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
      */
     protected function isChoiceActive($key, ViewData $data, $activeName)
     {
-        return $data->getState()->isActive() && in_array($key, $data->getState()->getValue());
+        if ($data->getState()->isActive()) {
+            $value = $data->getState()->getValue();
+
+            if (isset($value[$activeName]) && $key == $value[$activeName]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
