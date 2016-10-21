@@ -46,4 +46,18 @@ class AggregateViewData extends ViewData
     {
         $this->items[] = $item;
     }
+
+    /**
+     * @param callback $callback
+     */
+    public function sortItems($callback = null)
+    {
+        if ($callback === null) {
+            $callback = function ($a, $b) {
+                return strcmp($a->getName(), $b->getName());
+            };
+        }
+
+        usort($this->items, $callback);
+    }
 }
