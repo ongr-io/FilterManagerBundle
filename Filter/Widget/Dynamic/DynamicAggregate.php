@@ -100,30 +100,18 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        list($path, $field) = explode('>', $this->getDocumentField());
-        $name = $state->getName();
-        $aggregation = new NestedAggregation(
-            $name,
-            $path
-        );
-        $termsAggregation = new TermsAggregation('query', $field);
-        $termsAggregation->addParameter('size', 0);
+        list($path, $field) = explode('>', $this->getField());
+        $filter = !empty($filter = $relatedSearch->getPostFilters()) ? $filter : new MatchAllQuery();
+        $aggregation = new NestedAggregation($state->getName(), $path);
+        $nameAggregation = new TermsAggregation('name', $this->getNameField());
+        $valueAggregation = new TermsAggregation('value', $field);
+        $filterAggregation = new FilterAggregation($state->getName() . '-filter');
+        $nameAggregation->addAggregation($valueAggregation);
+        $aggregation->addAggregation($nameAggregation);
+        $filterAggregation->setFilter($filter);
 
         if ($this->getSortType()) {
-            $termsAggregation->addParameter('order', [$this->getSortType() => $this->getSortOrder()]);
-        }
-
-        $termsAggregation->addAggregation(
-            new TermsAggregation('name', $this->getNameField())
-        );
-
-        $aggregation->addAggregation($termsAggregation);
-        $filterAggregation = new FilterAggregation($name . '-filter');
-
-        if (!empty($relatedSearch->getPostFilters())) {
-            $filterAggregation->setFilter($relatedSearch->getPostFilters());
-        } else {
-            $filterAggregation->setFilter(new MatchAllQuery());
+            $valueAggregation->addParameter('order', [$this->getSortType()['type'] => $this->getSortType()['order']]);
         }
 
         if ($state->isActive()) {
@@ -171,49 +159,32 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
         $activeNames = $data->getState()->isActive() ? array_keys($data->getState()->getValue()) : [];
         $filterAggregations = $this->fetchAggregation($result, $data->getName(), $data->getState()->getValue());
 
-        if ($this->getShowZeroChoices() && $data->getState()->isActive()) {
+        if ($this->getShowZeroChoices()) {
             $unsortedChoices = $this->formInitialUnsortedChoices($result, $data);
         }
 
         /** @var AggregationValue $bucket */
         foreach ($filterAggregations as $activeName => $aggregation) {
             foreach ($aggregation as $bucket) {
-                $name = $bucket->getAggregation('name')->getBuckets()[0]['key'];
+                $name = $bucket['key'];
 
                 if ($name != $activeName && $activeName != 'all-selected') {
                     continue;
                 }
 
-                $active = $this->isChoiceActive($bucket['key'], $data, $activeName);
-                $choice = new ViewData\Choice();
-                $choice->setLabel($bucket->getValue('key'));
-                $choice->setCount($bucket['doc_count']);
-                $choice->setActive($active);
-
-                $choice->setUrlParameters(
-                    $this->getOptionUrlParameters($bucket['key'], $name, $data, $active)
-                );
-
-                if ($activeName == 'all-selected') {
-                    $unsortedChoices[$activeName][$name][$bucket['key']] = $choice;
-                } else {
-                    $unsortedChoices[$activeName][$bucket['key']] = $choice;
-                }
+                $this->addNonZeroValuesToUnsortedChoices($unsortedChoices, $activeName, $bucket, $data);
             }
         }
 
-        if (isset($unsortedChoices['all-selected'])) {
-            foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
-                if (in_array($name, $activeNames)) {
-                    continue;
-                }
-
-                $unsortedChoices[$name] = $buckets;
+        foreach ($unsortedChoices['all-selected'] as $name => $buckets) {
+            if (in_array($name, $activeNames)) {
+                continue;
             }
 
-            unset($unsortedChoices['all-selected']);
+            $unsortedChoices[$name] = $buckets;
         }
 
+        unset($unsortedChoices['all-selected']);
         ksort($unsortedChoices);
 
         /** @var AggregateViewData $data */
@@ -253,10 +224,10 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
         $aggregation = $result->getAggregation(sprintf('%s-filter', $filterName));
 
         foreach ($values as $name => $value) {
-            $data[$name] = $aggregation->find(sprintf('%s.%s.query', $name, $filterName));
+            $data[$name] = $aggregation->find(sprintf('%s.%s.name', $name, $filterName));
         }
 
-        $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.query', $filterName));
+        $data['all-selected'] = $aggregation->find(sprintf('all-selected.%s.name', $filterName));
 
         return $data;
     }
@@ -281,20 +252,15 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
         list($path, $field) = explode('>', $this->getDocumentField());
         $boolQuery = new BoolQuery();
 
-        foreach ($terms as $term) {
-            $boolQuery->add(
-                new NestedQuery($path, new TermQuery($field, $term))
-            );
+        foreach ($terms as $groupName => $term) {
+            $nestedBoolQuery = new BoolQuery();
+            $nestedBoolQuery->add(new TermQuery($field, $term));
+            $nestedBoolQuery->add(new TermQuery($this->getNameField(), $groupName));
+            $boolQuery->add(new NestedQuery($path, $nestedBoolQuery));
         }
 
-        if ($boolQuery->getQueries() == []) {
-            $boolQuery->add(new MatchAllQuery());
-        }
-
-        $innerFilterAggregation = new FilterAggregation(
-            $aggName,
-            $boolQuery
-        );
+        $boolQuery = !empty($boolQuery->getQueries()) ? $boolQuery : new MatchAllQuery();
+        $innerFilterAggregation = new FilterAggregation($aggName, $boolQuery);
         $innerFilterAggregation->addAggregation($deepLevelAggregation);
         $filterAggregation->addAggregation($innerFilterAggregation);
     }
@@ -359,17 +325,47 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
             $data->getState()->getUrlParameters()
         );
 
-        foreach ($result->getAggregation($data->getName())->getAggregation('query') as $bucket) {
-            $groupName = $bucket->getAggregation('name')->getBuckets()[0]['key'];
-            $choice = new ViewData\Choice();
-            $choice->setActive(false);
-            $choice->setUrlParameters($urlParameters);
-            $choice->setLabel($bucket['key']);
-            $choice->setCount(0);
-            $unsortedChoices[$groupName][$bucket['key']] = $choice;
-            $unsortedChoices['all-selected'][$groupName][$bucket['key']] = $choice;
+        foreach ($result->getAggregation($data->getName())->getAggregation('name') as $nameBucket) {
+            $groupName = $nameBucket['key'];
+
+            foreach ($nameBucket->getAggregation('value') as $bucket) {
+                $choice = new ViewData\Choice();
+                $choice->setActive(false);
+                $choice->setUrlParameters($urlParameters);
+                $choice->setLabel($bucket['key']);
+                $choice->setCount(0);
+                $unsortedChoices[$groupName][$bucket['key']] = $choice;
+                $unsortedChoices['all-selected'][$groupName][$bucket['key']] = $choice;
+            }
         }
 
         return $unsortedChoices;
+    }
+
+    /**
+     * @param array            $unsortedChoices
+     * @param string           $activeName
+     * @param AggregationValue $agg
+     * @param ViewData         $data
+     */
+    protected function addNonZeroValuesToUnsortedChoices(&$unsortedChoices, $activeName, $agg, $data) {
+        $name = $agg['key'];
+        foreach ($agg['value']['buckets'] as $bucket) {
+            $active = $this->isChoiceActive($bucket['key'], $data, $activeName);
+            $choice = new ViewData\Choice();
+            $choice->setLabel($bucket['key']);
+            $choice->setCount($bucket['doc_count']);
+            $choice->setActive($active);
+
+            $choice->setUrlParameters(
+                $this->getOptionUrlParameters($bucket['key'], $name, $data, $active)
+            );
+
+            if ($activeName == 'all-selected') {
+                $unsortedChoices[$activeName][$name][$bucket['key']] = $choice;
+            } else {
+                $unsortedChoices[$activeName][$bucket['key']] = $choice;
+            }
+        }
     }
 }
