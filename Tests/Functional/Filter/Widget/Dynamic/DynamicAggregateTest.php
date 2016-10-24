@@ -39,6 +39,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                                 'value' => 'USA',
                             ],
                             [
+                                'name' => 'Designed in',
+                                'value' => 'USA',
+                            ],
+                            [
                                 'name' => 'Color',
                                 'value' => 'Green',
                             ],
@@ -77,6 +81,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                                 'value' => 'Lithuania',
                             ],
                             [
+                                'name' => 'Designed in',
+                                'value' => 'USA',
+                            ],
+                            [
                                 'name' => 'Color',
                                 'value' => 'Green',
                             ]
@@ -101,6 +109,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                             [
                                 'name' => 'Made in',
                                 'value' => 'USA',
+                            ],
+                            [
+                                'name' => 'Designed in',
+                                'value' => 'Germany',
                             ],
                             [
                                 'name' => 'Color',
@@ -163,6 +175,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                                 'value' => 'China',
                             ],
                             [
+                                'name' => 'Designed in',
+                                'value' => 'USA',
+                            ],
+                            [
                                 'name' => 'Group',
                                 'value' => 'Utilities',
                             ]
@@ -174,6 +190,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                             [
                                 'name' => 'Made in',
                                 'value' => 'China',
+                            ],
+                            [
+                                'name' => 'Designed in',
+                                'value' => 'Germany',
                             ],
                             [
                                 'name' => 'Color',
@@ -227,6 +247,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                     'Germany' => 3,
                     'Lithuania' => 1,
                 ],
+                'Designed in' => [
+                    'USA' => 3,
+                    'Germany' => 2,
+                ],
                 'Condition' => [
                     'Excelent' => 2,
                     'Fair' => 2,
@@ -274,6 +298,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                     'USA' => 1,
                     'China' => 1,
                     'Lithuania' => 0,
+                    'Germany' => 0,
+                ],
+                'Designed in' => [
+                    'USA' => 1,
                     'Germany' => 0,
                 ],
                 'Condition' => [
