@@ -164,16 +164,20 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
         }
 
         /** @var AggregationValue $bucket */
-        foreach ($filterAggregations as $activeName => $aggregation) {
-            foreach ($aggregation as $bucket) {
-                $name = $bucket['key'];
+        foreach ($filterAggregations as $activeName => $filterAggregation) {
+            foreach ($filterAggregation as $nameAggregation) {
+                $name = $nameAggregation['key'];
 
                 if (($name != $activeName && $activeName != 'all-selected') ||
                     ($activeName == 'all-selected' && in_array($name, $activeNames))) {
                     continue;
                 }
 
-                $this->modifyUnsortedChoices($unsortedChoices, $activeName, $bucket, $data);
+                foreach ($nameAggregation['value']['buckets'] as $bucket) {
+                    $choice = $this->createChoice($data, $name, $activeName, $bucket);
+                    $unsortedChoices[$name][$bucket['key']] = $choice;
+                }
+
                 $this->addViewDataItem($data, $name, $unsortedChoices[$name]);
                 unset($unsortedChoices[$name]);
             }
@@ -328,11 +332,8 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
             $groupName = $nameBucket['key'];
 
             foreach ($nameBucket->getAggregation('value') as $bucket) {
-                $choice = new ViewData\Choice();
-                $choice->setActive(false);
-                $choice->setUrlParameters($urlParameters);
-                $choice->setLabel($bucket['key']);
-                $choice->setCount(0);
+                $bucketArray = ['key' => $bucket['key'], 'doc_count' => 0];
+                $choice = $this->createChoice($data, $bucket['key'], '', $bucketArray, $urlParameters);
                 $unsortedChoices[$groupName][$bucket['key']] = $choice;
             }
         }
@@ -341,28 +342,28 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
     }
 
     /**
-     * @param array            $unsortedChoices
-     * @param string           $activeName
-     * @param AggregationValue $agg
-     * @param ViewData         $data
+     * @param AggregateViewData $data
+     * @param string            $name
+     * @param string            $activeName
+     * @param AggregationValue  $bucket
+     * @param array             $urlParameters
+     * @return ViewData\Choice
      */
-    protected function modifyUnsortedChoices(&$unsortedChoices, $activeName, $agg, $data)
+    protected function createChoice($data, $name, $activeName, $bucket, $urlParameters = null)
     {
-        $name = $agg['key'];
+        $active = $this->isChoiceActive($bucket['key'], $data, $activeName);
 
-        foreach ($agg['value']['buckets'] as $bucket) {
-            $active = $this->isChoiceActive($bucket['key'], $data, $activeName);
-            $choice = new ViewData\Choice();
-            $choice->setLabel($bucket['key']);
-            $choice->setCount($bucket['doc_count']);
-            $choice->setActive($active);
-
-            $choice->setUrlParameters(
-                $this->getOptionUrlParameters($bucket['key'], $name, $data, $active)
-            );
-
-            $unsortedChoices[$name][$bucket['key']] = $choice;
+        if (empty($urlParameters)) {
+            $urlParameters = $this->getOptionUrlParameters($bucket['key'], $name, $data, $active);
         }
+
+        $choice = new ViewData\Choice();
+        $choice->setLabel($bucket['key']);
+        $choice->setCount($bucket['doc_count']);
+        $choice->setActive($active);
+        $choice->setUrlParameters($urlParameters);
+
+        return $choice;
     }
 
     /**
