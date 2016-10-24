@@ -1,11 +1,15 @@
 # Dynamic Aggregate Filter
 
-This filter is used to aggregate the data provided from a specific field
-in a nested object of the document and then group the results by the values 
-from a different field of that same nested object. This means that the 
-results are grouped dynamically, without the need to specify exact names for
-grouping. Other than that, the functionality of the filter bears similarities 
-to the *choice filter*.
+This filter is used to handle nested objects. It aggregates the data from a 
+specified field (`field` value in configuration) and then groups the results 
+by the values from a separate field (`name_field` in configuration). Both fields
+have to exist in the same nested object of your document. The results are filtered
+by the selected choices and only a single choice per group can be selected. The 
+functionality of the filter is similar to the *Choice Filter*,but there are key 
+differences: The Choice Filter which creates a single group of choices, however 
+in the Dynamic Aggregate Filter the number and values of the groups are dynamic 
+and depend on the data in your documents. This means that the filter is very 
+flexible when dealing with certain nested objects.
 
 ## Configuration 
 
