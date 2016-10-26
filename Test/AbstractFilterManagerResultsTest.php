@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class is able to test results from filters manager.
+ *
+ * @deprecated Too complicated to use this test case.
  */
 abstract class AbstractFilterManagerResultsTest extends AbstractElasticsearchTestCase
 {

@@ -13,6 +13,8 @@ namespace ONGR\FilterManagerBundle\Pager;
 
 /**
  * Interface PagerAdapterInterface.
+ *
+ * @deprecated Everything is moved to PagerAwareData
  */
 interface PagerAdapterInterface
 {
