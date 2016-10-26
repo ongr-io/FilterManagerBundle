@@ -1,0 +1,28 @@
+ongr_filter_manager:
+    managers:
+        dynamic_filters:
+            filters:
+                - dynamic_aggregate_filter
+                - dynamic_aggregate_with_zero_choice_filter
+                - multi_dynamic_aggregate_filter
+            repository: es.manager.default.product
+    filters:
+        dynamic_aggregate_filter:
+            type: dynamic_aggregate
+            request_field: dynamic_aggregate
+            document_field: attributes>attributes.value
+            options:
+                name_field: attributes.name
+        dynamic_aggregate_with_zero_choice_filter:
+            type: dynamic_aggregate
+            request_field: zero_aggregate
+            document_field: attributes>attributes.value
+            options:
+                name_field: attributes.name
+                show_zero_choices: true
+        multi_dynamic_aggregate_filter:
+            type: multi_dynamic_aggregate
+            request_field: multi_dynamic_aggregate
+            document_field: attributes>attributes.value
+            options:
+                name_field: attributes.name

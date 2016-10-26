@@ -11,17 +11,12 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Choice;
 
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
-use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice;
-use ONGR\FilterManagerBundle\Search\FilterContainer;
-use ONGR\FilterManagerBundle\Search\FilterManager;
-use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
-class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
+class MultiTermChoiceTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array
@@ -35,26 +30,78 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
                         '_id' => 1,
                         'color' => 'red',
                         'manufacturer' => 'a',
+                        'sku' => 'foo',
+                        'title' => 'm1',
                     ],
                     [
                         '_id' => 2,
                         'color' => 'blue',
                         'manufacturer' => 'a',
+                        'sku' => 'foo',
+                        'title' => 'm2',
                     ],
                     [
                         '_id' => 3,
                         'color' => 'red',
                         'manufacturer' => 'b',
+                        'sku' => 'foo',
+                        'title' => 'm3',
                     ],
                     [
                         '_id' => 4,
                         'color' => 'blue',
                         'manufacturer' => 'b',
+                        'sku' => 'foo',
+                        'title' => 'm4',
                     ],
                     [
                         '_id' => 5,
                         'color' => 'green',
                         'manufacturer' => 'b',
+                        'sku' => 'acme',
+                        'title' => 'm5',
+                    ],
+                    [
+                        '_id' => 6,
+                        'color' => 'blue',
+                        'manufacturer' => 'a',
+                        'sku' => 'acme',
+                        'title' => 'm6',
+                    ],
+                    [
+                        '_id' => 7,
+                        'color' => 'yellow',
+                        'manufacturer' => 'a',
+                        'sku' => 'bar',
+                        'title' => 'm7',
+                    ],
+                    [
+                        '_id' => 8,
+                        'color' => 'red',
+                        'manufacturer' => 'a',
+                        'sku' => 'bar',
+                        'title' => 'm8',
+                    ],
+                    [
+                        '_id' => 9,
+                        'color' => 'blue',
+                        'manufacturer' => 'c',
+                        'sku' => 'bar',
+                        'title' => 'm9',
+                    ],
+                    [
+                        '_id' => 10,
+                        'color' => 'red',
+                        'manufacturer' => 'c',
+                        'sku' => 'foo',
+                        'title' => 'm10',
+                    ],
+                    [
+                        '_id' => 11,
+                        'color' => 'blue',
+                        'manufacturer' => 'a',
+                        'sku' => 'bar',
+                        'title' => 'm11',
                     ],
                 ],
             ],
@@ -62,153 +109,117 @@ class MultiTermChoiceTest extends AbstractFilterManagerResultsTest
     }
 
     /**
-     * {@inheritdoc}
+     * Data provider for testChoicesFilter().
+     *
+     * @return array
      */
     public function getTestResultsData()
     {
         $out = [];
 
-        // Case #0
-        $out[] = [new Request(['choice' => ['red', 'green']]), ['1', '3', '5']];
+        // Case #0, sorted in default acceding
+        $out[] = [
+            [
+                'red' => 4,
+                'blue' => 5,
+                'green' => 1,
+                'yellow' => 1,
+            ],
+            'mc_filter'
+        ];
 
         // Case #1
-        $out[] = [new Request(['choice' => ['yellow', 'black']]), []];
+        $out[] = [
+            [
+                'red' => 1,
+                'blue' => 1,
+                'green' => 1,
+            ],
+            'mc_filter',
+            ['manufacturer' => 'b']
+        ];
 
         // Case #2
-        $out[] = [new Request(['choice' => ['red', 'green', 'blue']]), ['1', '2', '3', '4', '5']];
+        $out[] = [
+            [
+                'red' => 2,
+                'blue' => 3,
+                'yellow' => 1,
+            ],
+            'mc_filter',
+            ['manufacturer' => 'a']
+        ];
 
         // Case #3
-        $out[] = [new Request(['choice' => [0 => 'black', 2 => 'red']]), ['1', '3']];
+        $out[] = [
+            [
+                'blue' => 3,
+                'red' => 2,
+                'yellow' => 1,
+            ],
+            'mc_filter',
+            ['manufacturer' => 'a']
+        ];
 
         // Case #4
-        $out[] = [new Request(['choice' => 'red']), ['1', '3']];
+        $out[] = [
+            [
+                'blue' => 4,
+                'red' => 3,
+                'green' => 1,
+                'yellow' => 1,
+            ],
+            'mc_filter_zero',
+            ['manufacturer' => ['a', 'b']]
+        ];
 
         // Case #5
-        $out[] = [new Request(['choice' => ['red', 'green']]), ['1', '3', '5']];
-
-        return $out;
-    }
-
-    /**
-     * Returns filter manager.
-     *
-     * @return FilterManager
-     */
-    protected function getFilterManager()
-    {
-        /** @var FilterManager $manager */
-        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('multi_choices'));
-
-        return $manager;
-    }
-
-    /**
-     * Data provider for testChoiceUrl.
-     *
-     * @return array
-     */
-    public function getChoiceUrlData()
-    {
-        // Case #0 simple data.
         $out[] = [
-            new Request(['choice' => ['red', 'green']]),
             [
-                [
-                    'red',
-                    'green',
-                    'blue',
-                ],
-                [
-                    'green',
-                ],
-                [
-                    'red',
-                ],
+                'a' => 6,
+                'b' => 3,
+                'c' => 2,
             ],
+            'mc_filter_man_priority_blue',
+            []
         ];
 
-        // Case #1 Nothing selected.
+        // Case #6
         $out[] = [
-            new Request(),
             [
-                [
-                    'blue',
-                ],
-                [
-                    'red',
-                ],
-                [
-                    'green',
-                ],
+                'a' => 2,
+                'b' => 2,
+                'c' => 1,
             ],
-        ];
-
-        // Case #2 Only one selected.
-        $out[] = [
-            new Request(['choice' => ['red']]),
-            [
-                [
-                    'red',
-                    'blue',
-                ],
-                [],
-                [
-                    'red',
-                    'green',
-                ],
-            ],
+            'mc_filter_man',
+            ['color' => ['red', 'green']]
         ];
 
         return $out;
     }
 
     /**
-     * Check if  urls returned is as expected in all cases.
+     * Check if choices are filtered and sorted as expected.
      *
-     * @param Request $request
-     * @param array   $expectedUrlParams
-     *
-     * @dataProvider getChoiceUrlData()
-     */
-    public function testChoiceUrl(Request $request, array $expectedUrlParams)
-    {
-        $result = $this->getFilterManager()->handleRequest($request);
-
-        /** @var ChoicesAwareViewData $viewData */
-        $viewData = $result->getFilters()['multi_choices_filter'];
-        $actualUrls = [];
-
-        foreach ($viewData->getChoices() as $choice) {
-            if (isset($choice->getUrlParameters()['choice'])) {
-                $actualUrls[] = $choice->getUrlParameters()['choice'];
-            } else {
-                $actualUrls[] = [];
-            }
-        }
-
-        $this->assertTrue($viewData->hasTag('badged'));
-        $this->assertEquals($expectedUrlParams, $actualUrls);
-    }
-
-    /**
-     * This method asserts if search request gives expected results.
-     *
-     * @param Request $request     Http request.
-     * @param array   $ids         Array of document ids to assert.
-     * @param bool    $assertOrder Set true if order of results lso should be asserted.
+     * @param array $expectedChoices
+     * @param string $filter
+     * @param array $query
      *
      * @dataProvider getTestResultsData()
      */
-    public function testResults(
-        Request $request,
-        $ids,
-        $assertOrder = false
-    ) {
-        $actual = array_map(
-            [$this, 'fetchDocumentId'],
-            iterator_to_array($this->getFilterManager()->handleRequest($request)->getResult())
-        );
+    public function testChoicesFilter($expectedChoices, $filter, $query = [])
+    {
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('multi_choices'));
 
-        $this->assertEquals(sort($ids), sort($actual));
+        /** @var ChoicesAwareViewData $result */
+        $result = $manager->handleRequest(new Request($query))->getFilters()[$filter];
+
+        $actualChoices = [];
+
+        foreach ($result->getChoices() as $choice) {
+            $actualChoices[$choice->getLabel()] = $choice->getCount();
+        }
+
+        $this->assertEquals($expectedChoices, $actualChoices);
     }
 }

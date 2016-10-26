@@ -1,0 +1,35 @@
+ongr_filter_manager:
+    managers:
+        multi_choices:
+            filters:
+                - mc_filter
+                - mc_filter_man
+                - mc_filter_man_priority_blue
+                - mc_filter_zero
+            repository: es.manager.default.product
+    filters:
+        mc_filter:
+            type: multi_choice
+            request_field: color
+            document_field: color
+            tags:
+                - badged
+        mc_filter_man:
+            type: multi_choice
+            request_field: manufacturer
+            document_field: manufacturer
+            tags:
+                - badged
+        mc_filter_man_priority_blue:
+            type: multi_choice
+            request_field: manufacturer
+            document_field: manufacturer
+            options:
+                sort_priority:
+                    - blue
+        mc_filter_zero:
+            type: multi_choice
+            request_field: choice_z
+            document_field: color
+            options:
+                show_zero_choices: true
