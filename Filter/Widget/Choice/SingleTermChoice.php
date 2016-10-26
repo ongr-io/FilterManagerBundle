@@ -18,6 +18,7 @@ use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
+use ONGR\FilterManagerBundle\Filter\Helper\SortAwareTrait;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData;
@@ -29,6 +30,8 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
  */
 class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterface
 {
+    use SortAwareTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -47,9 +50,9 @@ class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterfac
         $name = $state ? $state->getName() : $this->getDocumentField();
         $aggregation = new TermsAggregation($name, $this->getDocumentField());
 
-        if ($this->getOption('sort_order')) {
+        if ($this->getSortOrder()) {
             $aggregation->addParameter('order', [
-                $this->getOption('sort_type', '_count') => $this->getOption('sort_order')
+                $this->getSortType() => $this->getSortOrder()
             ]);
         }
 
@@ -125,10 +128,7 @@ class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterfac
             $unsortedChoices[$choiceLabel] = $choice;
         }
 
-        // Add the prioritized choices first.
-        if ($this->getOption('sort_priority')) {
-            $unsortedChoices = $this->addPriorityChoices($unsortedChoices, $data);
-        }
+        $unsortedChoices = $this->addPriorityChoices($unsortedChoices, $data);
 
         foreach ($unsortedChoices as $choice) {
             $data->addChoice($choice);
@@ -155,7 +155,7 @@ class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterfac
      */
     protected function addPriorityChoices(array $unsortedChoices, ChoicesAwareViewData $data)
     {
-        foreach ($this->getOption('sort_priority') as $name) {
+        foreach ($this->getSortPriority() as $name) {
             if (array_key_exists($name, $unsortedChoices)) {
                 $data->addChoice($unsortedChoices[$name]);
                 unset($unsortedChoices[$name]);
@@ -181,11 +181,7 @@ class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterfac
         }
 
         $aggregation = $result->getAggregation(sprintf('%s-filter', $name));
-        if (isset($aggregation)) {
-            return $aggregation->find($name);
-        }
-
-        return null;
+        return $aggregation->find($name);
     }
 
     /**

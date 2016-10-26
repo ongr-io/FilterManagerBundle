@@ -14,7 +14,6 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Search;
 use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareInterface;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareTrait;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,20 +23,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DocumentValue extends AbstractSingleValue
 {
+
+    use RelationAwareTrait;
+
     /**
      * @return string
      */
     public function getValue()
     {
         return $this->getOption('value', null);
-    }
-
-    /**
-     * @return string
-     */
-    public function getField()
-    {
-        return $this->getOption('field', null);
     }
 
     /**
@@ -49,7 +43,7 @@ class DocumentValue extends AbstractSingleValue
         $document = $request->get('document');
 
         if ($document) {
-            $this->addOption('value', $document->{$this->getDocumentField()});
+            $this->addOption('value', $document->{$this->getOption('field')});
             $state->setActive(true);
         }
 
@@ -61,6 +55,6 @@ class DocumentValue extends AbstractSingleValue
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $search->addPostFilter(new TermQuery($this->getField(), $this->getValue()));
+        $search->addPostFilter(new TermQuery($this->getDocumentField(), $this->getValue()));
     }
 }

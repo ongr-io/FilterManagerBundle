@@ -26,7 +26,7 @@ class ViewData implements SerializableInterface
     /**
      * @var array
      */
-    private $tags;
+    private $tags = [];
 
     /**
      * @var array Url parameters representing current filter state.
@@ -110,10 +110,14 @@ class ViewData implements SerializableInterface
     }
 
     /**
-     * @param string $tags
+     * @param array $tags
      */
     public function setTags($tags)
     {
+        if (!is_array($tags)) {
+            $this->tags = array_filter([ $tags ]);
+        }
+
         $this->tags = $tags;
     }
 
