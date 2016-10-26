@@ -74,12 +74,12 @@ class PagerAwareViewDataTest extends \PHPUnit_Framework_TestCase
         $pagerData->setState($this->getMock('ONGR\FilterManagerBundle\Filter\FilterState'));
         $pagerData->setData(100, 1, 12, 5);
 
-        $this->assertEquals(range(2,5, 1), $pagerData->getPages());
+        $this->assertEquals(range(2, 5, 1), $pagerData->getPages());
 
         $pagerData->setData(100, 5, 12, 5);
-        $this->assertEquals(range(4,7, 1), $pagerData->getPages());
+        $this->assertEquals(range(4, 7, 1), $pagerData->getPages());
 
         $pagerData->setData(100, 9, 12, 5);
-        $this->assertEquals(range(6,9, 1), $pagerData->getPages());
+        $this->assertEquals(range(6, 9, 1), $pagerData->getPages());
     }
 }
