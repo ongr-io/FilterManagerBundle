@@ -15,7 +15,7 @@ use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
 
-class DocumentValueTest extends AbstractElasticsearchTestCase
+class FieldValueTest extends AbstractElasticsearchTestCase
 {
     /**
      * {@inheritdoc}
@@ -58,13 +58,10 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
     {
         $out = [];
 
-        $document = new \stdClass();
-        $document->type = 'jeans';
-
         // Case #0
         $out[] = [
             [1,2],
-            ['document' => $document],
+            [],
         ];
 
         return $out;
@@ -80,7 +77,7 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
      */
     public function testFilter($expectedChoices, $query = [])
     {
-        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('search'));
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('field'));
         $result = $manager->handleRequest(new Request($query))->getResult();
 
         $actual = [];

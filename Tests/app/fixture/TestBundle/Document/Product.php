@@ -126,16 +126,9 @@ class Product implements SerializableInterface
     public $words;
 
     /**
-     * @var Variant[]
-     *
-     * @ES\Embedded(class="TestBundle:Variant", multiple=true)
-     */
-    public $variants;
-
-    /**
      * @var string
      *
-     * @ES\Property(type="date")
+     * @ES\Property(type="date", options={"format":"strict_date_optional_time"})
      */
     public $date;
 

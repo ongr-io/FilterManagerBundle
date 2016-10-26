@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Sort;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
 use ONGR\FilterManagerBundle\Search\FilterManager;
@@ -33,6 +34,7 @@ class SortTest extends AbstractElasticsearchTestCase
                         'color' => 'red',
                         'manufacturer' => 'a',
                         'stock' => 5,
+                        'price' => 1,
                         // Average = 3, sum = 15.
                         'items' => [1, 2, 3, 4, 5],
                         'words' => ['one', 'two', 'three', 'alfa', 'beta'],
@@ -42,6 +44,7 @@ class SortTest extends AbstractElasticsearchTestCase
                         'color' => 'blue',
                         'manufacturer' => 'a',
                         'stock' => 6,
+                        'price' => 3,
                         // Average = 7.2, sum = 36.
                         'items' => [2, 12, 3, 14, 5],
                         'words' => ['eta', 'geta', 'zeta', 'beta', 'deta'],
@@ -51,6 +54,7 @@ class SortTest extends AbstractElasticsearchTestCase
                         'color' => 'red',
                         'manufacturer' => 'b',
                         'stock' => 2,
+                        'price' => 3,
                         // Average = 3.2, sum = 16.
                         'items' => [5, 4, 3, -12, 16],
                         'words' => ['vienas', 'du', 'trys', 'keturi', 'penki'],
@@ -60,6 +64,7 @@ class SortTest extends AbstractElasticsearchTestCase
                         'color' => 'blue',
                         'manufacturer' => 'b',
                         'stock' => 7,
+                        'price' => 4,
                         // Average = 6, sum = 30.
                         'items' => [1, -2, 30, -4, 5],
                         'words' => ['eins', 'zwei', 'drei', 'fier', 'funf'],
@@ -69,147 +74,80 @@ class SortTest extends AbstractElasticsearchTestCase
         ];
     }
 
-    /**
-     * @return FilterManager
-     */
-    protected function getFilterManager()
-    {
-        $container = new FilterContainer();
-
-        $choices = [
-            ['label' => 'Stock ASC', 'field' => 'stock', 'order' => 'asc', 'default' => false, 'mode' => null],
-            ['label' => 'Stock DESC', 'field' => 'stock', 'order' => 'desc', 'default' => true, 'mode' => null],
-            [
-                'label' => 'Stock Keyed',
-                'field' => 'stock',
-                'order' => 'desc',
-                'default' => false,
-                'key' => 'foo',
-                'mode' => null,
-            ],
-            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'asc', 'default' => false, 'mode' => 'min'],
-            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'desc', 'default' => false, 'mode' => 'max'],
-            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'asc', 'default' => false, 'mode' => 'avg'],
-            ['label' => 'Items ASC', 'field' => 'items', 'order' => 'asc', 'default' => false, 'mode' => 'sum'],
-            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'min'],
-            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'max'],
-            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'avg'],
-            ['label' => 'Items ASC', 'field' => 'words', 'order' => 'asc', 'default' => false, 'mode' => 'sum'],
-        ];
-
-        $filter = new Sort();
-        $filter->setRequestField('sort');
-        $filter->setChoices($choices);
-        $container->set('sorting', $filter);
-
-        return new FilterManager(
-            $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
-        );
-    }
 
     /**
-     * Data provider for testSorting().
+     * Data provider for testFilter().
      *
      * @return array
      */
-    public function getTestSortingData()
+    public function getTestResultsData()
     {
         $out = [];
 
         // Case #0: ascending sorting.
         $out[] = [
-            new Request(['sort' => 0]),
             ['3', '1', '2', '4'],
+            ['sort' => 'asc'],
         ];
 
-        // Case #1: descending sorting.
+        // Case #1
         $out[] = [
-            new Request(['sort' => 1]),
             ['4', '2', '1', '3'],
+            ['sort' => 'desc'],
         ];
 
-        // Case #2: using keyed parameters.
+        // Case #2
         $out[] = [
-            new Request(['sort' => 'foo']),
-            ['4', '2', '1', '3'],
+            ['4', '2', '3', '1'],
+            ['sort' => 'desc_price_desc_stock'],
         ];
 
-        // Case #3: empty sort, should fallback to default.
+        // Case #3
         $out[] = [
-            new Request(['sort' => '']),
-            ['4', '2', '1', '3'],
+            ['1', '2', '3', '4'],
+            ['sort' => 'asc_price_desc_stock'],
         ];
 
-        // Case #4: mode set to min on integer array.
+        // Case #4
         $out[] = [
-            new Request(['sort' => 3]),
-            ['3', '4', '1', '2'],
-        ];
-
-        // Case #5: mode set to max on integer array.
-        $out[] = [
-            new Request(['sort' => 4]),
-            ['4', '3', '2', '1'],
-        ];
-
-        // Case #6: mode set to avg on integer array.
-        $out[] = [
-            new Request(['sort' => 5]),
-            ['3', '1', '4', '2'],
-        ];
-
-        // Case #7: mode set to sum on integer array.
-        $out[] = [
-            new Request(['sort' => 6]),
-            ['1', '3', '4', '2'],
-        ];
-
-        // Case #8: mode set to min on string array.
-        $out[] = [
-            new Request(['sort' => 7]),
-            ['1', '2', '4', '3'],
-        ];
-
-        // Case #9: mode set to max on string array.
-        $out[] = [
-            new Request(['sort' => 8]),
             ['1', '3', '2', '4'],
+            ['sort' => 'asc_price_asc_stock'],
         ];
 
-        // Case #10: mode set to avg on string array changes to mode min.
+        // Case #5
         $out[] = [
-            new Request(['sort' => 9]),
-            ['1', '2', '4', '3'],
+            ['1', '3', '4', '2'],
+            ['sort' => 'asc_items_sum_mode'],
         ];
 
-        // Case #11: mode set to sum on string array changes to mode min.
+        // Case #6
         $out[] = [
-            new Request(['sort' => 10]),
-            ['1', '2', '4', '3'],
+            ['3', '1', '2', '4'],
+            [],
         ];
 
         return $out;
     }
 
     /**
-     * Test sorting filter.
+     * Check if choices are filtered and sorted as expected.
      *
-     * @param Request $request
-     * @param array   $expectedOrder
+     * @param array $expectedChoices
+     * @param array $query
      *
-     * @dataProvider getTestSortingData()
+     * @dataProvider getTestResultsData()
      */
-    public function testSorting(Request $request, $expectedOrder)
+    public function testFilter($expectedChoices, $query = [])
     {
-        $result = $this->getFilterManager()->handleRequest($request)->getResult();
+
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('sorting'));
+        $result = $manager->handleRequest(new Request($query))->getResult();
 
         $actual = [];
         foreach ($result as $document) {
             $actual[] = $document->id;
         }
 
-        $this->assertSame($expectedOrder, $actual);
+        $this->assertEquals($expectedChoices, $actual);
     }
 }

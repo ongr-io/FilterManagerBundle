@@ -11,16 +11,16 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
 use ONGR\FilterManagerBundle\Search\FilterManager;
-use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Functional test for date range filter.
  */
-class DateRangeTest extends AbstractFilterManagerResultsTest
+class DateRangeTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array
@@ -32,128 +32,73 @@ class DateRangeTest extends AbstractFilterManagerResultsTest
                 'product' => [
                     [
                         '_id' => 1,
-                        'date' => '2001-09-11T00:00:00+0000',
+                        'date' => '2001-09-11',
                     ],
                     [
                         '_id' => 2,
-                        'date' => '2002-09-11T00:00:00+0000',
+                        'date' => '2002-09-12',
                     ],
                     [
                         '_id' => 3,
-                        'date' => '2003-09-11T00:00:00+0000',
+                        'date' => '2003-09-11',
                     ],
                     [
                         '_id' => 4,
-                        'date' => '2004-09-11T00:00:00+0000',
+                        'date' => '2004-09-11',
                     ],
                     [
                         '_id' => 5,
-                        'date' => '2005-09-11T00:00:00+0000',
+                        'date' => '2005-10-11',
                     ],
                 ],
             ],
         ];
     }
 
+
     /**
-     * {@inheritdoc}
+     * Data provider.
+     *
+     * @return array
      */
     public function getTestResultsData()
     {
         $out = [];
 
-        // Case #0 no active filter.
+        // Case #0
         $out[] = [
-            new Request([]),
-            ['1', '2', '3', '4', '5'],
-            false,
+            [3,2],
+            ['date_range' => '2002-09-11;2004-09-11'],
         ];
 
-        // Case #1 Filter is active and in the middle of available range.
+        // Case #1
         $out[] = [
-            new Request(['date_range' => '2003-01-01;2005-12-22']),
-            ['3', '4', '5'],
-            false,
-        ];
-
-        // Case #2 Range goes from beginning.
-        $out[] = [
-            new Request(['date_range' => '2001-01-01;2003-12-22']),
-            ['1', '2', '3'],
-            false,
-        ];
-
-        // Case #3 Range goes to end.
-        $out[] = [
-            new Request(['date_range' => '2003-01-03;2005-12-22']),
-            ['3', '4', '5'],
-            false,
+            [3,2],
+            ['date_range' => '1030886789;1125581189'],
         ];
 
         return $out;
     }
 
     /**
-     * Returns filter managers.
+     * Check if choices are filtered and sorted as expected.
      *
-     * @return FilterManager
-     */
-    protected function getFilterManager()
-    {
-        /** @var FilterManager $manager */
-        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range_filters'));
-
-        return $manager;
-    }
-
-    /**
-     * Check if view data returned is correct.
-     *
-     * @param Request $request     Http request.
-     * @param array   $ids         Array of document ids to assert.
-     * @param bool    $assertOrder Set true if order of results lso should be asserted.
+     * @param array $expectedChoices
+     * @param array $query
      *
      * @dataProvider getTestResultsData()
      */
-    public function testViewData(Request $request, $ids, $assertOrder = false)
+    public function testFilter($expectedChoices, $query = [])
     {
-        /** @var RangeAwareViewData $viewData */
-        $viewData = $this->getFilterManager()->handleRequest($request)->getFilters()['date'];
 
-        $this->assertInstanceOf('ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData', $viewData);
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range'));
+        $result = $manager->handleRequest(new Request($query))->getResult();
 
-        $this->assertEquals(
-            date_create_from_format(\DateTime::ISO8601, '2001-09-11T00:00:00+0000'),
-            $viewData->getMinBounds()
-        );
-
-        $this->assertEquals(
-            date_create_from_format(\DateTime::ISO8601, '2005-09-11T00:00:00+0000'),
-            $viewData->getMaxBounds()
-        );
-    }
-
-    /**
-     * This method asserts if search request gives expected results.
-     *
-     * @param Request $request     Http request.
-     * @param array   $ids         Array of document ids to assert.
-     * @param bool    $assertOrder Set true if order of results lso should be asserted.
-     *
-     * @dataProvider getTestResultsData()
-     */
-    public function testResults(Request $request, $ids, $assertOrder = false)
-    {
-        $actual = array_map(
-            [$this, 'fetchDocumentId'],
-            iterator_to_array($this->getFilterManager()->handleRequest($request)->getResult())
-        );
-
-        if (!$assertOrder) {
-            sort($actual);
-            sort($ids);
+        $actual = [];
+        foreach ($result as $document) {
+            $actual[] = $document->id;
         }
 
-        $this->assertEquals($ids, $actual);
+        $this->assertEquals($expectedChoices, $actual);
     }
 }

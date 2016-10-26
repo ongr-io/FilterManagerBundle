@@ -1,5 +1,12 @@
 imports:
     - { resource: services.yml }
+    - { resource: filters/single_choice.yml }
+    - { resource: filters/multi_choice.yml }
+    - { resource: filters/dynamic_aggregate.yml }
+    - { resource: filters/pager.yml }
+    - { resource: filters/range.yml }
+    - { resource: filters/search.yml }
+    - { resource: filters/sort.yml }
 
 framework:
     secret: "supersecret"
@@ -52,75 +59,9 @@ ongr_elasticsearch:
 ongr_filter_manager:
     managers:
         default:
-            filters: ['phrase', 'single_choice', 'zero_choices']
-            repository: 'es.manager.default.product'
-        multi_choices:
-            filters: ['multi_choices_filter']
-            repository: 'es.manager.default.product'
-        range_filters:
-            filters: ['sort_filter', 'inclusive_range', 'bar_range', 'date']
-            repository: 'es.manager.default.product'
-        dynamic_filters:
-            filters: ['dynamic_aggregate_filter', 'dynamic_aggregate_with_zero_choice_filter', 'multi_dynamic_aggregate_filter']
+            filters: ['sort_filter']
             repository: 'es.manager.default.product'
     filters:
-        single_choice:
-            type: choice
-            request_field: color
-            document_field: color
-            options:
-                size: 3
-                sort_type: _term
-                sort_order: asc
-                sort_priority:
-                    - red
-        zero_choices:
-            type: choice
-            request_field: zero
-            document_field: sku
-            options:
-                show_zero_choices: true
-        phrase:
-            type: match
-            request_field: q
-            document_field: title
-            options:
-                operator: 'and'
-                fuzziness: 0
-        page:
-            type: pager
-            request_field: page
-            document_field: ~
-            options:
-                count_per_page: 12
-                max_pages: 3
-        price_range:
-            type: range
-            request_field: range
-            document_field: price
-            tags:
-                - badged
-                - permanent
-        inclusive_range:
-            type: range
-            request_field: inclusive_range
-            document_field: price
-            options:
-                inclusive: true
-        date:
-            type: date_range
-            request_field: date_range
-            document_field: date
-        bar_range:
-            type: foo_range
-            request_field: range
-            document_field: price
-        multi_choices_filter:
-            type: multi_choice
-            request_field: choice
-            document_field: color
-            tags:
-                - badged
         sort_filter:
             type: sort
             request_field: 'sort'
@@ -128,23 +69,3 @@ ongr_filter_manager:
             options:
                 choices:
                     - { label: foo, field: price, default: true, order: asc }
-                    - { label: bar, fields: [{field: price, order: asc}, {field: date, order: desc}]}
-        dynamic_aggregate_filter:
-            type: dynamic_aggregate
-            request_field: dynamic_aggregate
-            document_field: attributes>attributes.value
-            options:
-                name_field: attributes.name
-        dynamic_aggregate_with_zero_choice_filter:
-            type: dynamic_aggregate
-            request_field: zero_aggregate
-            document_field: attributes>attributes.value
-            options:
-                name_field: attributes.name
-                show_zero_choices: true
-        multi_dynamic_aggregate_filter:
-            type: multi_dynamic_aggregate
-            request_field: multi_dynamic_aggregate
-            document_field: attributes>attributes.value
-            options:
-                name_field: 'attributes.name'

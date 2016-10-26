@@ -1,0 +1,22 @@
+ongr_filter_manager:
+    managers:
+        pager:
+            filters:
+                - page_filter
+                - pager_sort
+            repository: es.manager.default.product
+    filters:
+        page_filter:
+            type: pager
+            request_field: page
+            document_field: ~
+            options:
+                count_per_page: 3
+                max_pages: 2
+        pager_sort:
+            type: sort
+            request_field: 'sort'
+            document_field: ~
+            options:
+                choices:
+                    - { label: stock, field: stock, default: true, order: desc }

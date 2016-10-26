@@ -1,0 +1,65 @@
+ongr_filter_manager:
+    managers:
+        search:
+            filters:
+                - phraze
+                - nested_search
+                - must
+                - must_2
+                - fuzzy_1
+                - fuzzy_2
+                - document
+            repository: es.manager.default.product
+        field:
+            filters:
+                - field
+            repository: es.manager.default.product
+    filters:
+        phraze:
+            type: match
+            request_field: q
+            document_field: title,description^2,attributes>attributes.title^3
+            options:
+                operator: and
+                fuzziness: 0
+        nested_search:
+            type: match
+            request_field: qn
+            document_field: title,attributes>attributes.name^2
+            options:
+                operator: and
+                fuzziness: 0
+        must:
+            type: match
+            request_field: qm
+            document_field: description^2
+        must_2:
+            type: match
+            request_field: qm
+            document_field: title^3
+        fuzzy_1:
+            type: fuzzy
+            request_field: f1
+            document_field: title
+            options:
+                operator: and
+                fuzziness: 1
+        fuzzy_2:
+            type: fuzzy
+            request_field: f2
+            document_field: title,color
+            options:
+                operator: and
+                fuzziness: 2
+        document:
+            type: document_value
+            request_field: document
+            document_field: categories
+            options:
+                field: type
+        field:
+            type: field_value
+            request_field: ~
+            document_field: categories
+            options:
+                value: jeans

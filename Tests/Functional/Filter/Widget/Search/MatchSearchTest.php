@@ -12,10 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
-use ONGR\FilterManagerBundle\Search\FilterContainer;
-use ONGR\FilterManagerBundle\Search\FilterManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
 
 class MatchSearchTest extends AbstractElasticsearchTestCase
@@ -31,12 +28,13 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
                     [
                         '_id' => 1,
                         'title' => 'Foo',
-                        'variants' => [
+                        'description' => 'fish',
+                        'attributes' => [
                             [
-                                'title' => 'acme'
+                                'name' => 'acme'
                             ],
                             [
-                                'title' => 'test'
+                                'name' => 'foo'
                             ],
                         ],
                     ],
@@ -44,21 +42,22 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
                         '_id' => 2,
                         'title' => 'Baz',
                         'description' => 'tuna fish',
-                        'variants' => [
+                        'attributes' => [
                             [
-                                'title' => 'bar bar'
+                                'name' => 'foo'
                             ],
                             [
-                                'title' => 'testing'
+                                'name' => 'bar'
                             ],
                         ],
                     ],
                     [
                         '_id' => 3,
                         'title' => 'Foo bar',
-                        'variants' => [
+                        'description' => 'bar acme acme',
+                        'attributes' => [
                             [
-                                'title' => 'acme'
+                                'name' => 'acme'
                             ]
                         ]
                     ],
@@ -68,69 +67,52 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
     }
 
     /**
-     * Returns filter manager with MatchSearch set.
-     *
-     * @return FilterManager
-     */
-    public function getFilerManger()
-    {
-        $container = new FilterContainer();
-
-        $match = new MatchSearch();
-        $match->setRequestField('q');
-        $match->setDocumentField('title,description^2,variants>variants.title^3');
-
-        $container->set('match', $match);
-
-        return new FilterManager(
-            $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
-        );
-    }
-
-    /**
-     * Data provider for filtering.
+     * Data provider.
      *
      * @return array
      */
-    public function getTestingData()
+    public function getTestResultsData()
     {
         $out = [];
 
-        // Case #0: search a value that only exists in the variant title.
-        $out[] = [[1, 3], new Request(['q' => 'acme'])];
-        // Case #1: search a non existing value.
-        $out[] = [[], new Request(['q' => 'none-existing'])];
-        // Case #2: search a value that exists in both document and variant titles.
-        $out[] = [[2, 3], new Request(['q' => 'bar'])];
-        // Case #3: search a value that only exists in the document title.
-        $out[] = [[1, 3], new Request(['q' => 'Foo'])];
-        // Case #4: search a value that only exists in the document description.
-        $out[] = [[2], new Request(['q' => 'fish'])];
+        // Case #0
+        $out[] = [
+            [3, 1, 2],
+        ];
+
+        // Case #1
+        $out[] = [
+            [1, 3],
+            ['qn' => 'acme'],
+        ];
+
+        // Case #2
+        $out[] = [
+            [3],
+            ['qm' => 'bar'],
+        ];
 
         return $out;
     }
 
     /**
-     * Tests if search works.
+     * Check if choices are filtered and sorted as expected.
      *
-     * @param array   $expected
-     * @param Request $request
+     * @param array $expectedChoices
+     * @param array $query
      *
-     * @dataProvider getTestingData
+     * @dataProvider getTestResultsData()
      */
-    public function testFiltering($expected, $request)
+    public function testFilter($expectedChoices, $query = [])
     {
-        $result = $this->getFilerManger()->handleRequest($request);
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('search'));
+        $result = $manager->handleRequest(new Request($query))->getResult();
 
         $actual = [];
-        foreach ($result->getResult() as $doc) {
-            $actual[] = $doc->id;
+        foreach ($result as $document) {
+            $actual[] = $document->id;
         }
 
-        sort($actual);
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expectedChoices, $actual);
     }
 }

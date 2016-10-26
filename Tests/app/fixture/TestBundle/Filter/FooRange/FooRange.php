@@ -28,16 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 class FooRange extends AbstractFilter implements ViewDataFactoryInterface
 {
     /**
-     * @param string $requestField
-     * @param string $field
-     */
-    public function __construct($requestField, $field)
-    {
-        $this->setRequestField($requestField);
-        $this->setDocumentField($field);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getState(Request $request)
@@ -48,16 +38,8 @@ class FooRange extends AbstractFilter implements ViewDataFactoryInterface
             return $state;
         }
 
-        $values = explode(';', $state->getValue(), 2);
-
-        if (count($values) < 2) {
-            $state->setActive(false);
-
-            return $state;
-        }
-
-        $normalized['gt'] = floatval($values[0]);
-        $normalized['lt'] = floatval($values[1]);
+        $normalized[$this->getOption('direction', 'gt')] = $state->getValue();
+        $normalized['boost'] = $this->getOption('boost', '1.0');
 
         $state->setValue($normalized);
 

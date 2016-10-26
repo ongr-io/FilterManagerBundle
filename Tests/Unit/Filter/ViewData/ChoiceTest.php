@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\Filter\ViewData;
 
+use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\ViewData\Choice;
 
 class ChoiceTest extends \PHPUnit_Framework_TestCase
@@ -35,5 +36,26 @@ class ChoiceTest extends \PHPUnit_Framework_TestCase
         $choice = new Choice();
         $choice->setMode('mode');
         $this->assertEquals('mode', $choice->getMode());
+    }
+
+    public function testGetSerializableData()
+    {
+        $viewData = new Choice();
+        $viewData->setActive(true);
+        $viewData->setCount(10);
+        $viewData->setLabel('acme');
+        $viewData->setUrlParameters(['a' => 'b']);
+
+
+        $expected = [
+            'active' => true,
+            'default' => false,
+            'url_params' => ['a' => 'b'],
+            'label' => 'acme',
+            'mode' => null,
+            'count' => 10,
+        ];
+
+        $this->assertEquals($expected, $viewData->getSerializableData());
     }
 }

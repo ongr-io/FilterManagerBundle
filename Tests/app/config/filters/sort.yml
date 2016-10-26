@@ -1,0 +1,19 @@
+ongr_filter_manager:
+    managers:
+        sorting:
+            filters:
+                - sort_1
+            repository: es.manager.default.product
+    filters:
+        sort_1:
+            type: sort
+            request_field: sort
+            document_field: ~
+            options:
+                choices:
+                    asc: { field: stock, default: true, order: asc }
+                    desc: { field: stock, order: desc }
+                    desc_price_desc_stock: { fields: [{field: price, order: desc}, {field: stock, order: desc}]}
+                    asc_price_desc_stock: { fields: [{field: price, order: asc}, {field: stock, order: desc}]}
+                    asc_price_asc_stock: { fields: [{field: price, order: asc}, {field: stock, order: asc}]}
+                    asc_items_sum_mode: { field: items, order: asc, mode: sum }
