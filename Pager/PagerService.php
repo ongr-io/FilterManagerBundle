@@ -15,6 +15,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Returns all the required data to paginate.
+ *
+ * @deprecated Everything is moved to PagerAwareData
  */
 class PagerService
 {

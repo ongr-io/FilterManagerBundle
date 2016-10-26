@@ -15,6 +15,8 @@ use ONGR\FilterManagerBundle\Pager\PagerAdapterInterface;
 
 /**
  * Adapter used to simply calculate offset for a given page.
+ *
+ * @deprecated Everything is moved to PagerAwareData
  */
 class CountAdapter implements PagerAdapterInterface
 {
