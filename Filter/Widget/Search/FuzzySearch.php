@@ -23,11 +23,6 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
 class FuzzySearch extends AbstractSingleValue
 {
     /**
-     * @var array Fuzzy query parameters.
-     */
-    private $parameters = [];
-
-    /**
      * {@inheritdoc}
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
@@ -36,53 +31,15 @@ class FuzzySearch extends AbstractSingleValue
             if (strpos($this->getDocumentField(), ',') !== false) {
                 $subQuery = new BoolQuery();
                 foreach (explode(',', $this->getDocumentField()) as $field) {
-                    $subQuery->add(new FuzzyQuery($field, $state->getValue(), $this->getParameters()), 'should');
+                    $subQuery->add(new FuzzyQuery($field, $state->getValue(), $this->getOptions()), 'should');
                 }
                 $search->addQuery($subQuery, 'must');
             } else {
                 $search->addQuery(
-                    new FuzzyQuery($this->getDocumentField(), $state->getValue(), $this->getParameters()),
+                    new FuzzyQuery($this->getDocumentField(), $state->getValue(), $this->getOptions()),
                     'must'
                 );
             }
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return array_filter($this->parameters);
-    }
-
-    /**
-     * The maximum edit distance.
-     *
-     * @param string|int|float $fuzziness
-     */
-    public function setFuzziness($fuzziness)
-    {
-        $this->parameters['fuzziness'] = $fuzziness;
-    }
-
-    /**
-     * The number of initial characters which will not be “fuzzified”.
-     *
-     * @param int $prefixLength
-     */
-    public function setPrefixLength($prefixLength)
-    {
-        $this->parameters['prefix_length'] = $prefixLength;
-    }
-
-    /**
-     * The maximum number of terms that the fuzzy query will expand to.
-     *
-     * @param int $maxExpansions
-     */
-    public function setMaxExpansions($maxExpansions)
-    {
-        $this->parameters['max_expansions'] = $maxExpansions;
     }
 }

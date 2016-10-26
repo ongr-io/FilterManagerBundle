@@ -78,7 +78,7 @@ class Sort extends AbstractFilter implements ViewDataFactoryInterface
         foreach ($this->getChoices() as $key => $choice) {
             $active = $data->getState()->isActive() && strcmp($data->getState()->getValue(), $key) === 0;
             $viewChoice = new ViewData\Choice();
-            $viewChoice->setLabel($choice['label']);
+            $viewChoice->setLabel($key);
 
             if (isset($choice['default'])) {
                 $viewChoice->setDefault($choice['default']);
@@ -97,21 +97,6 @@ class Sort extends AbstractFilter implements ViewDataFactoryInterface
         }
 
         return $data;
-    }
-
-    /**
-     * Sets possible choices list.
-     *
-     * @param array $choices
-     */
-    public function setChoices($choices)
-    {
-        $choicesOption = [];
-        foreach ($choices as $key => $choice) {
-            $choicesOption[isset($choice['key']) ? $choice['key'] : $key] = $choice;
-        }
-
-        $this->addOption('choices', $choicesOption);
     }
 
     /**

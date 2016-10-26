@@ -19,26 +19,29 @@ trait SortAwareTrait
     use OptionsAwareTrait;
 
     /**
+     * @var string $default
      * @return string
      */
-    public function getSortType()
+    public function getSortType($default = '_count')
     {
-        return $this->getOption('sort_type', '_count');
+        return $this->getOption('sort_type', $default);
     }
 
     /**
+     * @var string $default
      * @return string
      */
-    public function getSortOrder()
+    public function getSortOrder($default = 'asc')
     {
-        return $this->getOption('sort_order', 'asc');
+        return $this->getOption('sort_order', $default);
     }
 
     /**
-     * @return string
+     * @var array $default
+     * @return array
      */
-    public function getSortPriority()
+    public function getSortPriority($default = [])
     {
-        return $this->getOption('sort_priority', []);
+        return $this->getOption('sort_priority', $default);
     }
 }

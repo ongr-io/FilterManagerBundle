@@ -15,7 +15,6 @@ use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\Helper\DocumentFieldAwareInterface;
 use ONGR\FilterManagerBundle\Filter\Helper\RequestFieldAwareInterface;
-use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareInterface;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;

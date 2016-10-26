@@ -14,7 +14,6 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Search;
 use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareInterface;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareTrait;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,28 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Filter for filtering on exact value in specified field.
  */
-class FieldValue extends AbstractSingleValue implements RelationAwareInterface
+class FieldValue extends AbstractSingleValue
 {
     use RelationAwareTrait;
-
-    /**
-     * @var string
-     */
-    protected $value;
-
-    /**
-     * Setter for field value.
-     *
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
 
     /**
      * {@inheritdoc}
@@ -61,6 +41,6 @@ class FieldValue extends AbstractSingleValue implements RelationAwareInterface
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $search->addPostFilter(new TermQuery($this->getDocumentField(), $this->value));
+        $search->addPostFilter(new TermQuery($this->getDocumentField(), $this->getOption('value')));
     }
 }

@@ -29,15 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Pager extends AbstractFilter implements ViewDataFactoryInterface
 {
     /**
-     * @return int
-     */
-    public function getMaxPages()
-    {
-        return $this->getOption('max_pages', 10);
-    }
-
-    /**
-     * Returns count per page.
+     * Returns maximum items per page.
      *
      * @return int
      */
@@ -94,18 +86,14 @@ class Pager extends AbstractFilter implements ViewDataFactoryInterface
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         /** @var ViewData\PagerAwareViewData $data */
-        $data->setPager(
-            new PagerService(
-                new CountAdapter($result->count()),
-                array_filter(
-                    [
-                        'page' => $data->getState()->getValue(),
-                        'limit' => $this->getCountPerPage(),
-                        'max_pages' => $this->getMaxPages(),
-                    ]
-                )
-            )
+
+        $data->setData(
+            $result->count(),
+            $data->getState()->getValue(),
+            $this->getCountPerPage(),
+            $this->getOption('max_pages', 10)
         );
+
 
         return $data;
     }
