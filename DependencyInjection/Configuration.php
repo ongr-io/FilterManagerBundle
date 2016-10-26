@@ -73,19 +73,10 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('filters')
-                    ->validate()
-                        ->ifTrue(
-                            function ($v) {
-                                $v = array_filter($v);
-
-                                return empty($v);
-                            }
-                        )
-                        ->thenInvalid('At least single filter must be configured.')
-                    ->end()
+                    ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
-//                            ->scalarNode('name')->end()
+                            ->scalarNode('name')->info('Filter name')->end()
                             ->scalarNode('type')->end()
                             ->scalarNode('document_field')->end()
                             ->scalarNode('request_field')->end()
