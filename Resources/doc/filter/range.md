@@ -30,6 +30,12 @@ ongr_filter_manager:
                 inclusive: true
 ```
 
+When using this filter, `request_field` GET parameters need to be provided as two numbers separated 
+by `;`. For example, to search for values between 10 and 20 you would need to provide a URL like this:
+`www.page.com/?request_field=10;20`. If there is no specific value, that is, all the values that are
+ grater than 100 need to be provided, `-` must be specified in stead of a number:
+`www.page.com/?request_field=100;-`.
+
 ## Twig view data
 
 View data returned by this filter to be used in template:

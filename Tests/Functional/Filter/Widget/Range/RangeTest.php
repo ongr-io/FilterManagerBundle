@@ -139,6 +139,30 @@ class RangeTest extends AbstractFilterManagerResultsTest
             'managers' => $managers,
         ];
 
+        // Case #8 only to range specified.
+        $out[] = [
+            'request' => new Request(['range' => '-;3', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
+
+        // Case #9 only from range specified.
+        $out[] = [
+            'request' => new Request(['range' => '2;-', 'sort' => '0', 'mode' => null]),
+            'ids' => ['3', '4', '5'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
+
+        // Case #10 any range specified.
+        $out[] = [
+            'request' => new Request(['range' => '-;-', 'sort' => '0', 'mode' => null]),
+            'ids' => ['1', '2', '3', '4', '5'],
+            'assertOrder' => true,
+            'managers' => $managers,
+        ];
+
         return $out;
     }
 
