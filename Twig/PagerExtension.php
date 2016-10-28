@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Twig;
 
-use ONGR\FilterManagerBundle\Pager\PagerService;
+use ONGR\FilterManagerBundle\Filter\ViewData\PagerAwareViewData;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -55,17 +55,17 @@ class PagerExtension extends \Twig_Extension
     /**
      * Renders pagination element.
      *
-     * @param \Twig_Environment $env
-     * @param PagerService      $pager
-     * @param string            $route
-     * @param array             $parameters
-     * @param string            $template
+     * @param \Twig_Environment  $env
+     * @param PagerAwareViewData $pager
+     * @param string             $route
+     * @param array              $parameters
+     * @param string             $template
      *
      * @return string
      */
     public function paginate(
         \Twig_Environment $env,
-        PagerService $pager,
+        $pager,
         $route,
         array $parameters = [],
         $template = 'ONGRFilterManagerBundle:Pager:paginate.html.twig'

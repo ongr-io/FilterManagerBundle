@@ -14,45 +14,22 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Range;
 use ONGR\ElasticsearchDSL\Query\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareInterface;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareTrait;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\AbstractSingleRequestValueFilter;
+use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
  * Class AbstractRangeFilter.
  */
-abstract class AbstractRange extends AbstractSingleRequestValueFilter implements
-    FieldAwareInterface,
-    ViewDataFactoryInterface
+abstract class AbstractRange extends AbstractFilter implements ViewDataFactoryInterface
 {
-    use FieldAwareTrait;
-
-    /**
-     * @var bool
-     */
-    private $inclusive = false;
-
-    /**
-     * @param bool $inclusive
-     *
-     * @return $this
-     */
-    public function setInclusive($inclusive)
-    {
-        $this->inclusive = $inclusive;
-
-        return $this;
-    }
-
     /**
      * @return bool
      */
     public function isInclusive()
     {
-        return $this->inclusive;
+        return $this->getOption('inclusive', false);
     }
 
     /**
@@ -69,7 +46,7 @@ abstract class AbstractRange extends AbstractSingleRequestValueFilter implements
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            $filter = new RangeQuery($this->getField(), $state->getValue());
+            $filter = new RangeQuery($this->getDocumentField(), $state->getValue());
             $search->addPostFilter($filter);
         }
     }

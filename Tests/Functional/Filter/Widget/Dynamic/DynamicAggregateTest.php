@@ -12,7 +12,13 @@
 namespace Tests\Functional\Filter\Widget\Dynamic;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
+use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
+use ONGR\FilterManagerBundle\Filter\Widget\Dynamic\DynamicAggregate;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class DynamicAggregateTest extends AbstractElasticsearchTestCase
@@ -202,13 +208,13 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
      *
      * @return array
      */
-    public function getChoicesSortData()
+    public function testDataProvider()
     {
         $out = [];
 
         // Case #0, without any request parameters.
         $out[] = [
-            'filterParams' => [],
+            'request' => new Request(),
             'expectedChoices' => [
                 'Color' => [
                     'Green' => 2,
@@ -232,64 +238,56 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                     'Maintenance' => 1,
                 ],
             ],
-            'filter' => 'dynamic_aggregate',
+            'filter' => 'dynamic_aggregate_filter'
         ];
-        // Case #1, 2 parameters from different groups.
+
+        // Case #0, with color red
         $out[] = [
-            'filterParams' => [
-                'dynamic_aggregate' => [
-                    'Made in' => 'China',
-                    'Group' => 'Accessories',
-                ]
-            ],
+            'request' => new Request(['dynamic_aggregate' => ['Color' => 'Red']]),
             'expectedChoices' => [
+                'Color' => [
+                    'Green' => 2,
+                    'Red' => 2,
+                    'Black' => 1,
+                ],
                 'Made in' => [
                     'USA' => 1,
                     'China' => 1,
-                    'Germany' => 1,
                 ],
                 'Condition' => [
-                    'Good' => 1,
-                ],
-                'Group' => [
-                    'Accessories' => 1,
-                    'Utilities' => 1,
-                ],
-            ],
-            'filter' => 'dynamic_aggregate',
-        ];
-        // Case #2, same group parameters.
-        $out[] = [
-            'filterParams' => [
-                'zero_aggregate' => [
-                    'Made in' => 'USA',
-                    'Color' => 'Green',
+                    'Fair' => 1,
                 ]
             ],
+            'filter' => 'dynamic_aggregate_filter'
+        ];
+
+        // Case #0, with color red, with zero choices
+        $out[] = [
+            'request' => new Request(['zero_aggregate' => ['Color' => 'Red']]),
             'expectedChoices' => [
                 'Color' => [
-                    'Green' => 1,
-                    'Red' => 1,
-                    'Black' => 0,
+                    'Green' => 2,
+                    'Red' => 2,
+                    'Black' => 1,
                 ],
                 'Made in' => [
                     'USA' => 1,
-                    'China' => 0,
+                    'China' => 1,
+                    'Lithuania' => 0,
                     'Germany' => 0,
-                    'Lithuania' => 1,
                 ],
                 'Condition' => [
-                    'Excelent' => 1,
-                    'Fair' => 0,
+                    'Fair' => 1,
                     'Good' => 0,
+                    'Excelent' => 0,
                 ],
                 'Group' => [
-                    'Accessories' => 1,
+                    'Accessories' => 0,
                     'Utilities' => 0,
                     'Maintenance' => 0,
                 ],
             ],
-            'filter' => 'zero_choice_aggregate',
+            'filter' => 'dynamic_aggregate_with_zero_choice_filter'
         ];
 
         return $out;
@@ -298,22 +296,22 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
     /**
      * Check if choices are formed as expected.
      *
-     * @param array $filterParams
+     * @param Request $request
      * @param array $expectedChoices
      * @param string $filter
      *
-     * @dataProvider getChoicesSortData()
+     * @dataProvider testDataProvider
      */
-    public function testChoices($filterParams, $expectedChoices, $filter)
+    public function testChoices(Request $request, $expectedChoices, $filter)
     {
-        /** @var AggregateViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
-            ->handleRequest(new Request($filterParams))->getFilters()[$filter];
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('dynamic_filters'));
 
-        $this->assertTrue($result instanceof AggregateViewData);
+        /** @var AggregateViewData $result */
+        $result = $manager->handleRequest($request)->getFilters()[$filter];
 
         $actualChoices = $this->extractActualChoices($result);
 
+        $this->assertTrue($result instanceof AggregateViewData);
         $this->assertEquals($expectedChoices, $actualChoices);
     }
 

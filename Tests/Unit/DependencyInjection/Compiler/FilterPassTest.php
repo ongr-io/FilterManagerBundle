@@ -12,9 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use ONGR\FilterManagerBundle\DependencyInjection\Compiler\FilterPass;
-use ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange\FooRange;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 class FilterPassTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,198 +26,128 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            ->setMethods(
+                [
+                    'findTaggedServiceIds',
+                    'getParameter',
+                    'setDefinition',
+                ]
+            )->getMock();
+    }
 
-        $this->container->expects($this->any())->method('getParameter')->with(
-            'ongr_filter_manager.filter_map'
-        )->willReturn([]);
+    public function testPass()
+    {
+        $this->container->method('getParameter')->willReturnCallback(function ($arg) {
+            switch ($arg) {
+                case 'ongr_filter_manager.filters':
+                    return [
+                        'filter.match' => [
+                            'type' => 'match',
+                            'request_field' => 'acme',
+                            'document_field' => 'acme',
+                            'tags' => [],
+                            'options' => [],
+                        ],
+                    ];
+                case 'ongr_filter_manager.managers':
+                    return [
+                        'default' => [
+                            'filters' => ['match'],
+                            'repository' => 'foo'
+                        ]
+                    ];
+                default:
+                    return [];
+            }
+        });
 
-        $filterManager = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
-            ->setConstructorArgs(['ONGR\FilterManagerBundle\Search\FilterManager'])
-            ->getMock();
-
-        $filterContainer = new Definition('ONGR\FilterManagerBundle\Search\FilterContainer');
-        $filterManager->expects($this->any())->method('getArgument')->willReturn(
-            $filterContainer
+        $this->container->expects($this->once())->method('findTaggedServiceIds')->willReturn(
+            [
+                'filter' => [
+                    [
+                        'type' => 'match'
+                    ]
+                ],
+            ]
         );
 
-        $this->container->expects($this->any())->method('getDefinition')->with($this->anything())
-            ->willReturn($filterManager);
-
-        $filterMock = $this->getMockBuilder('ONGR\FilterManagerBundle\Search\FilterManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->container->expects($this->any())->method('get')->with($this->anything())
-            ->will(
-                $this->returnCallback(
-                    function ($parameter) use ($filterManager, $filterMock) {
-                        switch ($parameter) {
-                            case 'ongr_filter_manager.foo_filters':
-                                return $filterManager;
-                            case 'ongr_filter_manager.filter.foo_filter':
-                                return new FooRange('range', 'price');
-                            case 'ongr_filter_manager.filter.bar_filter':
-                                return $filterMock;
-                            default:
-                                return null;
-                        }
-                    }
-                )
-            );
+        $filterPass = new FilterPass();
+        $filterPass->process($this->container);
     }
 
     /**
-     * Tests filter name tag not set exception.
-     *
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
-    public function testFilterNameTagNotSet()
+    public function testPassWhenThereIsNo()
     {
-        $this->setContainerConfig(
-            [],
+        $this->container->expects($this->once())->method('findTaggedServiceIds')->willReturn(
             [
-                'ongr_filter_manager.filter.foo_filter' => [
-                    [],
+                'filter' => [
+                    [
+                        'no_type' => 'match'
+                    ]
                 ],
             ]
         );
 
-        $compilerPass = new FilterPass();
-        $compilerPass->process($this->container);
+        $filterPass = new FilterPass();
+        $filterPass->process($this->container);
     }
 
     /**
-     * Tests duplicated filter name exception.
-     *
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Found duplicate filter name `bar_filter`
      */
-    public function testDuplicateFilterName()
+    public function testPassWhenThereIsNoMathingFilter()
     {
-        $this->setContainerConfig(
-            [],
+        $this->container->method('getParameter')->willReturn([
+            'filter.match' => [
+                'type' => 'match',
+                'request_field' => 'acme',
+                'document_field' => 'acme',
+                'tags' => [],
+                'options' => [],
+            ],
+        ]);
+        $this->container->expects($this->once())->method('findTaggedServiceIds')->willReturn(
             [
-                'ongr_filter_manager.filter.foo_filter' => [
+                'filter' => [
                     [
-                        'filter_name' => 'bar_filter'
-                    ],
+                        'type' => 'choice'
+                    ]
                 ],
             ]
         );
 
-        $this->container->expects($this->once())
-            ->method('has')
-            ->with($this->anything())
-            ->willReturn(true);
-
-        $compilerPass = new FilterPass();
-        $compilerPass->process($this->container);
+        $filterPass = new FilterPass();
+        $filterPass->process($this->container);
     }
 
     /**
-     * Tests if there at least one filter for manager.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Manager 'ongr_filter_manager.foo_filters' does not have any filters.
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
-    public function testNoFiltersForManager()
+    public function testPassWhenFilterNameIsTheSameAsTYpe()
     {
-        $this->setContainerConfig(
-            [
-                'ongr_filter_manager.foo_filters' => [],
+        $this->container->method('getParameter')->willReturn([
+            'match' => [
+                'type' => 'match',
+                'request_field' => 'acme',
+                'document_field' => 'acme',
+                'tags' => [],
+                'options' => [],
             ],
-            []
-        );
-        $compilerPass = new FilterPass();
-        $compilerPass->process($this->container);
-    }
-
-    /**
-     * Tests if the FilterPass process action
-     * passes without exceptions
-     */
-    public function testCorrectConfiguration()
-    {
-        $this->setContainerConfig(
+        ]);
+        $this->container->expects($this->once())->method('findTaggedServiceIds')->willReturn(
             [
-                'ongr_filter_manager.foo_filters' => [
+                'filter.match' => [
                     [
-                        'filter_name' => 'bar_filter'
-                    ],
-                ],
-            ],
-            []
-        );
-        $manager = $this->container->get('ongr_filter_manager.foo_filters');
-        $compiler = $manager->getArgument(0);
-        $compiler->addMethodCall('set');
-
-        $compilerPass = new FilterPass();
-        $compilerPass->process($this->container);
-    }
-
-    /**
-     * Test FilterPass with correct configuration.
-     */
-    public function testSetDefinitions()
-    {
-        $this->setContainerConfig(
-            [],
-            [
-                'custom.filters.foo' => [
-                    [
-                        'filter_name' => 'foo_filter'
-                    ],
-                ],
-                'custom.filters.bar' => [
-                    [
-                        'filter_name' => 'bar_filter'
-                    ],
-                ],
-                'ongr_filter_manager.filter.qux_filter' => [
-                    [
-                        'filter_name' => 'qux_filter'
-                    ],
+                        'type' => 'match'
+                    ]
                 ],
             ]
         );
 
-        $this->container->expects($this->exactly(2))
-            ->method('setAlias')
-            ->withConsecutive(
-                [$this->equalTo('ongr_filter_manager.filter.foo_filter'), $this->anything()],
-                [$this->equalTo('ongr_filter_manager.filter.bar_filter'), $this->anything()]
-            );
-
-        $compilerPass = new FilterPass();
-        $compilerPass->process($this->container);
-    }
-
-    /**
-     * Configure container mock.
-     *
-     * @param array $managers Tagged filter managers.
-     * @param array $filters  Tagged filters.
-     */
-    protected function setContainerConfig($managers, $filters)
-    {
-        $this->container->expects($this->any())->method('findTaggedServiceIds')->with($this->anything())
-            ->will(
-                $this->returnCallback(
-                    function ($parameter) use ($managers, $filters) {
-                        switch ($parameter) {
-                            case 'es.filter_manager':
-                                return $managers;
-                            case 'ongr_filter_manager.filter':
-                                return $filters;
-                            default:
-                                return null;
-                        }
-                    }
-                )
-            );
+        $filterPass = new FilterPass();
+        $filterPass->process($this->container);
     }
 }

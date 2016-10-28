@@ -13,6 +13,8 @@ namespace ONGR\FilterManagerBundle\Filter;
 
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
+use ONGR\FilterManagerBundle\Filter\Helper\DocumentFieldAwareInterface;
+use ONGR\FilterManagerBundle\Filter\Helper\RequestFieldAwareInterface;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareInterface;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +22,21 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This interface defines required methods for single filter.
  */
-interface FilterInterface extends RelationAwareInterface
+interface FilterInterface extends
+    DocumentFieldAwareInterface,
+    RequestFieldAwareInterface,
+    RelationAwareInterface
 {
+    /**
+     * This function is called right after filter is created. It passes options from configuration tree to the filter.
+     * You are free to set any configuration you want in options node and it will be passed to your filter
+     * by this function. This function is already defined in OptionsTrait used in AbstractFilter,
+     * so do not forget to call parent if you extend it.
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options);
+
     /**
      * Resolves filter state by given request.
      *

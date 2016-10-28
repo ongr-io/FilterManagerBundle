@@ -12,12 +12,8 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Choice;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filter\ViewData;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice;
-use ONGR\FilterManagerBundle\Search\FilterContainer;
-use ONGR\FilterManagerBundle\Search\FilterManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class SingleTermChoiceTest extends AbstractElasticsearchTestCase
@@ -115,16 +111,17 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
     /**
      * Check if choices are sorted as expected using configuration settings.
      */
-    public function testChoicesConfiguration()
+    public function testSimpleChoice()
     {
         /** @var ChoicesAwareViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.foo_filters')
-            ->handleRequest(new Request())->getFilters()['single_choice'];
+        $result = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('single_choice'))
+            ->handleRequest(new Request())->getFilters()['sc'];
 
         $expectedChoices = [
+            'green',
+            'yellow',
             'red',
             'blue',
-            'green',
         ];
 
         $actualChoices = [];
@@ -137,120 +134,120 @@ class SingleTermChoiceTest extends AbstractElasticsearchTestCase
     }
 
     /**
-     * Data provider for testChoicesSort().
+     * Data provider for testChoicesFilter().
      *
      * @return array
      */
-    public function getChoicesSortData()
+    public function getTestResultsData()
     {
         $out = [];
 
-        // Case #0, sorted in ascending order by term, nothing is prioritized.
-        $sortParams = ['type' => '_term', 'order' => 'asc', 'priorities' => []];
-        $out[] = ['sortParams' => $sortParams, ['blue', 'green', 'red', 'yellow']];
+        // Case #0, sorted in default acceding
+        $out[] = [
+            [
+                'green',
+                'yellow',
+                'red',
+                'blue',
+            ],
+            'sc'
+        ];
 
         // Case #1, sorted in descending order by term, blue is prioritized.
-        $sortParams = ['type' => '_term', 'order' => 'desc', 'priorities' => ['blue']];
-        $out[] = ['sortParams' => $sortParams, ['blue', 'yellow', 'red', 'green']];
+        $out[] = [
+            [
+                'acme',
+                'bar',
+                'foo',
+            ],
+            'sc_zero_choices'
+        ];
 
         // Case #2, all items prioritized, so sorting shouldn't matter.
-        $sortParams = ['type' => '_term', 'order' => 'desc', 'priorities' => ['blue', 'green', 'red']];
-        $out[] = ['sortParams' => $sortParams, ['blue', 'green', 'red', 'yellow']];
+        $out[] = [
+            [
+                'blue',
+                'green',
+            ],
+            'sc_sort_term_a'
+        ];
 
         // Case #3, sort items by count, red prioritized.
-        $sortParams = ['type' => '_count', 'order' => 'desc', 'priorities' => ['red']];
-        $out[] = ['sortParams' => $sortParams, ['red', 'blue', 'green', 'yellow']];
+        $out[] = [
+            [
+                'yellow',
+            ],
+            'sc_sort_term_d'
+        ];
 
-        // Case #3, sort items by count.
-        $sortParams = ['type' => '_count', 'order' => 'asc', 'priorities' => []];
-        $out[] = ['sortParams' => $sortParams, ['green', 'yellow', 'red', 'blue']];
+        // Case #4
+        $out[] = [
+            [
+                'blue',
+                'red',
+                'green',
+                'yellow'
+            ],
+            'sc_sort_count'
+        ];
+
+        // Case #5 with selected man
+        $out[] = [
+            [
+                'yellow',
+                'red',
+                'blue',
+            ],
+            'sc',
+            ['manufacturer' => 'a']
+        ];
+
+        // Case #6 with selected man with zero choices
+        $out[] = [
+            [
+                'acme',
+                'foo',
+                'bar',
+            ],
+            'sc_zero_choices',
+            ['manufacturer' => 'a']
+        ];
+
+        // Case #7 with selected man with zero choices
+        $out[] = [
+            [
+                'yellow',
+                'red',
+                'blue',
+                'green',
+            ],
+            'sc_zero_choices_color',
+            ['manufacturer' => 'a']
+        ];
 
         return $out;
     }
 
     /**
-     * Check if choices are sorted as expected.
+     * Check if choices are filtered and sorted as expected.
      *
-     * @param array $sortParams
      * @param array $expectedChoices
+     * @param string $filter
+     * @param array $query
      *
-     * @dataProvider getChoicesSortData()
+     * @dataProvider getTestResultsData()
      */
-    public function testChoicesSort($sortParams, $expectedChoices)
+    public function testFilter($expectedChoices, $filter, $query = [])
     {
-        $container = new FilterContainer();
-
-        $filter = new SingleTermChoice();
-        $filter->setRequestField('choice');
-        $filter->setTags(['tagged']);
-        $filter->setField('color');
-        $filter->setSortType($sortParams);
-
-        $container->set('choice', $filter);
-
-        $manager = new FilterManager(
-            $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
-        );
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('single_choice'));
 
         /** @var ChoicesAwareViewData $result */
-        $result = $manager->handleRequest(new Request())->getFilters()['choice'];
+        $result = $manager->handleRequest(new Request($query))->getFilters()[$filter];
 
         $actualChoices = [];
 
         foreach ($result->getChoices() as $choice) {
             $actualChoices[] = $choice->getLabel();
-        }
-
-        $this->assertFalse($result->hasTag('badged'));
-        $this->assertEquals($expectedChoices, $actualChoices);
-    }
-
-    /**
-     * Check if fetches more choices than ES default.
-     */
-    public function testChoicesSize()
-    {
-        $container = new FilterContainer();
-
-        $filter = new SingleTermChoice();
-        $filter->setRequestField('choice');
-        $filter->setField('title');
-
-        $container->set('choice', $filter);
-
-        $manager = new FilterManager(
-            $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
-        );
-
-        /** @var ChoicesAwareViewData $result */
-        $result = $manager->handleRequest(new Request())->getFilters()['choice'];
-
-        $this->assertEquals(11, count($result->getChoices()));
-    }
-
-    /**
-     * Check if fetches choices that represent 0 documents
-     */
-    public function testZeroChoicesSize()
-    {
-        /** @var ChoicesAwareViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.foo_filters')
-            ->handleRequest(new Request(['single_choice' => 'red']))->getFilters()['zero_choices'];
-
-        $expectedChoices = [
-            'foo' => 3,
-            'bar' => 1,
-            'acme' => 0,
-        ];
-
-        $actualChoices = [];
-
-        foreach ($result->getChoices() as $choice) {
-            $actualChoices[$choice->getLabel()] = $choice->getCount();
         }
 
         $this->assertEquals($expectedChoices, $actualChoices);

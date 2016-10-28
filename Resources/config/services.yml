@@ -1,7 +1,67 @@
 services:
     ongr_filter_manager.twig.pager_extension:
-            class: ONGR\FilterManagerBundle\Twig\PagerExtension
-            arguments:
-                - '@router'
-            tags:
-                - { name: twig.extension }
+        class: ONGR\FilterManagerBundle\Twig\PagerExtension
+        arguments:
+            - '@router'
+        tags:
+            - { name: twig.extension }
+
+    ongr_filter_manager.filter.choice:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice
+        tags:
+            - { name: ongr_filter_manager.filter, type: choice }
+
+    ongr_filter_manager.filter.multi_choice:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice
+        tags:
+            - { name: ongr_filter_manager.filter, type: multi_choice }
+
+    ongr_filter_manager.filter.dynamic_aggregate:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Dynamic\DynamicAggregate
+        tags:
+            - { name: ongr_filter_manager.filter, type: dynamic_aggregate }
+
+    ongr_filter_manager.filter.multi_dynamic_aggregate:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Dynamic\MultiDynamicAggregate
+        tags:
+            - { name: ongr_filter_manager.filter, type: multi_dynamic_aggregate }
+
+    ongr_filter_manager.filter.pager:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Pager\Pager
+        tags:
+            - { name: ongr_filter_manager.filter, type: pager }
+
+    ongr_filter_manager.filter.range:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Range\Range
+        tags:
+            - { name: ongr_filter_manager.filter, type: range }
+
+    ongr_filter_manager.filter.date_range:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Range\DateRange
+        tags:
+            - { name: ongr_filter_manager.filter, type: date_range }
+
+    ongr_filter_manager.filter.document_value:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Search\DocumentValue
+        tags:
+            - { name: ongr_filter_manager.filter, type: document_value }
+
+    ongr_filter_manager.filter.field_value:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Search\FieldValue
+        tags:
+            - { name: ongr_filter_manager.filter, type: field_value }
+
+    ongr_filter_manager.filter.fuzzy:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch
+        tags:
+            - { name: ongr_filter_manager.filter, type: fuzzy }
+
+    ongr_filter_manager.filter.match:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch
+        tags:
+            - { name: ongr_filter_manager.filter, type: match }
+
+    ongr_filter_manager.filter.sort:
+        class: ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort
+        tags:
+            - { name: ongr_filter_manager.filter, type: sort }

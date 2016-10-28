@@ -150,12 +150,12 @@ class Choice implements SerializableInterface
     public function getSerializableData()
     {
         return [
-            'active' => $this->active,
-            'default' => $this->default,
-            'url_params' => $this->urlParameters,
-            'label' => $this->label,
-            'mode' => $this->mode,
-            'count' => $this->count,
+            'active' => $this->isActive(),
+            'default' => $this->isDefault(),
+            'url_params' => $this->getUrlParameters(),
+            'label' => $this->getLabel(),
+            'mode' => $this->getMode(),
+            'count' => $this->getCount(),
         ];
     }
 }

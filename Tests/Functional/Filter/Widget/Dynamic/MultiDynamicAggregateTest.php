@@ -13,7 +13,12 @@ namespace Tests\Functional\Filter\Widget\Dynamic;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
+use ONGR\FilterManagerBundle\Filter\Widget\Dynamic\MultiDynamicAggregate;
+use ONGR\FilterManagerBundle\Search\FilterContainer;
+use ONGR\FilterManagerBundle\Search\FilterManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
@@ -209,7 +214,7 @@ class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
 
         // Case #0, without any request parameters.
         $out[] = [
-            'sortParams' => [],
+            'choices' => [],
             'expectedChoices' => [
                 'Color' => [
                     'Green' => 2,
@@ -233,10 +238,11 @@ class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
                     'Maintenance' => 1,
                 ],
             ],
+            'filter' => 'multi_dynamic_aggregate_filter'
         ];
         // Case #1, 2 parameters from different groups.
         $out[] = [
-            'sortParams' => [
+            'choices' => [
                 'multi_dynamic_aggregate' => [
                     'Made in' => ['China'],
                     'Group' => ['Accessories'],
@@ -256,10 +262,11 @@ class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
                     'Utilities' => 1,
                 ],
             ],
+            'filter' => 'multi_dynamic_aggregate_filter'
         ];
         // Case #2, same group parameters.
         $out[] = [
-            'sortParams' => [
+            'choices' => [
                 'multi_dynamic_aggregate' => [
                     'Made in' => ['China', 'USA'],
                     'Condition' => ['Good'],
@@ -279,6 +286,7 @@ class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
                     'Accessories' => 1,
                 ],
             ],
+            'filter' => 'multi_dynamic_aggregate_filter'
         ];
 
         return $out;
@@ -287,33 +295,35 @@ class MultiDynamicAggregateTest extends AbstractElasticsearchTestCase
     /**
      * Check if choices are formed as expected.
      *
-     * @param array $sortParams
+     * @param array $choices
      * @param array $expectedChoices
+     * @param string $filter
      *
      * @dataProvider getChoicesSortData()
      */
-    public function testChoices($sortParams, $expectedChoices)
+    public function testChoices($choices, $expectedChoices, $filter)
     {
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('dynamic_filters'));
+
         /** @var AggregateViewData $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
-            ->handleRequest(new Request($sortParams))->getFilters()['multi_dynamic_aggregate'];
+        $result = $manager->handleRequest(new Request($choices))->getFilters()[$filter];
         $this->assertTrue($result instanceof AggregateViewData);
         $this->assertEquals($expectedChoices, $this->extractActualChoices($result));
     }
 
-    /**
-     * Tests if the documents are filtered as expected
-     */
-    public function testFiltering()
-    {
-        /** @var DocumentIterator $result */
-        $result = $this->getContainer()->get('ongr_filter_manager.dynamic_filters')
-            ->handleRequest(new Request(
-                ['multi_dynamic_aggregate' => ['Made in' => ['China', 'USA'], 'Condition' => ['Good']]]
-            ))->getResult();
-
-        $this->assertEquals(2, $result->count());
-    }
+//    /**
+//     * Tests if the documents are filtered as expected
+//     */
+//    public function testFiltering()
+//    {
+//        /** @var DocumentIterator $result */
+//        $result = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('dynamic_filters'))
+//            ->handleRequest(new Request(
+//                ['multi_dynamic_aggregate' => ['Made in' => ['China', 'USA'], 'Condition' => ['Good']]]
+//            ))->getResult();
+//
+//        $this->assertEquals(2, $result->count());
+//    }
 
     /**
      * Extracts actualChoices array with the right

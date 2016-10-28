@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.5",
         "symfony/symfony": "~2.7|~3.0",
-        "ongr/elasticsearch-bundle": "~1.0"
+        "ongr/elasticsearch-bundle": "~1.2.4"
     },
     "require-dev": {
         "monolog/monolog": "~1.0",

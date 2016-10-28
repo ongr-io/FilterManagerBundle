@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Controller;
 
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,26 +43,29 @@ class ManagerController extends Controller
      * Returns search response results from filter manager.
      *
      * @param Request $request Request.
-     * @param string  $name    Filter manager name.
+     * @param string  $managerName    Filter manager name.
      *
      * @return array
      */
-    protected function getFilterManagerResponse($request, $name)
+    protected function getFilterManagerResponse($request, $managerName)
     {
-        return ['filter_manager' => $this->get(sprintf('ongr_filter_manager.%s', $name))->handleRequest($request)];
+        return [
+            'filter_manager' => $this->get(ONGRFilterManagerExtension::getFilterManagerId($managerName))
+                ->handleRequest($request)
+        ];
     }
 
     /**
      * Returns JSON response with search response data.
      *
-     * @param Request $request
-     * @param string  $managerName
+     * @param Request $request Request.
+     * @param string  $name    Filter manager name.
      *
-     * @return array
+     * @return JsonResponse
      */
     public function jsonAction(Request $request, $managerName)
     {
-        $data = $this->get(sprintf('ongr_filter_manager.%s', $managerName))
+        $data = $this->get(ONGRFilterManagerExtension::getFilterManagerId($managerName))
             ->handleRequest($request)
             ->getSerializableData();
 

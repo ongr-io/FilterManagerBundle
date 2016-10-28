@@ -1,5 +1,12 @@
 imports:
     - { resource: services.yml }
+    - { resource: filters/single_choice.yml }
+    - { resource: filters/multi_choice.yml }
+    - { resource: filters/dynamic_aggregate.yml }
+    - { resource: filters/pager.yml }
+    - { resource: filters/range.yml }
+    - { resource: filters/search.yml }
+    - { resource: filters/sort.yml }
 
 framework:
     secret: "supersecret"
@@ -29,118 +36,36 @@ ongr_elasticsearch:
                 type: custom
                 tokenizer: keyword
                 filter: [lowercase]
-    connections:
-        default:
-            hosts:
-                - 127.0.0.1:9200
-            index_name: filter_manager_testing
-            settings:
-                refresh_interval: -1
-                number_of_shards: 2
-                number_of_replicas: 0
-            analysis:
-                tokenizer:
-                    - pathTokenizer
-                filter:
-                    - incremental_filter
-                analyzer:
-                    - urlAnalyzer
     managers:
         default:
-            connection: default
+            index:
+                hosts:
+                    - 127.0.0.1:9200
+                index_name: filter_manager_testing
+                settings:
+                    refresh_interval: -1
+                    number_of_shards: 2
+                    number_of_replicas: 0
+                analysis:
+                    tokenizer:
+                        - pathTokenizer
+                    filter:
+                        - incremental_filter
+                    analyzer:
+                        - urlAnalyzer
             mappings:
                 - TestBundle
 
 ongr_filter_manager:
     managers:
-        foo_filters:
-            filters: ['phrase', 'single_choice', 'foo_range', 'zero_choices']
-            repository: 'es.manager.default.product'
-        bar_filters:
-            filters: ['sort', 'inclusive_range', 'bar_range']
-            repository: 'es.manager.default.product'
-        range_filters:
-            filters: ['date']
-            repository: 'es.manager.default.product'
-        dynamic_filters:
-            filters: ['dynamic_aggregate', 'zero_choice_aggregate', 'multi_dynamic_aggregate']
+        default:
+            filters: ['sort_filter']
             repository: 'es.manager.default.product'
     filters:
-        match:
-            phrase:
-                request_field: 'q'
-                operator: 'and'
-                fuzziness: 0
-        pager:
-            pager:
-                request_field: 'page'
-                count_per_page: 12
-                max_pages: 3
-        range:
-            range:
-                request_field: 'range'
-                field: 'price'
-                tags:
-                    - badged
-                    - permanent
-            inclusive_range:
-                request_field: 'inclusive_range'
-                field: 'price'
-                inclusive: true
-        date_range:
-            date:
-                request_field: 'date_range'
-                field: 'date'
-        multi_choice:
-            choice:
-                request_field: 'choice'
-                field: 'choice'
-                size: 2
-                tags:
-                    - badged
-        choice:
-            single_choice:
-                request_field: 'single_choice'
-                field: 'color'
-                size: 3
-                sort:
-                  type: _term
-                  order: asc
-                  priorities:
-                     - red
-            zero_choices:
-                request_field: 'zero'
-                field: 'sku'
-                show_zero_choices: true
-        fuzzy:
-            fuzzy:
-                request_field: 'fuzzy'
-                field: 'color'
-                fuzziness: 5
-                prefix_length: 0
-                max_expansions: 50
-        field_value:
-            only_active:
-                field: 'active'
-                value: true
-        sort:
-            sort:
-                request_field: 'sort'
+        sort_filter:
+            type: sort
+            request_field: 'sort'
+            document_field: ~
+            options:
                 choices:
                     - { label: foo, field: price, default: true, order: asc }
-                    - { label: bar, fields: [{field: price, order: asc}, {field: date, order: desc}]}
-        dynamic_aggregate:
-            dynamic_aggregate:
-                request_field: 'dynamic_aggregate'
-                field: 'attributes>attributes.value'
-                name_field: 'attributes.name'
-            zero_choice_aggregate:
-                request_field: 'zero_aggregate'
-                field: 'attributes>attributes.value'
-                name_field: 'attributes.name'
-                show_zero_choices: true
-        multi_dynamic_aggregate:
-            multi_dynamic_aggregate:
-                request_field: 'multi_dynamic_aggregate'
-                field: 'attributes>attributes.value'
-                name_field: 'attributes.name'

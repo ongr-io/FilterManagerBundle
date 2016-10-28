@@ -18,19 +18,15 @@ use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData;
+use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
 use ONGR\FilterManagerBundle\Filter\Widget\AbstractSingleRequestValueFilter;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
  * This class provides sorting filter.
  */
-class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryInterface
+class Sort extends AbstractFilter implements ViewDataFactoryInterface
 {
-    /**
-     * @var array
-     */
-    private $choices;
-
     /**
      * {@inheritdoc}
      */
@@ -39,15 +35,15 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
         if ($state && $state->isActive()) {
             $stateValue = $state->getValue();
 
-            if (!empty($this->choices[$stateValue]['fields'])) {
-                foreach ($this->choices[$stateValue]['fields'] as $sortField) {
+            if (!empty($this->getChoices()[$stateValue]['fields'])) {
+                foreach ($this->getChoices()[$stateValue]['fields'] as $sortField) {
                     $this->addFieldToSort($search, $sortField);
                 }
             } else {
-                $this->addFieldToSort($search, $this->choices[$stateValue]);
+                $this->addFieldToSort($search, $this->getChoices()[$stateValue]);
             }
         } else {
-            foreach ($this->choices as $choice) {
+            foreach ($this->getChoices() as $choice) {
                 if ($choice['default']) {
                     $this->addFieldToSort($search, $choice);
 
@@ -79,11 +75,15 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         /** @var ChoicesAwareViewData $data */
-        foreach ($this->choices as $key => $choice) {
+        foreach ($this->getChoices() as $key => $choice) {
             $active = $data->getState()->isActive() && strcmp($data->getState()->getValue(), $key) === 0;
             $viewChoice = new ViewData\Choice();
-            $viewChoice->setLabel($choice['label']);
-            $viewChoice->setDefault($choice['default']);
+            $viewChoice->setLabel($key);
+
+            if (isset($choice['default'])) {
+                $viewChoice->setDefault($choice['default']);
+            }
+
             if (isset($choice['mode'])) {
                 $viewChoice->setMode($choice['mode']);
             }
@@ -100,15 +100,13 @@ class Sort extends AbstractSingleRequestValueFilter implements ViewDataFactoryIn
     }
 
     /**
-     * Sets possible choices list.
+     * Returns choices.
      *
-     * @param array $choices
+     * @return array
      */
-    public function setChoices($choices)
+    public function getChoices()
     {
-        foreach ($choices as $key => $choice) {
-            $this->choices[isset($choice['key']) ? $choice['key'] : $key] = $choice;
-        }
+        return $this->getOption('choices', []);
     }
 
     /**

@@ -32,7 +32,6 @@ class Configuration implements ConfigurationInterface
 
         $this->addManagersSection($rootNode);
         $this->addFiltersSection($rootNode);
-        $this->addCacheSection($rootNode);
 
         return $treeBuilder;
     }
@@ -52,13 +51,13 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('name')
                                 ->info('Filter manager name')
                             ->end()
-                            ->arrayNode('filters')
-                                ->info('Filter names to include in manager.')
-                                ->prototype('scalar')->end()
-                            ->end()
                             ->scalarNode('repository')
                                 ->isRequired()
                                 ->info('ElasticsearchBundle repository used for fetching data.')
+                            ->end()
+                            ->arrayNode('filters')
+                                ->info('Filter names to include in manager.')
+                                ->prototype('scalar')->end()
                             ->end()
                         ->end()
                     ->end()
@@ -74,274 +73,29 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('filters')
-                    ->validate()
-                        ->ifTrue(
-                            function ($v) {
-                                $v = array_filter($v);
-
-                                return empty($v);
-                            }
-                        )
-                        ->thenInvalid('At least single filter must be configured.')
-                    ->end()
-                    ->children()
-                        ->append($this->buildFilterTree('choice'))
-                        ->append($this->buildFilterTree('dynamic_aggregate'))
-                        ->append($this->buildFilterTree('multi_dynamic_aggregate'))
-                        ->append($this->buildFilterTree('multi_choice'))
-                        ->append($this->buildFilterTree('match'))
-                        ->append($this->buildFilterTree('fuzzy'))
-                        ->append($this->buildFilterTree('sort'))
-                        ->append($this->buildFilterTree('pager'))
-                        ->append($this->buildFilterTree('range'))
-                        ->append($this->buildFilterTree('date_range'))
-                        ->append($this->buildFilterTree('field_value'))
-                        ->append($this->buildFilterTree('document_value'))
-                    ->end()
-                ->end()
-            ->end();
-    }
-
-    /**
-     * @param ArrayNodeDefinition $rootNode
-     */
-    private function addCacheSection(ArrayNodeDefinition $rootNode)
-    {
-        $rootNode
-            ->children()
-                ->arrayNode('cache')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('engine')
-                            ->info('Caching engine service name.')
-                            ->defaultValue('es.cache_engine')
-                        ->end()
-                        ->arrayNode('exclude')
-                            ->info('Array of filter names to exclude from caching.')
-                            ->prototype('scalar')->end()
-                        ->end()
-                        ->integerNode('life_time')
-                            ->info('Cached search life time.')
-                            ->defaultValue(10800)
-                        ->end()
-                    ->end()
-                ->end()
-            ->end();
-    }
-    
-    /**
-     * Builds filter config tree for given filter name.
-     *
-     * @param string $filterName
-     *
-     * @return ArrayNodeDefinition
-     */
-    private function buildFilterTree($filterName)
-    {
-        $filter = new ArrayNodeDefinition($filterName);
-
-        /** @var ParentNodeDefinitionInterface $node */
-        $node = $filter
-            ->requiresAtLeastOneElement()
-            ->useAttributeAsKey('name')
-            ->prototype('array')
-                ->children()
-                    ->scalarNode('name')->end()
-                    ->arrayNode('relations')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
                         ->children()
-                            ->append($this->buildRelationsTree('search'))
-                            ->append($this->buildRelationsTree('reset'))
-                        ->end()
-                    ->end()
-                    ->scalarNode('field')
-                        ->info('Document field name.')
-                    ->end()
-                    ->arrayNode('tags')
-                        ->info('Filter tags that will be passed to view data.')
-                        ->prototype('scalar')->end()
-                    ->end()
-                ->end();
-
-        if ($filterName != 'field_value') {
-            $node
-                ->children()
-                    ->scalarNode('request_field')
-                        ->info('URL parameter name.')
-                        ->isRequired()
-                    ->end()
-                ->end();
-        }
-
-        switch ($filterName) {
-            case 'choice':
-            case 'multi_choice':
-                $node
-                    ->children()
-                        ->integerNode('size')
-                            ->info('Result size to return.')
-                        ->end()
-                        ->booleanNode('show_zero_choices')->defaultFalse()->end()
-                        ->arrayNode('sort')
-                        ->children()
-                            ->enumNode('type')
-                                ->values(['_term', '_count'])
-                                ->defaultValue('_term')
+                            ->scalarNode('name')->info('Filter name')->end()
+                            ->scalarNode('type')->end()
+                            ->scalarNode('document_field')->end()
+                            ->scalarNode('request_field')->end()
+                            ->arrayNode('tags')
+                                ->prototype('scalar')->end()
                             ->end()
-                            ->enumNode('order')
-                                ->values(['asc', 'desc'])
-                                ->defaultValue('asc')
-                            ->end()
-                            ->arrayNode('priorities')->prototype('scalar')->end()
-                            ->end()
-                        ->end()
-                    ->end();
-                break;
-            case 'dynamic_aggregate':
-            case 'multi_dynamic_aggregate':
-                $node
-                    ->children()
-                        ->scalarNode('name_field')
-                            ->info('Name of the field to provide the aggregated values from.')
-                        ->end()
-                        ->booleanNode('show_zero_choices')->defaultFalse()->end()
-                        ->arrayNode('sort')
-                        ->children()
-                            ->enumNode('type')
-                                ->values(['_term', '_count'])
-                                ->defaultValue('_term')
-                            ->end()
-                            ->enumNode('order')
-                                ->values(['asc', 'desc'])
-                                ->defaultValue('asc')
-                            ->end()
-                            ->arrayNode('priorities')->prototype('scalar')->end()
-                            ->end()
-                        ->end()
-                    ->end();
-                break;
-            case 'match':
-                $node
-                    ->children()
-                        ->scalarNode('operator')
-                            ->info('The operator flag.')
-                        ->end()
-                        ->scalarNode('fuzziness')
-                            ->info('The maximum edit distance.')
-                        ->end()
-                    ->end();
-                break;
-            case 'fuzzy':
-                $node
-                    ->children()
-                        ->scalarNode('fuzziness')
-                            ->info('The maximum edit distance.')
-                        ->end()
-                        ->integerNode('prefix_length')
-                            ->info(
-                                'The number of initial characters which will not be “fuzzified”.
-                                This helps to reduce the number of terms which must be examined.'
-                            )
-                        ->end()
-                        ->integerNode('max_expansions')
-                            ->info('The maximum number of terms that the fuzzy query will expand to.')
-                        ->end()
-                    ->end();
-                break;
-            case 'sort':
-                $node
-                    ->children()
-                        ->arrayNode('choices')
-                            ->prototype('array')
-                                ->beforeNormalization()
-                                    ->always(
-                                        function ($v) {
-                                            if (empty($v['fields']) && !empty($v['field'])) {
-                                                $field = ['field' => $v['field']];
-                                                if (array_key_exists('order', $v)) {
-                                                    $field['order'] = $v['order'];
-                                                }
-                                                if (array_key_exists('mode', $v)) {
-                                                    $field['mode'] = $v['mode'];
-                                                }
-                                                $v['fields'][] = $field;
-                                            }
-
-                                            if (empty($v['label'])) {
-                                                $v['label'] = $v['fields'][0]['field'];
-                                            }
-
-                                            return $v;
-                                        }
-                                    )
-                                ->end()
-                                ->addDefaultsIfNotSet()
+                            ->arrayNode('relations')
                                 ->children()
-                                    ->scalarNode('label')->end()
-                                    ->scalarNode('field')->end()
-                                    ->scalarNode('order')->defaultValue('asc')->end()
-                                    ->scalarNode('mode')->defaultNull()->end()
-                                    ->scalarNode('key')->info('Custom parameter value')->end()
-                                    ->booleanNode('default')->defaultFalse()->end()
-                                    ->arrayNode('fields')
-                                        ->isRequired()
-                                        ->requiresAtLeastOneElement()
-                                        ->prototype('array')
-                                        ->children()
-                                            ->scalarNode('field')->isRequired()->end()
-                                            ->scalarNode('order')->defaultValue('asc')->end()
-                                            ->scalarNode('mode')->defaultNull()->end()
-                                        ->end()
-                                    ->end()
+                                    ->append($this->buildRelationsTree('search'))
+                                    ->append($this->buildRelationsTree('reset'))
                                 ->end()
                             ->end()
+                            ->arrayNode('options')
+                                ->prototype('variable')->end()
+                            ->end()
                         ->end()
-                    ->end();
-                break;
-            case 'pager':
-                $node
-                    ->children()
-                        ->integerNode('count_per_page')
-                            ->info('Item count per page')
-                            ->defaultValue(10)
-                        ->end()
-                        ->integerNode('max_pages')
-                            ->info('Max pages displayed in pager at once.')
-                            ->defaultValue(8)
-                        ->end()
-                    ->end();
-                break;
-            case 'range':
-            case 'date_range':
-                $node
-                    ->children()
-                        ->booleanNode('inclusive')
-                            ->info('Whether filter should match range ends.')
-                            ->defaultFalse()
-                        ->end()
-                    ->end();
-                break;
-            case 'field_value':
-                $node
-                    ->children()
-                        ->scalarNode('value')
-                            ->info('Value which will be used for filtering.')
-                            ->isRequired()
-                    ->end();
-                break;
-            case 'document_value':
-                $node
-                    ->children()
-                        ->scalarNode('document_field')
-                            ->info('Field name from document object to pass to the filter.')
-                            ->isRequired()
-                    ->end();
-                break;
-            default:
-                // Default config is enough.
-                break;
-        }
-
-        return $filter;
+                    ->end()
+                ->end()
+            ->end();
     }
 
     /**

@@ -25,11 +25,9 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class ONGRFilterManagerExtension extends Extension
 {
-    /**
-     * @var AbstractFilterFactory[]
-     */
-    protected $factories = [];
-    
+
+    const PREFIX = 'ongr_filter_manager';
+
     /**
      * {@inheritdoc}
      */
@@ -41,18 +39,8 @@ class ONGRFilterManagerExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        !isset($config['filters']) ? : $this->addFilters($config['filters'], $container);
-        !isset($config['managers']) ? : $this->addFilterManagers($config, $container);
-    }
-
-    /**
-     * Adds filter factory.
-     *
-     * @param AbstractFilterFactory $factory
-     */
-    public function addFilterFactory(AbstractFilterFactory $factory)
-    {
-        $this->factories[$factory->getName()] = $factory;
+        $container->setParameter('ongr_filter_manager.filters', $config['filters']);
+        $container->setParameter('ongr_filter_manager.managers', $config['managers']);
     }
 
     /**
@@ -64,7 +52,7 @@ class ONGRFilterManagerExtension extends Extension
      */
     public static function getFilterId($name)
     {
-        return sprintf('ongr_filter_manager.filter.%s', $name);
+        return sprintf(self::PREFIX.'.filter.%s', $name);
     }
 
     /**
@@ -74,155 +62,8 @@ class ONGRFilterManagerExtension extends Extension
      *
      * @return string
      */
-    public static function getFilterManagerId($name)
+    public static function getFilterManagerId($name = 'default')
     {
-        return sprintf('ongr_filter_manager.%s', $name);
-    }
-
-    /**
-     * Adds filters based on configuration.
-     *
-     * @param array            $config    Configuration.
-     * @param ContainerBuilder $container Service container.
-     */
-    private function addFilters(array $config, ContainerBuilder $container)
-    {
-        $this->validateFilterNames($config);
-
-        foreach ($config as $type => $filters) {
-            foreach ($filters as $name => $config) {
-                $filterDefinition = $this
-                    ->getFilterFactory($type)
-                    ->setConfiguration($config)
-                    ->getDefinition();
-
-                $this->addRelation($filterDefinition, $config, 'search', 'include');
-                $this->addRelation($filterDefinition, $config, 'search', 'exclude');
-                $this->addRelation($filterDefinition, $config, 'reset', 'include');
-                $this->addRelation($filterDefinition, $config, 'reset', 'exclude');
-
-                $container->setDefinition(self::getFilterId($name), $filterDefinition);
-            }
-        }
-    }
-
-    /**
-     * Checks if filter names are valid.
-     *
-     * @param array $filters Filters to validate.
-     *
-     * @throws InvalidConfigurationException
-     */
-    private function validateFilterNames(array $filters)
-    {
-        $existing = [];
-
-        foreach ($filters as $type => $filters) {
-            foreach ($filters as $name => $data) {
-                if (in_array($name, $existing)) {
-                    throw new InvalidConfigurationException(
-                        "Found duplicate filter name `{$name}` in `{$type}` filter"
-                    );
-                }
-
-                $existing[] = $name;
-            }
-        }
-    }
-
-    /**
-     * Adds filters managers based on configuration.
-     *
-     * @param array            $config    Configuration array.
-     * @param ContainerBuilder $container Service container.
-     */
-    private function addFilterManagers(array $config, ContainerBuilder $container)
-    {
-        foreach ($config['managers'] as $name => $manager) {
-            $filterContainer = new Definition('ONGR\FilterManagerBundle\Search\FilterContainer');
-            $cacheEngine = $config['cache']['engine'] ? new Reference($config['cache']['engine']) : null;
-            
-            $filterContainer
-                ->addMethodCall('setCache', [$cacheEngine])
-                ->addMethodCall('setExclude', [$config['cache']['exclude']])
-                ->addMethodCall('setLifeTime', [$config['cache']['life_time']]);
-
-            foreach ($manager['filters'] as $filter) {
-                $filterContainer->addMethodCall(
-                    'set',
-                    [$filter, new Reference(self::getFilterId($filter))]
-                );
-            }
-
-            $managerDefinition = new Definition(
-                'ONGR\FilterManagerBundle\Search\FilterManager',
-                [
-                    $filterContainer,
-                    new Reference($manager['repository']),
-                    new Reference('event_dispatcher'),
-                ]
-            );
-            $managerDefinition->addTag('es.filter_manager');
-
-            $container->setDefinition(self::getFilterManagerId($name), $managerDefinition);
-        }
-    }
-
-    /**
-     * Adds relation to filter.
-     *
-     * @param Definition $definition
-     * @param array      $filter
-     * @param string     $urlType
-     * @param string     $relationType
-     */
-    private function addRelation(Definition $definition, $filter, $urlType, $relationType)
-    {
-        if (!empty($filter['relations'][$urlType][$relationType])) {
-            $definition->addMethodCall(
-                'set' . ucfirst($urlType) . 'Relation',
-                [$this->getRelation($relationType, $filter['relations'][$urlType][$relationType])]
-            );
-        }
-    }
-
-    /**
-     * Creates relation definition by given parameters.
-     *
-     * @param string $type
-     * @param array  $relations
-     *
-     * @return Definition
-     */
-    private function getRelation($type, $relations)
-    {
-        return new Definition(
-            sprintf('ONGR\FilterManagerBundle\Relation\%sRelation', ucfirst($type)),
-            [$relations]
-        );
-    }
-
-    /**
-     * Returns filter factory.
-     *
-     * @param string $name Factory name.
-     *
-     * @return AbstractFilterFactory
-     *
-     * @throws InvalidConfigurationException Invaid filter name request.
-     */
-    private function getFilterFactory($name)
-    {
-        if (array_key_exists($name, $this->factories)) {
-            return $this->factories[$name];
-        }
-        
-        throw new InvalidConfigurationException(
-            sprintf(
-                "Invalid filter name provided in configuration. Got '%s', available: %s",
-                $name,
-                implode(', ', array_keys($this->factories))
-            )
-        );
+        return sprintf(self::PREFIX.'.manager.%s', $name);
     }
 }

@@ -1,0 +1,61 @@
+ongr_filter_manager:
+    managers:
+        single_choice:
+            filters:
+                - sc
+                - sc_man
+                - sc_zero_choices
+                - sc_zero_choices_color
+                - sc_sort_term_a
+                - sc_sort_term_d
+                - sc_sort_count
+            repository: es.manager.default.product
+    filters:
+        sc:
+            type: choice
+            request_field: color_1
+            document_field: color
+        sc_man:
+            type: choice
+            request_field: manufacturer
+            document_field: manufacturer
+        sc_sort_term_a:
+            type: choice
+            request_field: color_2
+            document_field: color
+            options:
+                size: 2
+                sort_type: _term
+                sort_order: asc
+                sort_priority:
+                    - red
+        sc_sort_term_d:
+            type: choice
+            request_field: color_3
+            document_field: color
+            options:
+                size: 1
+                sort_type: _term
+                sort_order: desc
+                sort_priority:
+                    - blue
+                    - yellow
+        sc_sort_count:
+            type: choice
+            request_field: color_4
+            document_field: color
+            options:
+                sort_type: _count
+                sort_order: desc
+        sc_zero_choices:
+            type: choice
+            request_field: zero
+            document_field: sku
+            options:
+                show_zero_choices: true
+        sc_zero_choices_color:
+            type: choice
+            request_field: zero_color
+            document_field: color
+            options:
+                show_zero_choices: true

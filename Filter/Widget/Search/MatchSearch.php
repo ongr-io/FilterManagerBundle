@@ -23,24 +23,19 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
 class MatchSearch extends AbstractSingleValue
 {
     /**
-     * @var array
-     */
-    private $parameters = [];
-
-    /**
      * {@inheritdoc}
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
         if ($state && $state->isActive()) {
-            if (strpos($this->getField(), ',') !== false) {
+            if (strpos($this->getDocumentField(), ',') !== false) {
                 $subQuery = new BoolQuery();
-                foreach (explode(',', $this->getField()) as $field) {
+                foreach (explode(',', $this->getDocumentField()) as $field) {
                     $subQuery->add($this->buildMatchPart($field, $state), 'should');
                 }
                 $search->addQuery($subQuery, 'must');
             } else {
-                $search->addQuery($this->buildMatchPart($this->getField(), $state), 'must');
+                $search->addQuery($this->buildMatchPart($this->getDocumentField(), $state), 'must');
             }
         }
     }
@@ -63,7 +58,7 @@ class MatchSearch extends AbstractSingleValue
             list ($field, $boost) = explode('^', $field);
         }
 
-        $query =  new MatchQuery($field, $state->getValue(), $this->parameters);
+        $query =  new MatchQuery($field, $state->getValue(), $this->getOptions());
         !isset($boost) ? : $query->addParameter('boost', $boost);
 
         if (isset($path)) {
@@ -71,25 +66,5 @@ class MatchSearch extends AbstractSingleValue
         }
 
         return $query;
-    }
-
-    /**
-     * Sets operator
-     *
-     * @param string $operator
-     */
-    public function setOperator($operator)
-    {
-        $this->parameters['operator'] = $operator;
-    }
-
-    /**
-     * Sets the maximum edit distance
-     *
-     * @param string|int|float $fuzziness
-     */
-    public function setFuzziness($fuzziness)
-    {
-        $this->parameters['fuzziness'] = $fuzziness;
     }
 }

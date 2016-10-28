@@ -14,7 +14,6 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Search;
 use ONGR\ElasticsearchDSL\Query\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareInterface;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareTrait;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,58 +21,17 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Filter for filtering on exact value in specified field.
  */
-class DocumentValue extends AbstractSingleValue implements RelationAwareInterface
+class DocumentValue extends AbstractSingleValue
 {
+
     use RelationAwareTrait;
-
-    /**
-     * Field name of the document object.
-     *
-     * @var string
-     */
-    private $documentField;
-
-    /**
-     * @var string
-     */
-    protected $value;
-
-    /**
-     * @return string
-     */
-    public function getDocumentField()
-    {
-        return $this->documentField;
-    }
-
-    /**
-     * @param string $documentField
-     */
-    public function setDocumentField($documentField)
-    {
-        $this->documentField = $documentField;
-    }
-
-    /**
-     * Setter for field value.
-     *
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
 
     /**
      * @return string
      */
     public function getValue()
     {
-        return $this->value;
+        return $this->getOption('value', null);
     }
 
     /**
@@ -85,7 +43,7 @@ class DocumentValue extends AbstractSingleValue implements RelationAwareInterfac
         $document = $request->get('document');
 
         if ($document) {
-            $this->setValue($document->{$this->getDocumentField()});
+            $this->addOption('value', $document->{$this->getOption('field')});
             $state->setActive(true);
         }
 
@@ -97,6 +55,6 @@ class DocumentValue extends AbstractSingleValue implements RelationAwareInterfac
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $search->addPostFilter(new TermQuery($this->getField(), $this->getValue()));
+        $search->addPostFilter(new TermQuery($this->getDocumentField(), $this->getValue()));
     }
 }

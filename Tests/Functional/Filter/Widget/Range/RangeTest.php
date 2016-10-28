@@ -11,19 +11,14 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
-use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\Range\Range;
-use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
-use ONGR\FilterManagerBundle\Search\FilterContainer;
-use ONGR\FilterManagerBundle\Search\FilterManager;
-use ONGR\FilterManagerBundle\Test\AbstractFilterManagerResultsTest;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Functional test for range filter.
  */
-class RangeTest extends AbstractFilterManagerResultsTest
+class RangeTest extends AbstractElasticsearchTestCase
 {
     /**
      * @return array
@@ -69,166 +64,71 @@ class RangeTest extends AbstractFilterManagerResultsTest
     }
 
     /**
-     * {@inheritdoc}
+     * Data provider.
+     *
+     * @return array
      */
     public function getTestResultsData()
     {
         $out = [];
-        $managers = $this->getFilterManager();
-        // Case #0 range includes everything.
+
+        // Case #0
         $out[] = [
-            'request' => new Request(['range' => '0;50', 'sort' => '0', 'mode' => null]),
-            'ids' => ['1', '2', '3', '4', '5'],
-            'assertOrder' => true,
-            'managers' => $managers,
+            [5,4,3,2,1]
         ];
 
-        // Case #1 two elements.
+        // Case #1
         $out[] = [
-            'request' => new Request(['range' => '1;4', 'sort' => '0', 'mode' => null]),
-            'ids' => ['2', '3'],
-            'assertOrder' => true,
-            'managers' => $managers,
+            [3,2],
+            ['price' => '1;3.5'],
         ];
 
-        // Case #2 no elements.
+        // Case #2
         $out[] = [
-            'request' => new Request(['range' => '2;3', 'sort' => '0', 'mode' => null]),
-            'ids' => [],
-            'assertOrder' => true,
-            'managers' => $managers,
+            [3,2,1],
+            ['inclusive_range' => '1;3.5'],
         ];
 
-        // Case #3 invalid range specified.
+        // Case #3
         $out[] = [
-            'request' => new Request(['range' => '2', 'sort' => '0', 'mode' => null]),
-            'ids' => ['1', '2', '3', '4', '5'],
-            'assertOrder' => true,
-            'managers' => $managers,
+            [5,4,3,2,1],
+            ['price' => '1'],
         ];
 
-        // Case #4 no range specified.
+        // Case #4
         $out[] = [
-            new Request(['sort' => '0', 'mode' => null]),
-            ['1', '2', '3', '4', '5'],
-            true,
-            $managers,
+            [5,4,3,2,1],
+            ['price' => '1'],
         ];
 
-        // Case #5 test with float shouldn't list anything.
+        // Case #4
         $out[] = [
-            'request' => new Request(['range' => '4.3;50', 'sort' => '0', 'mode' => null]),
-            'ids' => [],
-            'assertOrder' => true,
-            'managers' => $managers,
-        ];
-
-        // Case #6 test with float should list.
-        $out[] = [
-            'request' => new Request(['range' => '4.1;50', 'sort' => '0', 'mode' => null]),
-            'ids' => ['5'],
-            'assertOrder' => true,
-            'managers' => $managers,
-        ];
-
-        // Case #7 Inclusive filter.
-        $out[] = [
-            'request' => new Request(['inclusive_range' => '1;2', 'sort' => '0', 'mode' => null]),
-            'ids' => ['1', '2'],
-            'assertOrder' => true,
-            'managers' => $managers,
+            [5,4,3],
+            ['custom_range' => '2'],
         ];
 
         return $out;
     }
 
     /**
-     * Check if view data returned is correct.
+     * Check if choices are filtered and sorted as expected.
      *
-     * @param Request          $request     Http request.
-     * @param array            $ids         Array of document ids to assert.
-     * @param bool             $assertOrder Set true if order of results lso should be asserted.
-     * @param FilterManager[] $managers    Set of filter managers to test.
+     * @param array $expectedChoices
+     * @param array $query
      *
-     * @dataProvider getTestResultsData
+     * @dataProvider getTestResultsData()
      */
-    public function testViewData(Request $request, $ids, $assertOrder = false, $managers = [])
+    public function testFilter($expectedChoices, $query = [])
     {
-        foreach ($managers as $filter => $filterManager) {
-            /** @var RangeAwareViewData $viewData */
-            $viewData = $filterManager->handleRequest($request)->getFilters()[$filter];
 
-            $this->assertInstanceOf('ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData', $viewData);
-            $this->assertEquals(1, $viewData->getMinBounds());
-            $this->assertEquals(4.2, $viewData->getMaxBounds(), '', 0.0001);
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range'));
+        $result = $manager->handleRequest(new Request($query))->getResult();
+
+        $actual = [];
+        foreach ($result as $document) {
+            $actual[] = $document->id;
         }
-    }
 
-    /**
-     * Returns filter managers.
-     *
-     * @return FilterManager[]
-     */
-    protected function getFilterManager()
-    {
-        $managers = [];
-        $container = new FilterContainer();
-
-        $choices = [
-            ['label' => 'Stock ASC', 'field' => 'price', 'order' => 'asc', 'default' => false, 'mode' => null],
-        ];
-
-        $filter = new Range();
-        $filter->setRequestField('range');
-        $filter->setField('price');
-        $container->set('range', $filter);
-
-        $filter = new Range();
-        $filter->setRequestField('inclusive_range');
-        $filter->setField('price');
-        $filter->setInclusive(true);
-        $container->set('inclusive_range', $filter);
-
-        $sort = new Sort();
-        $sort->setRequestField('sort');
-        $sort->setChoices($choices);
-        $container->set('sorting', $sort);
-
-        $managers['range'] = new FilterManager(
-            $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
-        );
-
-        $managers['bar_range'] = $this->getContainer()->get('ongr_filter_manager.bar_filters');
-
-        return $managers;
-    }
-
-    /**
-     * This method asserts if search request gives expected results.
-     *
-     * @param Request          $request     Http request.
-     * @param array            $ids         Array of document ids to assert.
-     * @param bool             $assertOrder Set true if order of results lso should be asserted.
-     * @param FilterManager[] $managers    Set of filter managers to test.
-     *
-     * @dataProvider getTestResultsData
-     */
-    public function testResults(Request $request, $ids, $assertOrder = false, $managers = [])
-    {
-        foreach ($managers as $filterManager) {
-            $actual = array_map(
-                [$this, 'fetchDocumentId'],
-                iterator_to_array($filterManager->handleRequest($request)->getResult())
-            );
-
-            if (!$assertOrder) {
-                sort($actual);
-                sort($ids);
-            }
-
-            $this->assertEquals($ids, $actual);
-        }
+        $this->assertEquals($expectedChoices, $actual);
     }
 }

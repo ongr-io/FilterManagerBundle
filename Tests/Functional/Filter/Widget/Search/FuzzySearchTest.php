@@ -12,10 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch;
-use ONGR\FilterManagerBundle\Search\FilterContainer;
-use ONGR\FilterManagerBundle\Search\FilterManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
 
 class FuzzySearchTest extends AbstractElasticsearchTestCase
@@ -50,60 +47,52 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
     }
 
     /**
-     * Data provider for filtering.
+     * Data provider.
      *
      * @return array
      */
-    public function getTestingData()
+    public function getTestResultsData()
     {
         $out = [];
 
-        // Case #0: Fuzziness parameter.
-        $out[] = [[2], new Request(['q' => 'lue']), 1];
-        // Case #1: Added prefix_length parameter - search term doesn't begin with 'b' so 'blue' doesn't match.
-        $out[] = [[], new Request(['q' => 'lue']), 1, 1];
+        // Case #0
+        $out[] = [
+            [3, 1, 2],
+        ];
+
+        // Case #1
+        $out[] = [
+            [2],
+            ['f1' => 'o']
+        ];
+
+        // Case #2
+        $out[] = [
+            [2],
+            ['f2' => 'lue']
+        ];
 
         return $out;
     }
 
     /**
-     * Tests if search works.
+     * Check if choices are filtered and sorted as expected.
      *
-     * @param array            $expected
-     * @param Request          $request
-     * @param string|int|float $fuzziness
-     * @param int              $prefixLength
-     * @param int              $maxExpansions
+     * @param array $expectedChoices
+     * @param array $query
      *
-     * @dataProvider getTestingData
+     * @dataProvider getTestResultsData()
      */
-    public function testFiltering($expected, $request, $fuzziness = null, $prefixLength = null, $maxExpansions = null)
+    public function testFilter($expectedChoices, $query = [])
     {
-        $container = new FilterContainer();
-
-        $fuzzy = new FuzzySearch();
-        $fuzzy->setRequestField('q');
-        $fuzzy->setField('color');
-        $fuzzy->setFuzziness($fuzziness);
-        $fuzzy->setPrefixLength($prefixLength);
-        $fuzzy->setMaxExpansions($maxExpansions);
-
-        $container->set('fuzzy', $fuzzy);
-
-        $fmb = new FilterManager(
-            $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
-        );
-        $result = $fmb->handleRequest($request);
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('search'));
+        $result = $manager->handleRequest(new Request($query))->getResult();
 
         $actual = [];
-        foreach ($result->getResult() as $doc) {
-            $actual[] = $doc->id;
+        foreach ($result as $document) {
+            $actual[] = $document->id;
         }
 
-        sort($actual);
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expectedChoices, $actual);
     }
 }

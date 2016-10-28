@@ -2,11 +2,8 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Dynamic;
 
-use ONGR\ElasticsearchBundle\Result\Aggregation\AggregationValue;
-use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\ElasticsearchDSL\Aggregation\FilterAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\NestedAggregation;
-use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
 use ONGR\ElasticsearchDSL\BuilderInterface;
 use ONGR\ElasticsearchDSL\Query\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
@@ -43,7 +40,7 @@ class MultiDynamicAggregate extends DynamicAggregate
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        list($path, $field) = explode('>', $this->getField());
+        list($path, $field) = explode('>', $this->getDocumentField());
 
         if ($state && $state->isActive()) {
             $boolQuery = new BoolQuery();
@@ -85,7 +82,7 @@ class MultiDynamicAggregate extends DynamicAggregate
         $terms,
         $aggName
     ) {
-        list($path, $field) = explode('>', $this->getField());
+        list($path, $field) = explode('>', $this->getDocumentField());
         $boolQuery = new BoolQuery();
 
         foreach ($terms as $namedTerms) {

@@ -16,7 +16,8 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Compiles custom filters.
@@ -28,47 +29,65 @@ class FilterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        $filters = [];
         foreach ($container->findTaggedServiceIds('ongr_filter_manager.filter') as $filterId => $filterTags) {
-            foreach ($filterTags as $tag) {
-                if (!array_key_exists('filter_name', $tag)) {
-                    throw new InvalidConfigurationException(
-                        sprintf('Filter tagged with `%s` must have `filter_name` set.', $filterId)
-                    );
-                }
+            $tagOptions = array_shift($filterTags);
 
-                $filterLabel = ONGRFilterManagerExtension::getFilterId($tag['filter_name']);
-                if ($filterLabel === $filterId) {
-                    continue;
-                }
-
-                if ($container->has($filterLabel)) {
-                    throw new InvalidConfigurationException(
-                        "Found duplicate filter name `{$tag['filter_name']}`"
-                    );
-                }
-                $container->setAlias($filterLabel, $filterId);
+            if (!array_key_exists('type', $tagOptions)) {
+                throw new InvalidConfigurationException(
+                    sprintf('Filter service `%s` must have `type` set.', $filterId)
+                );
             }
+
+            $filters[$tagOptions['type']] = $filterId;
         }
 
-        foreach ($container->findTaggedServiceIds('es.filter_manager') as $managerId => $managerTags) {
-            $managerDefinition = $container->getDefinition($managerId);
-            $this->checkManager($managerDefinition, "Manager '{$managerId}' does not have any filters.");
-        }
-    }
+        foreach ($container->getParameter('ongr_filter_manager.filters') as $filterName => $filterOptions) {
+            if (!array_key_exists($filterOptions['type'], $filters)) {
+                throw new InvalidConfigurationException(
+                    "There is no `{$filterOptions['type']}` type filter registered."
+                );
+            }
 
-    /**
-     * Checks if manager definition has any filters set.
-     *
-     * @param Definition $filterManager
-     * @param string     $message
-     *
-     * @throws InvalidArgumentException
-     */
-    private function checkManager(Definition $filterManager, $message = '')
-    {
-        $filterContainer = $filterManager->getArgument(0);
-        if (!$filterContainer->hasMethodCall('set')) {
-            throw new InvalidArgumentException($message);
+            if (array_key_exists($filterName, $filters)) {
+                throw new InvalidConfigurationException(
+                    "Filter name cannot be the same as the filter type. Check `{$filterName}` filter."
+                );
+            }
+
+            $definition = new DefinitionDecorator($filters[($filterOptions['type'])]);
+            $definition->addMethodCall('setRequestField', [$filterOptions['request_field']]);
+            $definition->addMethodCall('setDocumentField', [$filterOptions['document_field']]);
+            $definition->addMethodCall('setTags', [$filterOptions['tags']]);
+            $definition->addMethodCall('setOptions', [$filterOptions['options']]);
+
+            $container->setDefinition(ONGRFilterManagerExtension::getFilterId($filterName), $definition);
+        }
+
+        foreach ($container->getParameter('ongr_filter_manager.managers') as $managerName => $managerOptions) {
+            $filterContainer = new Definition('ONGR\FilterManagerBundle\Search\FilterContainer');
+
+//            $filterContainer
+//                ->addMethodCall('setExclude', [$config['cache']['exclude']])
+//                ->addMethodCall('setLifeTime', [$config['cache']['life_time']]);
+
+            foreach ($managerOptions['filters'] as $filter) {
+                $filterContainer->addMethodCall(
+                    'set',
+                    [$filter, new Reference(ONGRFilterManagerExtension::getFilterId($filter))]
+                );
+            }
+
+            $managerDefinition = new Definition(
+                'ONGR\FilterManagerBundle\Search\FilterManager',
+                [
+                    $filterContainer,
+                    new Reference($managerOptions['repository']),
+                    new Reference('event_dispatcher'),
+                ]
+            );
+
+            $container->setDefinition(ONGRFilterManagerExtension::getFilterManagerId($managerName), $managerDefinition);
         }
     }
 }

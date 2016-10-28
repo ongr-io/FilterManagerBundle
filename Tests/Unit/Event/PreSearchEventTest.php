@@ -16,27 +16,12 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 class PreSearchEventTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var PreSearchEvent
-     */
-    private $event;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->event = new PreSearchEvent(new SearchRequest(['test' => 'test']));
-    }
-
-    public function testConstruct()
-    {
-        $this->assertEquals($this->event, new PreSearchEvent(new SearchRequest(['test' => 'test'])));
-    }
-
     public function testGetSearchRequest()
     {
-        $this->assertEquals(new SearchRequest(['test' => 'test']), $this->event->getSearchRequest());
+        /** @var SearchRequest $request */
+        $request = $this->getMock('ONGR\FilterManagerBundle\Search\SearchRequest');
+        $event = new PreSearchEvent($request);
+
+        $this->assertSame($request, $event->getSearchRequest());
     }
 }

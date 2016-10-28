@@ -51,7 +51,7 @@ class DateRange extends AbstractRange
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
         $stateAgg = new StatsAggregation('date_range_agg');
-        $stateAgg->setField($this->getField());
+        $stateAgg->setField($this->getDocumentField());
         $search->addAggregation($stateAgg);
     }
 

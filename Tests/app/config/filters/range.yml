@@ -1,0 +1,41 @@
+ongr_filter_manager:
+    managers:
+        range:
+            filters:
+                - price_range
+                - date_range_filter
+                - bar_range
+                - range_sort
+                - inclusive_range
+            repository: es.manager.default.product
+    filters:
+        price_range:
+            type: range
+            request_field: price
+            document_field: price
+            tags:
+                - badged
+                - permanent
+        bar_range:
+            type: foo_range
+            request_field: custom_range
+            document_field: price
+            tags:
+                - badged
+        inclusive_range:
+            type: range
+            request_field: inclusive_range
+            document_field: price
+            options:
+                inclusive: true
+        date_range_filter:
+            type: date_range
+            request_field: date_range
+            document_field: date
+        range_sort:
+            type: sort
+            request_field: 'sort'
+            document_field: ~
+            options:
+                choices:
+                    - { label: price, field: price, default: true, order: desc }
