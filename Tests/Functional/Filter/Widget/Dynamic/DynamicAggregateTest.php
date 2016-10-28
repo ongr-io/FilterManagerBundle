@@ -265,7 +265,7 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
             'filter' => 'dynamic_aggregate_filter'
         ];
 
-        // Case #0, with color red
+        // Case #1, with color red
         $out[] = [
             'request' => new Request(['dynamic_aggregate' => ['Color' => 'Red']]),
             'expectedChoices' => [
@@ -280,12 +280,15 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                 ],
                 'Condition' => [
                     'Fair' => 1,
+                ],
+                'Designed in' => [
+                    'Germany' => 2,
                 ]
             ],
             'filter' => 'dynamic_aggregate_filter'
         ];
 
-        // Case #0, with color red, with zero choices
+        // Case #2, with color red, with zero choices
         $out[] = [
             'request' => new Request(['zero_aggregate' => ['Color' => 'Red']]),
             'expectedChoices' => [
@@ -301,8 +304,8 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
                     'Germany' => 0,
                 ],
                 'Designed in' => [
-                    'USA' => 1,
-                    'Germany' => 0,
+                    'USA' => 0,
+                    'Germany' => 2,
                 ],
                 'Condition' => [
                     'Fair' => 1,

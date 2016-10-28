@@ -12,9 +12,9 @@
 namespace ONGR\FilterManagerBundle\Filter\Widget\Dynamic;
 
 use ONGR\ElasticsearchBundle\Result\Aggregation\AggregationValue;
-use ONGR\ElasticsearchDSL\Aggregation\FilterAggregation;
-use ONGR\ElasticsearchDSL\Aggregation\NestedAggregation;
-use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
+use ONGR\ElasticsearchDSL\Aggregation\Bucketing\FilterAggregation;
+use ONGR\ElasticsearchDSL\Aggregation\Bucketing\NestedAggregation;
+use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\BuilderInterface;
 use ONGR\ElasticsearchDSL\Query\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
@@ -100,7 +100,7 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
      */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
-        list($path, $field) = explode('>', $this->getField());
+        list($path, $field) = explode('>', $this->getDocumentField());
         $filter = !empty($filter = $relatedSearch->getPostFilters()) ? $filter : new MatchAllQuery();
         $aggregation = new NestedAggregation($state->getName(), $path);
         $nameAggregation = new TermsAggregation('name', $this->getNameField());
@@ -111,7 +111,7 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
         $filterAggregation->setFilter($filter);
 
         if ($this->getSortType()) {
-            $valueAggregation->addParameter('order', [$this->getSortType()['type'] => $this->getSortType()['order']]);
+            $valueAggregation->addParameter('order', [$this->getSortType() => $this->getSortOrder()]);
         }
 
         if ($state->isActive()) {

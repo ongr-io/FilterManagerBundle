@@ -134,7 +134,7 @@ class MultiDynamicAggregate extends DynamicAggregate
      */
     private function getFilterQuery($terms)
     {
-        list($path, $field) = explode('>', $this->getField());
+        list($path, $field) = explode('>', $this->getDocumentField());
         $boolQuery = new BoolQuery();
 
         foreach ($terms as $groupName => $values) {
