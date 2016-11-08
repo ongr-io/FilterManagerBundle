@@ -107,18 +107,21 @@ To get a list grab the service and call `handleRequest()`. Here's a short exampl
        */
       public function listAction(Request $request)
       {
-          $filterManager = $this->get(ONGRFilterManagerExtension::getFilterManagerId('search_list'))
+          $searchList = $this->get(ONGRFilterManagerExtension::getFilterManagerId('search_list'))
                             ->handleRequest($request);
           $this->render(
               'AppBundle:Product:list.html.twig',
               [
-                'filters' => $filterManager->getFilters(),  
-                'products' => $filterManager->getResults(),  
+                'filters' => $searchList->getFilters(),  
+                'products' => $searchList->getResult(),  
               ]
           );                  
       }
   }
   ```
+  
+  > More information how to use filters and render the results are in [basics topic here](http://docs.ongr.io/FilterManagerBundle/Basics).
+  
 ## Troubleshooting
 
 If you face any issue or difficulty by implementing bundle, do not be afraid to create an issue with bug or question. Also ONGR organization has a tag in [Stackoverflow](http://stackoverflow.com/questions/tagged/ongr) so you can ask about all ONGR bundles also there.
