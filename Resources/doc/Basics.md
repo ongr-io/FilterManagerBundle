@@ -1,22 +1,32 @@
 # Basic Usage
 
-## Configuration
+## Mandatory configuration fields
 
 Since version `v2.0.0` all filters was unified and from now on all of them shares the same required configuration fields.
 
 | Setting name           | Meaning                                                                              |
 |------------------------|--------------------------------------------------------------------------------------|
-| `type`*                | In order to use `choice` filter you need to add this config.                         |
-| `request_field`*       | Request field used to view the selected page. (e.g. `www.page.com/?request_field=4`) |
-| `document_field`*      | Specifies the field in repository to apply this filter on. (e.g. `item_color`)       |
-| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
-| `relations`            | Read more about `relations` at dedicated topic [here](http://docs.ongr.io/FilterManagerBundle/Relations)           |
-| `options`              | Array of filter specific options. Every filter might have different options, check in specific filter docs        |
+| `type`*                | The filter type. (e.g. choice or pager) |
+| `request_field`*       | Field name in the request for filter state activation. (e.g. `www.page.com/?page=4` `page` is request field name) |
+| `document_field`*      | Specifies the field in the document object to apply filter on. (e.g. `item_color`)       |
+| `tags`                 | Array of the filter specific tags that will be accessible at Twig view data.             |
+| `relations`            | Read more about `relations` at [dedicated topic here](http://docs.ongr.io/FilterManagerBundle/Relations)           |
+| `options`              | Array of the filter specific options. Every filter might have different options, check in the certain filter docs.        |
 
 > `*` are required for every filter.
 
-## Filter usage in the controller
-Lets say we have a simple configuration (take a look at the comments after each field).
+## Choices sorting
+
+There is an option to sort choices. The sorting can be defined in `options`, here's the list of settings:
+
+| Setting name           | Meaning                                                                                 |
+|------------------------|-----------------------------------------------------------------------------------------|
+| `sort_type`            | You can sort either by the `_term` which was aggregated or by the `_count` of the terms.|
+| `sort_order`           | Specifies the ordering direction. Either ascending or descending.                       |
+| `sort_priority`        | Highest priority term names, the first terms to be shown in choices list.               |
+
+## Configuration example
+Let's say we have a simple configuration (take a look at the comments after each field).
 
 ```yaml
 # app/config/config.yml
@@ -44,7 +54,7 @@ ongr_filter_manager:
                     - { label: price_asc, field: price, order: asc }
 ```
 
-To get a list grab the service and call `handleRequest()`. Here's a short example in the controller:
+### Usage in the controller
 
 ```php
 <?php
@@ -78,7 +88,7 @@ class ProductController extends Controller
 }
 ```
 
-From the controller example there will be 2 variables pass to the template. 
+From the controller example, there will be 2 variables pass to the template. 
 `filters` will contain an array with each filter from active filter manager. In this particular case `filters` array will contain:
 
 - key `color` with an object implementing `ChoicesAwareViewData`
@@ -86,9 +96,9 @@ From the controller example there will be 2 variables pass to the template.
 
 `products` will contain `DocumentIterator` with the result set.
 
-### Render catalog and sidebar
+### Usage in the templates
 
-Firstly lets create the sidebar list of colors with the number of products that have a certain color will be rendered:
+Firstly let's create the sidebar list of colors with the number of products that have a certain color will be rendered:
 
 ```twig
 <ul>
@@ -102,7 +112,7 @@ Firstly lets create the sidebar list of colors with the number of products that 
 </ul>
 ```
 
-> `choice.urlParameters` contains all attributes with selected filters before, so you don't need to care how to combine url.
+> `choice.urlParameters` contains all attributes with selected filters before, so you don't need to care how to combine the URL.
  
  Next, the product list page. Simply iterate trough product document objects:
  
