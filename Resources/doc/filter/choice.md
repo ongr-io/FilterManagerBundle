@@ -5,13 +5,10 @@ Before reading about this filter take a look at the [base configuration](http://
 This filter groups values of repository in a specified field, and returns available options.
 If you select one of the options, *choice filter* will return item list filtered by it.
 
-## Choice filter options
+## Choice filter specific options
 
 | Setting name           | Meaning                                                                                 |
 |------------------------|-----------------------------------------------------------------------------------------|
-| `sort_type`            | You can sort either by the `_term` which was aggregated or by the `_count` of the terms.|
-| `sort_order`           | Specifies the ordering direction. Either ascending or descending.                       |
-| `sort_priority`        | Highest priority term names, the first terms to be shown in choices list.               |
 | `size`                 | Specifies the filter choices amount.                       |
 | `show_zero_choices`    | Includes choices that have 0 documents in the choice array (defaults to `false`)        |
   
@@ -55,7 +52,7 @@ Lets say we have a data in elasticsearch in `product` type and filter configurat
 ]
 ```
 
-According to the configuration the filter will become active when there will be `color` in request query.
+According to the configuration, the filter will become active when there will be `color` in the request query.
 
 If the state is inactive it will just collect the options by executing query:
 
@@ -98,9 +95,7 @@ So lets say we execute request with `http://127.0.0.1?color=black`. In this part
 }
 ```
 
-
-
-> Take a look in [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics) how to pass `Request` object in controller to execute filtering. 
+> Take a look in the [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics) how to pass `Request` object to the controller for execute filtering. 
 
 
 
