@@ -19,7 +19,6 @@ use ONGR\FilterManagerBundle\Filter\Helper\ViewDataFactoryInterface;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
-use ONGR\FilterManagerBundle\Filter\Widget\AbstractSingleRequestValueFilter;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
@@ -77,7 +76,7 @@ class Sort extends AbstractFilter implements ViewDataFactoryInterface
         /** @var ChoicesAwareViewData $data */
         foreach ($this->getChoices() as $key => $choice) {
             $active = $data->getState()->isActive() && strcmp($data->getState()->getValue(), $key) === 0;
-            $viewChoice = new ViewData\Choice();
+            $viewChoice = new ViewData\ChoiceAwareViewData();
             $viewChoice->setLabel($key);
 
             if (isset($choice['default'])) {

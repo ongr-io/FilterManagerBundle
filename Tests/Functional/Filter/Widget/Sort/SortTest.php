@@ -13,10 +13,6 @@ namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Sort;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
-use ONGR\FilterManagerBundle\Filter\Widget\Sort\Sort;
-use ONGR\FilterManagerBundle\Search\FilterContainer;
-use ONGR\FilterManagerBundle\Search\FilterManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class SortTest extends AbstractElasticsearchTestCase
