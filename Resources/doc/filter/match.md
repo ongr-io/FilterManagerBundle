@@ -1,73 +1,107 @@
 # Match Filter
 
+Before reading about this filter take a look at the [base configuration](http://docs.ongr.io/FilterManagerBundle/Basics) 
+which applies for all filters.
+
 This filter searches for a matching value in the specified field. Usual use case is search functionality.
 
-## Configuration
+### Match filter specific document_field setting
+
+Unlike in most filters, `document_field` setting from the basic configuration is a lot more flexible for the *Match Filter*.
+This filter enables you to search on multiple fields, therefore you can specify more than one field 
+in this setting by separating them with commas. Also, specifying a ^ sign followed by a number 
+allows you to boost the field by a specific value. Finally, if you are searching on a nested object, 
+you can provide both its path and field by separating them with a > symbol. Here is an example of the 
+field value used by the *Match Filter*:
+
+```yaml
+document_field: title^3, description^2, variants>variants.description
+```
+
+### Match filter specific options
+
+Match filter uses Elasiticsearch [Match Query][1] in its core and all the specific options are passed to it.
+This means that the specific options of the *Match Filter* are the same as the options of the *Match Query*. 
+Here are a few of the more commonly used ones:
 
 | Setting name           | Meaning                                                                                        |
 |------------------------|------------------------------------------------------------------------------------------------|
-| `request_field`        | Request field used to specify filter value. (e.g. `www.page.com/?request_field=4`)             |
-| `field`                | Specifies the field in repository to apply this filter on. (e.g. `item_color`)                 |
-| `fuzziness`            | Enables inexact matching of the results.                                                       |
+| `fuzziness`            | Enables inexact matching of the results. Expects an integer value                              |
+| `prefix_length`        | Used together with `fuzziness`. Determines the length of the prefix that won't change          |
 | `operator`             | Controls the clauses of the inner boolean query. Can be set to `or` or `and`, defaults to `or` |
-| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.                       |
+
+You can read more about them or get the complete list in the [official docs][1]
   
-Example of the configuration:
+### Configuration example example:
   
 ```yaml
 # app/config/config.yml
-    
 ongr_filter_manager:
-    managers:
-        search_list:
-            filters:
-                - search
-            repository: 'es.manager.default.product'
+    #...
     filters:
-        match:
-            search:
-                request_field: 'q'
-                field: title
+        search:
+            type: match
+            request_field: q
+            document_field: title,description^2,attributes>attributes.title^3
+            options:
                 operator: and
                 fuzziness: 2
 
 ```
-It also has to be mentioned that more than one field can be specified. If you want to apply the filter
-to more than one field you can specify it by separating them with commas like so:
+### Query composition
 
-```yaml
-....
-#    search:
-#        request_field: 'q'
-#        field: title, description
-#    search-with-heights:
-#        request_field: 'q'
-#        field: title^3, description^2, longdesc
-....
+According to the specified configuration, the filter will become active when the request query will contain `q` parameter. 
+Therefore, if the request being executed is `http://127.0.0.1?q=example`, the filter will execute this query: 
+
+```json
+{
+    "query": {
+        "bool": {
+            "should": [
+                {
+                    "match": {
+                        "title": {
+                            "query": "example",
+                            "fuzziness": 2,
+                            "operator": "and"
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "description": {
+                            "query": "example",
+                            "fuzziness": 2,
+                            "operator": "and",
+                            "boost": "2"
+                        }
+                    }
+                },
+                {
+                    "nested": {
+                        "path": "attributes",
+                        "query": {
+                            "match": {
+                                "attributes.title": {
+                                    "query": "example",
+                                    "fuzziness": 2,
+                                    "operator": "and",
+                                    "boost": "3"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
 ```
-In the example above ^ sign denotes the boost that is assigned to a specific field
 
-## Twig view data
+To start using the filter, simply call the `handleRequest` method of the filter manager from the
+controller. After the request is handled, only documents that contain `experiment` (or any very similar
+word, due to fuzziness) will appear in the results.  
 
-View data returned by this filter to be used in template:
- 
-| Method                  | Value                                            | 
-|-------------------------|--------------------------------------------------|
-| getName()               | Filter name                                      |
-| getResetUrlParameters() | Url parameters required to reset filter          |
-| getState()              | Filter state                                     |
-| getUrlParameters()      | Url parameters representing current filter state |
-| getTags()               | Lists all tags specified at filter configuration |
-| hasTag($tag)            | Checks if filter has the specific tag            |
-  
+> For more information on how to handle a request or retrieve data, please refer to the [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics)
 
-## Usage in template example
-
-This example uses filter defined in [Search example](../examples/search_example.md). To display this filter we would add following code to template:
-
-```twig
-<form action="{{ path(app.request.attributes.get('_route')) }}" method="get">
-    <input name="q" placeholder="Search..." value="{{ filter_manager.getFilters().search.getState().getValue() }}">
-    <input type="submit" value="Search">
-</form>
-```
+[1]: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html
