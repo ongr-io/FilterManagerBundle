@@ -5,7 +5,7 @@ Before reading about this filter take a look at the [base configuration](http://
 This filter groups values of repository in a specified field, and returns available options.
 If you select one of the options, *choice filter* will return item list filtered by it.
 
-## Choice filter specific options
+### Choice filter specific options
 
 | Setting name           | Meaning                                                                                 |
 |------------------------|-----------------------------------------------------------------------------------------|
@@ -28,7 +28,7 @@ ongr_filter_manager:
     #...
 ```
 
-## Usage
+### Query composition
 
 Lets say we have a data in elasticsearch in `product` type and filter configuration from example above.
 
@@ -97,5 +97,9 @@ So lets say we execute request with `http://127.0.0.1?color=black`. In this part
 
 > Take a look in the [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics) how to pass `Request` object to the controller for execute filtering. 
 
+### Usage in the templates
 
+`choice` returns `ChoiceAwareViewData` as the result set for view data. Check the available functions in this class.
+
+More information how to use filters in templates can be found in [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics)
 
