@@ -103,7 +103,7 @@ class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterfac
 
         foreach ($this->fetchAggregation($result, $data->getName()) as $bucket) {
             $active = $this->isChoiceActive($bucket['key'], $data);
-            $choice = new ViewData\Choice();
+            $choice = new ViewData\ChoiceAwareViewData();
             $choice->setLabel($bucket['key']);
             $choice->setCount($bucket['doc_count']);
             $choice->setActive($active);
@@ -120,7 +120,7 @@ class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterfac
         }
 
         foreach ($zeroValueChoices as $choiceLabel => $value) {
-            $choice = new ViewData\Choice();
+            $choice = new ViewData\ChoiceAwareViewData();
             $choice->setLabel($choiceLabel);
             $choice->setCount(0);
             $choice->setActive(false);

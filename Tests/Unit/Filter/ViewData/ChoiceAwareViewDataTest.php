@@ -11,17 +11,16 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\Filter\ViewData;
 
-use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\ViewData\Choice;
+use ONGR\FilterManagerBundle\Filter\ViewData\ChoiceAwareViewData;
 
-class ChoiceTest extends \PHPUnit_Framework_TestCase
+class ChoiceAwareViewDataTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests active and default values
      */
     public function testActiveAndDefault()
     {
-        $choice = new Choice();
+        $choice = new ChoiceAwareViewData();
         $choice->setActive(true);
         $choice->setDefault(false);
         $this->assertTrue($choice->isActive());
@@ -33,14 +32,14 @@ class ChoiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testMode()
     {
-        $choice = new Choice();
+        $choice = new ChoiceAwareViewData();
         $choice->setMode('mode');
         $this->assertEquals('mode', $choice->getMode());
     }
 
     public function testGetSerializableData()
     {
-        $viewData = new Choice();
+        $viewData = new ChoiceAwareViewData();
         $viewData->setActive(true);
         $viewData->setCount(10);
         $viewData->setLabel('acme');

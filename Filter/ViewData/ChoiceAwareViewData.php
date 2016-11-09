@@ -16,7 +16,7 @@ use ONGR\FilterManagerBundle\SerializableInterface;
 /**
  * This class holds data for filter choice.
  */
-class Choice implements SerializableInterface
+class ChoiceAwareViewData implements SerializableInterface
 {
     /**
      * @var bool
