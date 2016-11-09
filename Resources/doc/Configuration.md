@@ -13,73 +13,67 @@ ongr_filter_manager:
         product_list:
             # a list of filters by name that this manager holds
             filters:
-                - search
-                - pager
+                - material
+                - people
+                - pagination
                 - price
                 - sorting
-                - color
-                - brand
-                - people
-                - material
-                - app_category
             # the repository that this manager will filter on
             repository: 'es.manager.default.product'
         category_list:
             filters:
-                - search
+                - people
+                - pagination
             repository: 'es.manager.default.category'
 
     filters:
         # a node for a filter type can contain multiple filters
-        multi_choice:
-            # configuration of individual filter named `color`
-            color:
-                request_field: 'c'
-                field: color
+        # configuration of individual filter named `color`
+        color:
+            type: multi_choice
+            request_field: c
+            document_field: color
+            options:
                 size: 10
                 relations:
                     search:
                         include:
                             - people
-
-            material:
-                request_field: 'm'
-                field: material
+        material:
+            type: multi_choice
+            request_field: m
+            field: material
+        brand:
+            type: choice
+            request_field: 'b'
+            document_field: brand
+            options:
                 size: 10
-        choice:
-            brand:
-                request_field: 'b'
-                field: brand
-                size: 10
-            people:
-                request_field: 'p'
-                field: variants.people
+        people:
+            type: choice
+            request_field: 'p'
+            document_field: variants.people
+            options:
                 size: 10
                 relations:
                     search:
                         include:
                             - color
-        match:
-            search:
-                request_field: 'q'
-                field: title
-        pager:
-            pager:
-                request_field: 'page'
+        # Filter name cannot be the same as filter type.
+        pagination:
+            type: pager
+            request_field: page
+            document_field: ~
+            options:
                 count_per_page: 12
                 max_pages: 10
-        sort:
-            sorting:
-                request_field: 'sort'
+        sorting:
+            type: sort
+            request_field: 'sort'
+            options:
                 choices:
                     - { label: filter.price_asc, field: price, default: true }
                     - { label: filter.price_desc, field: price, order: desc }
                     - { label: filter.title_asc, field: title }
                     - { label: filter.title_desc, field: title, order: desc }
-        range:
-            price:
-                request_field: 'price'
-                field: price
-                inclusive: true
-
 ```

@@ -47,7 +47,7 @@ class ManagerController extends Controller
      *
      * @return array
      */
-    protected function getFilterManagerResponse($request, $managerName)
+    protected function getFilterManagerResponse(Request $request, $managerName)
     {
         return [
             'filter_manager' => $this->get(ONGRFilterManagerExtension::getFilterManagerId($managerName))

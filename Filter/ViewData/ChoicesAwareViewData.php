@@ -19,12 +19,12 @@ use ONGR\FilterManagerBundle\Filter\ViewData;
 class ChoicesAwareViewData extends ViewData
 {
     /**
-     * @var Choice[]
+     * @var ChoiceAwareViewData[]
      */
     private $choices = [];
 
     /**
-     * @return ViewData\Choice[]
+     * @return ViewData\ChoiceAwareViewData[]
      */
     public function getChoices()
     {
@@ -32,7 +32,7 @@ class ChoicesAwareViewData extends ViewData
     }
 
     /**
-     * @param ViewData\Choice[] $choices
+     * @param ViewData\ChoiceAwareViewData[] $choices
      */
     public function setChoices($choices)
     {
@@ -40,9 +40,9 @@ class ChoicesAwareViewData extends ViewData
     }
 
     /**
-     * @param Choice $choice
+     * @param ChoiceAwareViewData $choice
      */
-    public function addChoice(Choice $choice)
+    public function addChoice(ChoiceAwareViewData $choice)
     {
         $this->choices[] = $choice;
     }
