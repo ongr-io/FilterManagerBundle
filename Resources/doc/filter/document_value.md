@@ -1,175 +1,75 @@
-# Using `document_value` filter
+# Document Value Filter
  
-Document value filter is tightly connected to router bundle. It uses a document object provided by route match to grab a specific
- value from it and form a term query with that value. Usually it might be used for category contents filtering.
+Before reading about this filter take a look at the [base configuration][1]
+which applies for all filters.
  
-The example below will provide real use case of `document_value` filter. Two different document types will be created: `country` and `city`.
- Every city will contain a key of country. We want to display page for country and list cities in that country.
+The primary function of this filter is to form categories or types of documents. Unlike most filters this one
+does not need URL parameters, instead, it is used together with [ONGR Router][2]. The filter takes the `document`
+instance that is provided with the route, gets a value from a specified field and creates a term query with it.
+
+### Document Value Filter specific options
+
+| Setting name | Meaning                                                                                                               |
+|--------------|-----------------------------------------------------------------------------------------------------------------------|
+| `field`      | The name of the parameter in the document that is passed with the router. This field provides the value for the query |
  
-## Configuration
- 
- First of Elasticsearch, FilterManager and Router bundles have to be configured.
+### Configuration example
  
 ```yaml
- # app/config/config.yml
- 
-ongr_elasticsearch:
-    analysis:
-        analyzer:
-            urlAnalyzer: #for router bundle
-                type: custom
-                tokenizer: keyword
-                filter: [lowercase]
-    connections:
-        default:
-            hosts:
-                - 127.0.0.1:9200
-            index_name: world
-            analysis:
-                analyzer:
-                    - urlAnalyzer
-    managers:
-        default:
-            connection: default
-            mappings:
-                - AppBundle
                 
 ongr_filter_manager:
-    managers:
-        cities_list:
-            filters:
-                - country_filter
-            repository: 'es.manager.default.city'
+    #...
     filters:
-        document_value:
-            country_filter:
-                request_field: document # Use only `document` value, unless you have your own router.
-                field: country
-                document_field: key
-
-ongr_router:
-    es_manager: default
-    seo_routes:
-        country: AppBundle:Default:countryPage
+        category:
+            type: document_value
+            request_field: document # Use only `document` value, unless you have your own router.
+            field: name
+            document_field: country
+        
 ```
- 
-## Define documents
-         
-Next step is to define documents:
+  
+> Important! The `request_field` in this filter **must** be `document`, unless you are using your own router. Unlike in 
+most filters, it will not be used in the URL
 
-```php
-// src/AppBundle/Document/Country.php
-    
-namespace AppBundle\Document;
+### Query composition
 
-use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\RouterBundle\Document\SeoAwareTrait;
-
-/**
- * @ES\Document(type="country")
- */
-class Country
-{
-    use SeoAwareTrait;
-
-    /**
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
-     */
-    public $key;
-
-    /**
-     * @ES\Property(type="string")
-     */
-    public $name;
-}
-```
-
-```php
-// src/AppBundle/Document/City.php
-
-namespace AppBundle\Document;
-
-use ONGR\ElasticsearchBundle\Annotation as ES;
-
-/**
- * @ES\Document(type="city")
- */
-class City
-{
-    /**
-     * @ES\Property(type="string")
-     */
-    public $name;
-
-    /**
-     * In this field will be stored related country object key.
-     *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
-     */
-    public $country;
-}
-```
-
-## Importing sample data
-
-This step is here only for demonstration purposes.
-
-Create file `countries.json` with following content:
+For this section, imagine you need to list all the cities depending on the country. You would need two types of documents: 
+a `Country` and a `City`. You would have to include `Country` in the [ONGR router][2] and configure its controller (how to 
+handle the request with Filter Manager in this controller can be found in the [Basics][1] section). After this all you would 
+need to do is to go to the URL that matches the `url` field in one of the `Country` documents. Lets imagine that one of 
+those documents is this:
 
 ```json
-[
-{"count":5,"date":"2015-12-16T11:47:22+0200"},
-{"_type":"country","_id":"1","_source":{"name":"USA", "key":"usa", "url":"/usa"},
-{"_type":"city","_id":"a","_source":{"name":"Miami","country":"usa"}},
-{"_type":"city","_id":"b","_source":{"name":"New York","country":"usa"}},
-{"_type":"country","_id":"2","_source":{"name":"UK", "key":"uk", "url":"/uk"},
-{"_type":"city","_id":"c","_source":{"name":"London","country":}}
-]
-```
 
-To import this data run `app/console ongr:es:index:import countries.json`.
-
-## Using filter
-
-Last step is to use created filter. Custom action will be created:
-
-```php
-// src/AppBundle/Controller/DefaultController.php
-
-namespace AppBundle\Controller;
-
-use AppBundle\Document\Country;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-class DefaultController extends Controller
 {
-    public function countryPageAction(Request $request, Country $document)
-    {
-        $manager = $this->get('ongr_filter_manager.cities_list')->handleRequest($request);
-
-        $cities = [];
-
-        foreach ($manager->getResult() as $city) {
-            $cities[] = $city->name;
-        }
-
-        return new Response('Cities in ' . $document->name . ': ' . implode(', ', $cities));
-    }
+  "url": "/france",
+  "name": "France"
 }
+
 ```
 
-Now if you go to `example.com/usa/` you should see:
+If this is so and you go to the URL `www.example.com/france`, then the query formed by Document Value filter will be:
+ 
+```json
 
-```bash
-Cities in USA: Miami, New York
+{
+  "post_filter": {
+    "term": {
+      "country": "France"
+    }
+  }
+}
+
 ```
 
-Response at `example.com/uk/` should be:
+> Note, that the Filter Manager here is provided the repository of the `City`, more on that in the [Basics][1] section.
 
-```bash
-Cities in UK: London
-```
+### Usage in the templates
+
+This filter returns a simple ViewData object, it is not intended to create any view-specific choices. The aim of this 
+filter is to limit the result set of the documents.
+
+> For more information on how to handle a request or retrieve data, please refer to the [basics topic][1]
+
+[1]: http://docs.ongr.io/FilterManagerBundle/Basics
+[2]: http://docs.ongr.io/RouterBundle
