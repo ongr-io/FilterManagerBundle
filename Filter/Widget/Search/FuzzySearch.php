@@ -19,6 +19,8 @@ use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
  * This class runs match search.
+ *
+ * @deprecated This filter is deprecated and will be removed in v2.0. Use MatchSearch instead
  */
 class FuzzySearch extends AbstractSingleValue
 {
