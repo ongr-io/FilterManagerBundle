@@ -182,7 +182,7 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
                 }
 
                 $active = $this->isChoiceActive($bucket['key'], $data, $activeName);
-                $choice = new ViewData\Choice();
+                $choice = new ViewData\ChoiceAwareViewData();
                 $choice->setLabel($bucket->getValue('key'));
                 $choice->setCount($bucket['doc_count']);
                 $choice->setActive($active);
@@ -358,7 +358,7 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
 
         foreach ($result->getAggregation($data->getName())->getAggregation('query') as $bucket) {
             $groupName = $bucket->getAggregation('name')->getBuckets()[0]['key'];
-            $choice = new ViewData\Choice();
+            $choice = new ViewData\ChoiceAwareViewData();
             $choice->setActive(false);
             $choice->setUrlParameters($urlParameters);
             $choice->setLabel($bucket['key']);
