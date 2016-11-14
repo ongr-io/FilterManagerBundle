@@ -56,7 +56,7 @@ ongr_filter_manager:
             request_field: document
             document_field: categories
             options:
-                field: type
+                field: category
         field:
             type: field_value
             request_field: ~
