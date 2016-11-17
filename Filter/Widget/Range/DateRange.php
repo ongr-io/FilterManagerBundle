@@ -14,41 +14,12 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Range;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Date range filter, selects documents from lower date to upper date.
  */
 class DateRange extends Range
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getState(Request $request)
-    {
-        $state = AbstractRange::getState($request);
-
-        if ($state->getValue()) {
-            $values = explode(';', $state->getValue(), 2);
-
-            if (count($values) < 2) {
-                $state->setActive(false);
-
-                return $state;
-            }
-
-            $gt = $this->isInclusive() ? 'gte' : 'gt';
-            $lt = $this->isInclusive() ? 'lte' : 'lt';
-
-            $normalized[$gt] = $values[0];
-            $normalized[$lt] = $values[1];
-
-            $state->setValue($normalized);
-        }
-
-        return $state;
-    }
-
     /**
      * {@inheritdoc}
      */

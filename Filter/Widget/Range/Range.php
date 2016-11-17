@@ -43,13 +43,10 @@ class Range extends AbstractRange
             return $state;
         }
 
-        $gt = $this->isInclusive() ? 'gte' : 'gt';
-        $lt = $this->isInclusive() ? 'lte' : 'lt';
+        $stateValues[$this->isInclusive() ? 'gte' : 'gt'] = $values[0];
+        $stateValues[$this->isInclusive() ? 'lte' : 'lt'] = $values[1];
 
-        $normalized[$gt] = floatval($values[0]);
-        $normalized[$lt] = floatval($values[1]);
-
-        $state->setValue($normalized);
+        $state->setValue($this->normalizeStateValues($stateValues));
 
         return $state;
     }
@@ -87,5 +84,18 @@ class Range extends AbstractRange
         $data->setMaxBounds($agg['max']);
 
         return $data;
+    }
+
+    /**
+     * @param array $stateValues
+     * @return array
+     */
+    private function normalizeStateValues(array $stateValues)
+    {
+        if (!$this instanceof DateRange) {
+            $stateValues = array_map('floatval', $stateValues);
+        }
+
+        return $stateValues;
     }
 }
