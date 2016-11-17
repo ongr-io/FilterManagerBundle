@@ -13,6 +13,7 @@ namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
+use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -130,5 +131,16 @@ class RangeTest extends AbstractElasticsearchTestCase
         }
 
         $this->assertEquals($expectedChoices, $actual);
+    }
+
+    public function testFilterWithRelatedSearch()
+    {
+        /** @var FilterManager $manager */
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range'));
+        $result = $manager->handleRequest(new Request(['limit' => 'red']));
+        $priceViewData = $result->getFilters()['price_range'];
+
+        $this->assertEquals(1, $priceViewData->getMinBounds());
+        $this->assertEquals(3, $priceViewData->getMaxBounds());
     }
 }

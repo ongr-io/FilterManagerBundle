@@ -6,6 +6,7 @@ ongr_filter_manager:
                 - date_range_filter
                 - bar_range
                 - range_sort
+                - limit
                 - inclusive_range
             repository: es.manager.default.product
     filters:
@@ -28,6 +29,10 @@ ongr_filter_manager:
             document_field: price
             options:
                 inclusive: true
+        limit:
+            type: choice
+            request_field: limit
+            document_field: color
         date_range_filter:
             type: date_range
             request_field: date_range

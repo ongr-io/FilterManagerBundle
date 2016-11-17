@@ -56,6 +56,6 @@ abstract class AbstractRange extends AbstractFilter implements ViewDataFactoryIn
      */
     public function isRelated()
     {
-        return false;
+        return true;
     }
 }
