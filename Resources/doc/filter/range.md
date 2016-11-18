@@ -99,18 +99,18 @@ example of how you can define a list of weight ranges.
 ```twig
 
 <ul>
-    {% set filter = filter_manager.getFilters().weight %}
+    {% set filter = filter_manager.filters.weight %}
     <li>
-        <a href="{{ path('your_route', filter.getUrlParameters()|merge("weight":"0;10") }}">0 - 10 kg</a>
+        <a href="{{ path('your_route', filter.urlParameters|merge("weight":"0;10") }}">0 - 10 kg</a>
     </li>
     <li>
-        <a href="{{ path('your_route', filter.getUrlParameters()|merge("weight":"10;25") }}">10 - 25 kg</a>
+        <a href="{{ path('your_route', filter.urlParameters|merge("weight":"10;25") }}">10 - 25 kg</a>
     </li>
     <li>
-        <a href="{{ path('your_route', filter.getUrlParameters()|merge("weight":"25;50") }}">25 - 50 kg</a>
+        <a href="{{ path('your_route', filter.urlParameters|merge("weight":"25;50") }}">25 - 50 kg</a>
     </li>
     <li>
-        <a href="{{ path('your_route', filter.resetUrlParameters() }}"> All </a>
+        <a href="{{ path('your_route', filter.resetUrlParameters }}"> All </a>
     </li>
 </ul>
 
