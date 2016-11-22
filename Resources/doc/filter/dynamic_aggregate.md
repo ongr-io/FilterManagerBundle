@@ -1,28 +1,27 @@
 # Dynamic Aggregate Filter
 
-This filter is used to aggregate the data provided from a specific field
-in a nested object of the document and then group the results by the values 
-from a different field of that same nested object. This means that the 
-results are grouped dynamically, without the need to specify exact names for
-grouping. Other than that, the functionality of the filter bears similarities 
-to the *choice filter*.
+This filter is used to handle nested objects. It aggregates the data from a specified field (`document_field value` 
+in configuration) and then groups the results by the values from a separate field (`name_field` in configuration). 
+Both fields have to exist in the same nested object of your document. After grouping, several sets of choices are 
+made. A single choice from each group can be selected. Results are filtered by the selected choices. 
 
-## Configuration 
+The functionality of the filter is similar to the Choice Filter, but there are key differences: The Choice Filter 
+which creates a single group of choices, however in the Dynamic Aggregate Filter the number and values of the groups 
+is dynamic and depend on the data in your documents. This means that the filter is very flexible when dealing with 
+certain types of nested objects.
+
+### Dynamic Aggregate filter specific options 
 
 | Setting name           | Meaning                                                                              |
 |------------------------|--------------------------------------------------------------------------------------|
-| `request_field`        | Request field used to view the selected page. (e.g. `www.page.com/?request_field=4`) |
 | `name_field`           | Specifies the field in the repository that the results will be grouped by            |
-| `field`                | Specifies the field in repository to apply this filter on.                           |
-| `sort`                 | Sorts the choices based on your configuration.                                       |
-| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
 | `show_zero_choices`    | If set to true enables the display of choices with zero available documents.         |
 
-> Important note! Here `name_field` and `field` values should both point to the fields in the nested object of the
-document, however the `field` must specify both the `path` and the `field` properties separated by the `>` sign 
-(e.g. `field = 'attributes>attributes.value'`).
+> Important note! Here `name_field` and `document_field` (from general configuration) values should both point to 
+the fields in the nested object of the document, however the `document_field` must specify both the `path` and the
+`field` properties separated by the `>` sign (e.g. `field = 'attributes>attributes.value'`).
 
-Example:
+### Configuration example example:
   
 ```yaml
   
@@ -30,69 +29,164 @@ Example:
   
 ongr_filter_manager:
     managers:
-        search_list:
-            filters:
-                - attributes
-            repository: 'es.manager.default.product'
+        # ...
     filters:
-        dynamic_aggregate:
-            attributes:
-                request_field: 'attributes'
+        dynamic_attributes:
+            type: dynamic_aggregate
+            request_field: attributes
+            document_field: attributes>attributes.value
+            options:
                 name_field: attributes.name
-                field: attributes>attributes.value
                 show_zero_choices: false
 ```  
 
-## Twig view data
+### Query composition
 
-Twig view data returned by this filter is an instance of `AggregateViewData` class.
-This object has an array of `ChoiceAwareViewData` that can be accessed through
-`getItems()` method. Once accessed it provides these methods to retrieve the
-information stored within:
+Lets say we have data in elasticsearch type `product`. Imagine that your products
+have such nested objects in their `attributes` field:
 
-| Method                  | Value                                            |
-|-------------------------|--------------------------------------------------|
-| getName()               | Filter name                                      |
-| getResetUrlParameters() | Url parameters required to reset filter          |
-| getState()              | Filter state                                     |
-| getUrlParameters()      | Url parameters representing current filter state |
-| getChoices()            | Returns a list of available choices              |
-| getTags()               | Lists all tags specified at filter configuration |
-| hasTag($tag)            | Checks if filter has the specific tag            |
-
-Each choice has its own data:
-
-| Method             | Value                                      |
-|--------------------|--------------------------------------------|
-| isActive()         | Is this choice currently applied           |
-| isDefault()        | Is this choice the default one             |
-| getCount()         | Return the number of items for this choice |
-| getLabel()         | Choice label                               |
-| getUrlParameters() | Returns a list of available choices        |
-
-## Usage in template example
-
-```twig
-<ul>
-    {% for choices in filter_manager.getFilters().getItems() %}
-        <li>
-            <a href="#"><strong>{{ choices.name }}</strong></a>
-        </li>
-        {% for choice in choices.choices %}
-            <li>
-            {% if choice.active %}
-                <a href="{{ path(active_category, choice.getUrlParameters()) }}"
-                   class="list-group-item active">{{ choice.label }}({{ choice.count }})</a>
-            {% else %}
-                <a href="{{ path(active_category, choice.getUrlParameters()) }}"
-                   class="list-group-item">{{ choice.label }} ({{ choice.count }})</a>
-            {% endif %}
-            </li>
-        {% endfor %}
-    {% endfor %}
-</ul>
+```json
+[
+  {
+    "name": "Color",
+    "value": "Red"
+  },
+  {
+    "name": "Material",
+    "value": "Wood"
+  },
+  {
+    "name": "Made in",
+    "value": "Portugal"
+  }
+]
 ```
 
-The example above would render out a list of available choices of documents with their 
-corresponding amounts and they would be grouped by the names that would be generated from
-the provided `name_field` of the same nested object.
+The filter creates a complex set of aggregations for the formation of specific groups
+of choices, but the query part is quite strait forward and it simply filters out the
+documents by the values provided in the request query. If we had the configuration 
+specified above and requested `http://127.0.0.1?attributes[Color]=Red`, we would get 
+a query like this:
+
+```json
+{
+    "post_filter": {
+        "nested": {
+            "path": "attributes",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "attributes.value": "Red"
+                            }
+                        },
+                        {
+                            "term": {
+                                "attributes.name": "Colors"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "aggregations": {
+        "dynamic_attributes-filter": {
+            "filter": {
+                "match_all": []
+            },
+            "aggregations": {
+                "Color": {
+                    "filter": {
+                        "match_all": []
+                    },
+                    "aggregations": {
+                        "dynamic_attributes": {
+                            "nested": {
+                                "path": "attributes"
+                            },
+                            "aggregations": {
+                                "query": {
+                                    "terms": {
+                                        "field": "attributes.value",
+                                        "size": 0,
+                                        "order": {
+                                            "_count": "asc"
+                                        }
+                                    },
+                                    "aggregations": {
+                                        "name": {
+                                            "terms": {
+                                                "field": "attributes.name"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "all-selected": {
+                    "filter": {
+                        "nested": {
+                            "path": "attributes",
+                            "query": {
+                                "term": {
+                                    "attributes.value": "Red"
+                                }
+                            }
+                        }
+                    },
+                    "aggregations": {
+                        "dynamic_attributes": {
+                            "nested": {
+                                "path": "attributes"
+                            },
+                            "aggregations": {
+                                "query": {
+                                    "terms": {
+                                        "field": "attributes.value",
+                                        "size": 0,
+                                        "order": {
+                                            "_count": "asc"
+                                        }
+                                    },
+                                    "aggregations": {
+                                        "name": {
+                                            "terms": {
+                                                "field": "attributes.name"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+> Take a look in the [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics) how to pass `Request` object to 
+the controller for execute filtering.
+
+### Usage in the templates
+
+Dynamic Aggregate filter returns `AggregateViewData` as the result set for view data. In addition to the standard view
+data, it is a container for a set of `ChoiceAwareViewData` objects that represent each group of choices. These items
+can be accessed like so:
+
+```twig
+
+{% for choices in filters.dynamic_attributes.items %}
+    {# here choices are used as ChoiceAwareViewData #}
+    ...
+{% endfor %}
+
+```
+
+More information how to use filters in templates can be found in [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics)
+
