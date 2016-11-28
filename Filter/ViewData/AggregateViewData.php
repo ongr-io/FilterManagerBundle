@@ -21,7 +21,7 @@ class AggregateViewData extends ViewData
     /**
      * @var ChoicesAwareViewData[]
      */
-    private $items;
+    private $items = [];
 
     /**
      * @return ChoicesAwareViewData[]
