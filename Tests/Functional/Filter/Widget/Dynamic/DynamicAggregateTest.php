@@ -241,7 +241,7 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
             'filter' => 'dynamic_aggregate_filter'
         ];
 
-        // Case #0, with color red
+        // Case #1, with color red
         $out[] = [
             'request' => new Request(['dynamic_aggregate' => ['Color' => 'Red']]),
             'expectedChoices' => [

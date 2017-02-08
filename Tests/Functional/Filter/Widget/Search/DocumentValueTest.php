@@ -80,7 +80,7 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
      */
     public function testFilter($expectedChoices, $query = [])
     {
-        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('search'));
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('document_value'));
         $result = $manager->handleRequest(new Request($query))->getResult();
 
         $actual = [];

@@ -62,14 +62,14 @@ class FuzzySearchTest extends AbstractElasticsearchTestCase
 
         // Case #1
         $out[] = [
-            [2],
-            ['f1' => 'o']
+            [1,3],
+            ['f1' => 'oo']
         ];
 
         // Case #2
         $out[] = [
-            [2],
-            ['f2' => 'lue']
+            [3],
+            ['f2' => 'ar']
         ];
 
         return $out;

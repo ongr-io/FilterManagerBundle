@@ -8,11 +8,14 @@ ongr_filter_manager:
                 - must_2
                 - fuzzy_1
                 - fuzzy_2
-                - document
             repository: es.manager.default.product
         field:
             filters:
                 - field
+            repository: es.manager.default.product
+        document_value:
+            filters:
+                - document
             repository: es.manager.default.product
     filters:
         phraze:
@@ -20,14 +23,12 @@ ongr_filter_manager:
             request_field: q
             document_field: title,description^2,attributes>attributes.title^3
             options:
-                operator: and
                 fuzziness: 0
         nested_search:
             type: match
             request_field: qn
             document_field: title,attributes>attributes.name^2
             options:
-                operator: and
                 fuzziness: 0
         must:
             type: match
@@ -42,14 +43,12 @@ ongr_filter_manager:
             request_field: f1
             document_field: title
             options:
-                operator: and
                 fuzziness: 1
         fuzzy_2:
             type: fuzzy
             request_field: f2
-            document_field: title,color
+            document_field: title
             options:
-                operator: and
                 fuzziness: 2
         document:
             type: document_value

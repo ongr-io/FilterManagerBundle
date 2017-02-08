@@ -19,7 +19,7 @@ class PreSearchEventTest extends \PHPUnit_Framework_TestCase
     public function testGetSearchRequest()
     {
         /** @var SearchRequest $request */
-        $request = $this->getMock('ONGR\FilterManagerBundle\Search\SearchRequest');
+        $request = $this->createMock('ONGR\FilterManagerBundle\Search\SearchRequest');
         $event = new PreSearchEvent($request);
 
         $this->assertSame($request, $event->getSearchRequest());

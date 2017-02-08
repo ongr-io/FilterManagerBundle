@@ -14,11 +14,8 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Search;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareInterface;
-use ONGR\FilterManagerBundle\Filter\Helper\FieldAwareTrait;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
-use ONGR\FilterManagerBundle\Filter\Widget\AbstractSingleRequestValueFilter;
 
 /**
  * This class generalises filters for single value searching.

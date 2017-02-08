@@ -14,7 +14,7 @@ namespace ONGR\FilterManagerBundle\Filter\Widget\Choice;
 use ONGR\ElasticsearchBundle\Result\Aggregation\AggregationValue;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\FilterAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
-use ONGR\ElasticsearchDSL\Query\TermQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
@@ -56,7 +56,6 @@ class SingleTermChoice extends AbstractFilter implements ViewDataFactoryInterfac
             ]);
         }
 
-        $aggregation->addParameter('size', 0);
         if ($this->getOption('size') > 0) {
             $aggregation->addParameter('size', $this->getOption('size'));
         }

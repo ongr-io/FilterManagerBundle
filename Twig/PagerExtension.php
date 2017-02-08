@@ -43,12 +43,12 @@ class PagerExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction(
+            new \Twig_Function(
                 'ongr_paginate',
                 [$this, 'paginate'],
                 ['is_safe' => ['html'], 'needs_environment' => true]
             ),
-            new \Twig_SimpleFunction('ongr_paginate_path', [$this, 'path'], ['is_safe' => []]),
+            new \Twig_Function('ongr_paginate_path', [$this, 'path'], ['is_safe' => []]),
         ];
     }
 

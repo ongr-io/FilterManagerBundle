@@ -11,8 +11,8 @@
 
 namespace ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange;
 
-use ONGR\ElasticsearchDSL\Aggregation\StatsAggregation;
-use ONGR\ElasticsearchDSL\Query\RangeQuery;
+use ONGR\ElasticsearchDSL\Aggregation\Metric\StatsAggregation;
+use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;

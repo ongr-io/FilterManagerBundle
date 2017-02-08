@@ -46,13 +46,6 @@ ongr_elasticsearch:
                     refresh_interval: -1
                     number_of_shards: 2
                     number_of_replicas: 0
-                analysis:
-                    tokenizer:
-                        - pathTokenizer
-                    filter:
-                        - incremental_filter
-                    analyzer:
-                        - urlAnalyzer
             mappings:
                 - TestBundle
 

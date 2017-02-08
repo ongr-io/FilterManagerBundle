@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Search;
 
-use ONGR\ElasticsearchDSL\Query\TermQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
 use ONGR\FilterManagerBundle\Filter\Relation\RelationAwareTrait;

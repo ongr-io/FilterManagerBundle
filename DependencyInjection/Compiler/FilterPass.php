@@ -13,6 +13,7 @@ namespace ONGR\FilterManagerBundle\DependencyInjection\Compiler;
 
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -49,13 +50,7 @@ class FilterPass implements CompilerPassInterface
                 );
             }
 
-            if (array_key_exists($filterName, $filters)) {
-                throw new InvalidConfigurationException(
-                    "Filter name cannot be the same as the filter type. Check `{$filterName}` filter."
-                );
-            }
-
-            $definition = new DefinitionDecorator($filters[($filterOptions['type'])]);
+            $definition = new ChildDefinition($filters[($filterOptions['type'])]);
             $definition->addMethodCall('setRequestField', [$filterOptions['request_field']]);
             $definition->addMethodCall('setDocumentField', [$filterOptions['document_field']]);
             $definition->addMethodCall('setTags', [$filterOptions['tags']]);
@@ -67,15 +62,13 @@ class FilterPass implements CompilerPassInterface
         foreach ($container->getParameter('ongr_filter_manager.managers') as $managerName => $managerOptions) {
             $filterContainer = new Definition('ONGR\FilterManagerBundle\Search\FilterContainer');
 
-//            $filterContainer
-//                ->addMethodCall('setExclude', [$config['cache']['exclude']])
-//                ->addMethodCall('setLifeTime', [$config['cache']['life_time']]);
-
-            foreach ($managerOptions['filters'] as $filter) {
-                $filterContainer->addMethodCall(
-                    'set',
-                    [$filter, new Reference(ONGRFilterManagerExtension::getFilterId($filter))]
-                );
+            if (isset($managerOptions['filters'])) {
+                foreach ($managerOptions['filters'] as $filter) {
+                    $filterContainer->addMethodCall(
+                        'set',
+                        [$filter, new Reference(ONGRFilterManagerExtension::getFilterId($filter))]
+                    );
+                }
             }
 
             $managerDefinition = new Definition(

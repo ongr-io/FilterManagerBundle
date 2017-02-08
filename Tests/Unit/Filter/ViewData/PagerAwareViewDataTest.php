@@ -18,7 +18,7 @@ class PagerAwareViewDataTest extends \PHPUnit_Framework_TestCase
     public function testSetData()
     {
         $pagerData = new PagerAwareViewData();
-        $pagerData->setState($this->getMock('ONGR\FilterManagerBundle\Filter\FilterState'));
+        $pagerData->setState($this->createMock('ONGR\FilterManagerBundle\Filter\FilterState'));
 
         $this->assertEquals(
             [
@@ -55,7 +55,7 @@ class PagerAwareViewDataTest extends \PHPUnit_Framework_TestCase
     public function testCheckPageNavigation()
     {
         $pagerData = new PagerAwareViewData();
-        $pagerData->setState($this->getMock('ONGR\FilterManagerBundle\Filter\FilterState'));
+        $pagerData->setState($this->createMock('ONGR\FilterManagerBundle\Filter\FilterState'));
         $pagerData->setData(100, 1, 12, 5);
 
         $this->assertTrue($pagerData->isFirstPage());
@@ -71,7 +71,7 @@ class PagerAwareViewDataTest extends \PHPUnit_Framework_TestCase
     public function testGetPages()
     {
         $pagerData = new PagerAwareViewData();
-        $pagerData->setState($this->getMock('ONGR\FilterManagerBundle\Filter\FilterState'));
+        $pagerData->setState($this->createMock('ONGR\FilterManagerBundle\Filter\FilterState'));
         $pagerData->setData(100, 1, 12, 5);
 
         $this->assertEquals(range(2, 5, 1), $pagerData->getPages());
