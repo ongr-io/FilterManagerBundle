@@ -40,28 +40,8 @@ class MultiDynamicAggregate extends DynamicAggregate
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        list($path, $field) = explode('>', $this->getDocumentField());
-
         if ($state && $state->isActive()) {
-            $boolQuery = new BoolQuery();
-
-            foreach ($state->getValue() as $groupName => $values) {
-                $innerBoolQuery = new BoolQuery();
-
-                foreach ($values as $value) {
-                    $innerBoolQuery->add(
-                        new NestedQuery(
-                            $path,
-                            new TermQuery($field, $value)
-                        ),
-                        BoolQuery::SHOULD
-                    );
-                }
-
-                $boolQuery->add($innerBoolQuery);
-            }
-
-            $search->addPostFilter($boolQuery);
+            $search->addPostFilter($this->getFilterQuery($state->getValue()));
         }
     }
 
@@ -82,14 +62,7 @@ class MultiDynamicAggregate extends DynamicAggregate
         $terms,
         $aggName
     ) {
-        list($path, $field) = explode('>', $this->getDocumentField());
-        $boolQuery = new BoolQuery();
-
-        foreach ($terms as $namedTerms) {
-            $boolQuery->add(
-                new NestedQuery($path, new TermsQuery($field, array_values($namedTerms)))
-            );
-        }
+        $boolQuery = $this->getFilterQuery($terms);
 
         if ($boolQuery->getQueries() == []) {
             $boolQuery->add(new MatchAllQuery());
@@ -152,5 +125,37 @@ class MultiDynamicAggregate extends DynamicAggregate
         }
 
         return false;
+    }
+
+    /**
+     * @param array $terms
+     *
+     * @return BoolQuery
+     */
+    private function getFilterQuery($terms)
+    {
+        list($path, $field) = explode('>', $this->getDocumentField());
+        $boolQuery = new BoolQuery();
+
+        foreach ($terms as $groupName => $values) {
+            $innerBoolQuery = new BoolQuery();
+
+            foreach ($values as $value) {
+                $nestedBoolQuery = new BoolQuery();
+                $nestedBoolQuery->add(new TermQuery($field, $value));
+                $nestedBoolQuery->add(new TermQuery($this->getNameField(), $groupName));
+                $innerBoolQuery->add(
+                    new NestedQuery(
+                        $path,
+                        $nestedBoolQuery
+                    ),
+                    BoolQuery::SHOULD
+                );
+            }
+
+            $boolQuery->add($innerBoolQuery);
+        }
+
+        return $boolQuery;
     }
 }
