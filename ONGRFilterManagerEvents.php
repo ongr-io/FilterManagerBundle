@@ -25,4 +25,10 @@ final class ONGRFilterManagerEvents
      * The SEARCH_RESPONSE event occurs after search is executed
      */
     const SEARCH_RESPONSE = 'ongr_filter_manager.search_response';
+
+    /**
+     * The PRE_PROCESS_SEARCH event occurs before the preProcessSearch method of
+     * the filter is called
+     */
+    const PRE_PROCESS_SEARCH = 'ongr_filter_manager.pre_process_search';
 }
