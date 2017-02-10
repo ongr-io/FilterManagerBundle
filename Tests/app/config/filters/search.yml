@@ -6,8 +6,6 @@ ongr_filter_manager:
                 - nested_search
                 - must
                 - must_2
-                - fuzzy_1
-                - fuzzy_2
                 - document
             repository: es.manager.default.product
         field:
@@ -37,20 +35,6 @@ ongr_filter_manager:
             type: match
             request_field: qm
             document_field: title^3
-        fuzzy_1:
-            type: fuzzy
-            request_field: f1
-            document_field: title
-            options:
-                operator: and
-                fuzziness: 1
-        fuzzy_2:
-            type: fuzzy
-            request_field: f2
-            document_field: title,color
-            options:
-                operator: and
-                fuzziness: 2
         document:
             type: document_value
             request_field: document

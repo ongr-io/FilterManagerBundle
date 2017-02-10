@@ -51,11 +51,6 @@ services:
         tags:
             - { name: ongr_filter_manager.filter, type: field_value }
 
-    ongr_filter_manager.filter.fuzzy:
-        class: ONGR\FilterManagerBundle\Filter\Widget\Search\FuzzySearch
-        tags:
-            - { name: ongr_filter_manager.filter, type: fuzzy }
-
     ongr_filter_manager.filter.match:
         class: ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch
         tags:
