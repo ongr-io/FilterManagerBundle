@@ -1,35 +1,56 @@
-# Field value filter
+# Field Value Filter
 
-Purpose of this filter is to select only those documents which have predefined value in predefined field. Sample use case could be to display only active items (having true in field `active`).
+Purpose of this filter is to select only those documents which have predefined value in a predefined field. 
+Usual use case could be to display only active items (having true in field `active`). In reality this is
+the most simple filter to use.
 
-> Note that this filter does not depend from request and is always active.
+> Note that this filter does not depend on request and is always active.
 
-## Configuration 
+### Document Value Filter specific options
 
 | Setting name | Meaning                                                                     |
 |--------------|-----------------------------------------------------------------------------|
-| `field`      | Specifies the field in repository to apply this filter on. (e.g. `active`)  |
-| `value`      | Specifies exact value which should be in `field`.                           |
-| `tags`       | Array of filter specific tags that will be accessible at Twig view data.    |
+| `value`      | Specifies exact value which should be in `document_field`.                  |
 
-Example:
+>Note that this filter does not depend on requests, so `requst_field` should be set to `~`
+
+
+### Configuration example
   
 ```yaml
 # app/config/config.yml
   
 ongr_filter_manager:
-    managers:
-        search_list:
-            filters:
-                - only_active
-            repository: 'es.manager.default.product'
+    #...
     filters:
-        field_value:
-            only_active:
-                field: 'active'
+        only_active:
+            type: field_value
+            request_field: ~
+            document_field: 'active'
+            options:
                 value: true
 ```  
 
-## Twig view data
+### Query composition
 
-This filter is not included in view data.
+As mentioned before, this is a very simple filter and, given the configuration above, it will
+always create the same query:
+ 
+```json
+
+{
+  "post_filter": {
+    "term": {
+      "active": true
+    }
+  }
+}
+
+```
+
+### Usage in the templates
+
+This filter returns a simple ViewData object, it is not intended to create any view-specific choices. The aim of this 
+filter is to limit the result set of the documents.
+ 
+> For more information on how to handle a request or retrieve data, please refer to the [basics topic][http://docs.ongr.io/FilterManagerBundle/Basics]
