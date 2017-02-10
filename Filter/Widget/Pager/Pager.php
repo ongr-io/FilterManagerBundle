@@ -19,8 +19,6 @@ use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\ViewData\PagerAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\AbstractFilter;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
-use ONGR\FilterManagerBundle\Pager\PagerService;
-use ONGR\FilterManagerBundle\Pager\Adapters\CountAdapter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
