@@ -33,22 +33,27 @@ class DateRangeTest extends AbstractElasticsearchTestCase
                     [
                         '_id' => 1,
                         'date' => '2001-09-11',
+                        'color' => 'red',
                     ],
                     [
                         '_id' => 2,
                         'date' => '2002-09-12',
+                        'color' => 'blue',
                     ],
                     [
                         '_id' => 3,
                         'date' => '2003-09-11',
+                        'color' => 'blue',
                     ],
                     [
                         '_id' => 4,
                         'date' => '2004-09-11',
+                        'color' => 'blue',
                     ],
                     [
                         '_id' => 5,
                         'date' => '2005-10-11',
+                        'color' => 'red',
                     ],
                 ],
             ],
@@ -90,7 +95,6 @@ class DateRangeTest extends AbstractElasticsearchTestCase
      */
     public function testFilter($expectedChoices, $query = [])
     {
-
         $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range'));
         $result = $manager->handleRequest(new Request($query))->getResult();
 
@@ -100,5 +104,19 @@ class DateRangeTest extends AbstractElasticsearchTestCase
         }
 
         $this->assertEquals($expectedChoices, $actual);
+    }
+
+    public function testBoundsFormation()
+    {
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range'));
+        $result = $manager->handleRequest(new Request())->getFilters()['date_range_filter'];
+
+        $this->assertEquals('2001-09-11', $result->getMinBounds()->format('Y-m-d'));
+        $this->assertEquals('2005-10-11', $result->getMaxBounds()->format('Y-m-d'));
+
+        $result = $manager->handleRequest(new Request(['limit' => 'blue']))->getFilters()['date_range_filter'];
+
+        $this->assertEquals('2002-09-12', $result->getMinBounds()->format('Y-m-d'));
+        $this->assertEquals('2004-09-11', $result->getMaxBounds()->format('Y-m-d'));
     }
 }
