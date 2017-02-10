@@ -27,14 +27,6 @@ class DocumentValue extends AbstractSingleValue
     use RelationAwareTrait;
 
     /**
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->getOption('value', null);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getState(Request $request)
@@ -42,9 +34,16 @@ class DocumentValue extends AbstractSingleValue
         $state = new FilterState();
         $document = $request->get('document');
 
-        if ($document) {
-            $this->addOption('value', $document->{$this->getOption('field')});
-            $state->setActive(true);
+        if (is_object($document)) {
+            try {
+                $closure = \Closure::bind(function ($document, $field) {
+                    return $document->$field;
+                }, null, $document);
+                $state->setValue($closure($document, $this->getOption('field')));
+                $state->setActive(true);
+            } catch (\Exception $e) {
+                throw new \LogicException("Cannot access document field.");
+            }
         }
 
         return $state;
@@ -55,6 +54,6 @@ class DocumentValue extends AbstractSingleValue
      */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $search->addPostFilter(new TermQuery($this->getDocumentField(), $this->getValue()));
+        $search->addPostFilter(new TermQuery($this->getDocumentField(), $state->getValue()));
     }
 }

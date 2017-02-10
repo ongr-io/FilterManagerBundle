@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
+use ONGR\ElasticsearchBundle\Tests\app\fixture\Acme\BarBundle\Document\Product;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -58,12 +59,19 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
     {
         $out = [];
 
-        $document = new \stdClass();
-        $document->type = 'jeans';
-
         // Case #0
+        $document = new Product();
+        $document->setCategory('jeans');
         $out[] = [
             [1,2],
+            ['document' => $document],
+        ];
+
+        // Case #1
+        $document = new Product();
+        $document->setCategory('shirts');
+        $out[] = [
+            [3, 1],
             ['document' => $document],
         ];
 
