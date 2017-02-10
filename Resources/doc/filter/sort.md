@@ -1,99 +1,125 @@
 # Sort Filter
 
-Filter used for sorting the documents.
+Before reading about this filter take a look at the [base configuration](http://docs.ongr.io/FilterManagerBundle/Basics) which applies for all filters.
 
-## Configuration
+This filter is used for sorting the documents.
 
-First, you have to specify the request field:
-
-| Setting name           | Meaning                                                                              |
-|------------------------|--------------------------------------------------------------------------------------|
-| `request_field`        | Request field used to pass the sort choice id (e.g. `www.page.com/?request_field=4`) |
-| `tags`                 | Array of filter specific tags that will be accessible at Twig view data.             |
-
-After which you can specify multiple sort options/choices:
+### Sort filter specific options
 
 | Setting name           | Meaning                                                            |
 |------------------------|--------------------------------------------------------------------|
-| `label`                | Choice name to be used in templates. (e.g. `Title descending`)     |
+| `choices`              | Associative array that defines all available sorting possibilities |
+
+Formation of `choices` array:
+
+Each choice in `choices` array is a way to sort data. `choices` is an associative array, where
+keys identify unique ways of sorting data. This key will also appear in the url once a sorting 
+choice is selected (e.g. `example.com?sort=price_desc` where `price_desc` is the key of a choice).
+ 
+Formation of each choice:
+
+Each choice accepts several parameters:
+
+| Setting name           | Meaning                                                            |
+|------------------------|--------------------------------------------------------------------|
 | `field`                | Specifies the field in repository to sort on. (e.g. `item_color`)  |
 | `order`                | Order to sort by. Default `asc`. Valid values: `asc`,  `desc`.     |
 | `default`              | Specifies whether this choice is the default one. Default `false`. |
-| `mode`                 | For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
-| `fields`               | Array of fields to sort on. For more information see table below.  |
+| `mode`                 | Interprets the value of sorting when defined field is an array. For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
+| `fields`               | Used when sorting on several fields at once. More information below |
 
-> `field`, `order`, and `mode` are ignored if at least one of fields is defined.
+The main parameters here are `field`, `order` and `mode`. If there is a need to sort on several
+fields, you can specify the `fields` parameter, which is just a set of the three parameters specified
+before.
 
-Each object in `fields` array specifies sorting condition. Available parameters are defined below:
+`default` should only be set to true in one choice.
 
-| Setting name           | Meaning                                                            |
-|------------------------|--------------------------------------------------------------------|
-| `field`                | Specifies the field in repository to sort on. (e.g. `item_color`)  |
-| `order`                | Order to sort by. Default `asc`. Valid values: `asc`,  `desc`.     |
-| `mode`                 | For any arrays: `min`, `max`, for numeric arrays `avg`, `sum`.     |
+> Since this filter works with several ES fields, depending on the request, the 
+`document_field` value should be set to null (`~`).
 
-Example:
+### Configuration example:
 
 ```yaml
 # app/config/config.yml
     
 ongr_filter_manager:
-    managers:
-        search_list:
-            filters:
-                - search_sort
-            repository: 'es.manager.default.product'
+    # ...
     filters:
-        sort:
-            search_sort:
-                request_field: 'sort'
-                choices:
-                  - { label: No sorting, key: score, field: _score, default: true }
-                  - { label: Heaviest to lightest, key: weight_desc, field: weight, order: desc }
-                  - { label: Lightest to heaviest, key: weight_asc, field: weight, order: asc  }
+        search_sort:
+            type: sort
+            request_field: sort
+            document_field: ~
+            choices:
+                # single field sorting
+                stock_asc: { field: stock, default: true, order: asc }
+                stock_desc: { field: stock, order: desc }
+                # molti field sorting
+                price_desc_hits_desc: 
+                    fields: 
+                        - {field: price, order: desc}
+                        - {field: hits, order: desc}
+                price_desc_hits_asc:
+                    fields:
+                        - {field: price, order: desc}
+                        - {field: hits, order: asc}
 
 ```
 
-## Twig view data
+### Query composition
 
-View data returned by this filter to be used in template:
+Considering the configuration above, if we execute a request `http://127.0.0.1?sort=price_desc_hits_asc`
+The following will be added to a search:
 
-| Method                  | Value                                            |
-|-------------------------|--------------------------------------------------|
-| getName()               | Filter name                                      |
-| getResetUrlParameters() | Url parameters required to reset filter          |
-| getState()              | Filter state                                     |
-| getUrlParameters()      | Url parameters representing current filter state |
-| getChoices()            | Returns a list of available sort choices         |
-| getTags()               | Lists all tags specified at filter configuration |
-| hasTag($tag)            | Checks if filter has the specific tag            |
+```json
 
+{
+    "sort": [
+        {
+            "price": {
+                "order": "desc"
+            }
+        },
+        {
+            "hits": {
+                "order": "asc"
+            }
+        }
+    ]
+}
 
-Each choice has its own data:
+```
 
-| Method             | Value                                      |
-|--------------------|--------------------------------------------|
-| isActive()         | Is this choice currently applied           |
-| isDefault()        | Is this choice the default one             |
-| getLabel()         | Choice label                               |
-| getUrlParameters() | Returns a list of available choices        |
-| getMode()          | Returns a mode value if is set             |
+Because a default value is specified, request query that does not contain `sort`
+parameter will have its results sorted according to stock ascending.
 
-## Usage in template example
+> Take a look in the [basics topic](http://docs.ongr.io/FilterManagerBundle/Basics) how to pass `Request` object to the controller for execute filtering. 
 
-This example uses filter defined in [Search example](../examples/search_example.md). To display this filter we would add following code to template:
+### Usage in the templates
+
+Sort filter returns `ChoiceAwareViewData` as the result set for view data. 
+Each choice is a possible option for sorting data and the usage of it is similar
+to the one from the *Choice* filter.
+
+Here is an example of how to create a list of options for sorting in twig environment:
 
 ```twig
-{% set sortFilter = filter_manager.getFilters().search_sort %}
+{% set sortFilter = filters.search_sort %}
 <ul>
-    {% for choice in sortFilter.getChoices() %}
+    {% for choice in sortFilter.choices %}
         <li>
-            {% if choice.isActive() %}
-                <b>{{ choice.getLabel() }}</b>
+            {% if choice.active %}
+                <a href="{{ path('your_route', choice.unsetUrlParameters) }}" class="active">
             {% else %}
-                <a href="{{ path(app.request.attributes.get('_route'), choice.getUrlParameters()) }}">{{ choice.getLabel() }}</a>
+                <a href="{{ path('your_route', choice.urlParameters) }}">
             {%  endif %}
+                {{ choice.label|trans() }}</a>
         </li>
     {% endfor %}
 </ul>
 ```
+
+Notice here that the label of each choice is the key specified in the configuration.
+We highly recommend including your keys in [Symfony translations][1] to give them nice, 
+descriptive names.
+
+[1]: http://symfony.com/doc/current/translation.html 
