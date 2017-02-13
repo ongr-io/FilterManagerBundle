@@ -43,7 +43,7 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
             ->with(new Request())
             ->will($this->returnValue($searchResponse));
 
-        $templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $templating = $this->createMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $templating
             ->expects($this->once())
             ->method('renderResponse')

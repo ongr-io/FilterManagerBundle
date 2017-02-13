@@ -22,7 +22,7 @@ class FilterContainerTest extends \PHPUnit_Framework_TestCase
     {
         $filterContainer = new FilterContainer();
         $result = $filterContainer->getFiltersByRelation(
-            $this->getMock('ONGR\FilterManagerBundle\Relation\RelationInterface')
+            $this->createMock('ONGR\FilterManagerBundle\Relation\RelationInterface')
         );
         $this->assertInstanceOf('ONGR\FilterManagerBundle\Relation\FilterIterator', $result);
     }
@@ -41,7 +41,7 @@ class FilterContainerTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $filterContainer->buildSearchRequest(
-            $this->getMock('Symfony\Component\HttpFoundation\Request')
+            $this->createMock('Symfony\Component\HttpFoundation\Request')
         );
 
         $this->assertEquals(2, count($result));
@@ -52,12 +52,12 @@ class FilterContainerTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildSearch()
     {
-        $mockRequest = $this->getMock('ONGR\FilterManagerBundle\Search\SearchRequest');
+        $mockRequest = $this->createMock('ONGR\FilterManagerBundle\Search\SearchRequest');
         $mockRequest->expects($this->once())
             ->method('get')
             ->will($this->returnValue(null));
 
-        $mockFilterInterface = $this->getMock('ONGR\FilterManagerBundle\Filter\FilterInterface');
+        $mockFilterInterface = $this->createMock('ONGR\FilterManagerBundle\Filter\FilterInterface');
         $mockFilterInterface->expects($this->once())
             ->method('modifySearch')
             ->withConsecutive(
@@ -83,7 +83,7 @@ class FilterContainerTest extends \PHPUnit_Framework_TestCase
         $mock = $this->getMockBuilder('ONGR\FilterManagerBundle\Filter\FilterInterface')->getMock();
         $mock->expects($this->once())
             ->method('getState')
-            ->will($this->returnValue($this->getMock('ONGR\FilterManagerBundle\Filter\FilterState')));
+            ->will($this->returnValue($this->createMock('ONGR\FilterManagerBundle\Filter\FilterState')));
 
         return $mock;
     }

@@ -46,7 +46,7 @@ class AndRelationTest extends \PHPUnit_Framework_TestCase
 
         foreach ($relations as $result) {
             if (isset($result)) {
-                $mock = $this->getMock('ONGR\FilterManagerBundle\Relation\RelationInterface');
+                $mock = $this->createMock('ONGR\FilterManagerBundle\Relation\RelationInterface');
                 $mock->expects($this->any())->method('isRelated')->will($this->returnValue($result));
                 $andRelation->addRelation($mock);
             } else {

@@ -140,7 +140,7 @@ class RangeTest extends AbstractElasticsearchTestCase
         $result = $manager->handleRequest(new Request(['limit' => 'red']));
         $priceViewData = $result->getFilters()['price_range'];
 
-        $this->assertEquals(1, $priceViewData->getMinBounds());
-        $this->assertEquals(3, $priceViewData->getMaxBounds());
+        $this->assertEquals(1, floor($priceViewData->getMinBounds()));
+        $this->assertEquals(5, ceil($priceViewData->getMaxBounds()));
     }
 }

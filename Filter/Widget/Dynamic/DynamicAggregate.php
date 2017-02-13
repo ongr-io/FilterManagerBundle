@@ -16,10 +16,10 @@ use ONGR\ElasticsearchDSL\Aggregation\Bucketing\FilterAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\NestedAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\BuilderInterface;
-use ONGR\ElasticsearchDSL\Query\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
-use ONGR\ElasticsearchDSL\Query\NestedQuery;
-use ONGR\ElasticsearchDSL\Query\TermQuery;
+use ONGR\ElasticsearchDSL\Query\Joining\NestedQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\FilterState;
@@ -347,7 +347,8 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
      * @param string            $activeName
      * @param AggregationValue  $bucket
      * @param array             $urlParameters
-     * @return ViewData\Choice
+     *
+     * @return ViewData\ChoiceAwareViewData
      */
     protected function createChoice($data, $name, $activeName, $bucket, $urlParameters = null)
     {
@@ -357,7 +358,7 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
             $urlParameters = $this->getOptionUrlParameters($bucket['key'], $name, $data, $active);
         }
 
-        $choice = new ViewData\Choice();
+        $choice = new ViewData\ChoiceAwareViewData();
         $choice->setLabel($bucket['key']);
         $choice->setCount($bucket['doc_count']);
         $choice->setActive($active);
@@ -369,7 +370,7 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
     /**
      * @param AggregateViewData $data
      * @param string            $name
-     * @param ViewData\Choice[] $choices
+     * @param ViewData\ChoiceAwareViewData[] $choices
      */
     protected function addViewDataItem($data, $name, $choices)
     {

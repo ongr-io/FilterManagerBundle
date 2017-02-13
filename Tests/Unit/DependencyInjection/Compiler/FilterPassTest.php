@@ -122,32 +122,4 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
         $filterPass = new FilterPass();
         $filterPass->process($this->container);
     }
-
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     */
-    public function testPassWhenFilterNameIsTheSameAsTYpe()
-    {
-        $this->container->method('getParameter')->willReturn([
-            'match' => [
-                'type' => 'match',
-                'request_field' => 'acme',
-                'document_field' => 'acme',
-                'tags' => [],
-                'options' => [],
-            ],
-        ]);
-        $this->container->expects($this->once())->method('findTaggedServiceIds')->willReturn(
-            [
-                'filter.match' => [
-                    [
-                        'type' => 'match'
-                    ]
-                ],
-            ]
-        );
-
-        $filterPass = new FilterPass();
-        $filterPass->process($this->container);
-    }
 }

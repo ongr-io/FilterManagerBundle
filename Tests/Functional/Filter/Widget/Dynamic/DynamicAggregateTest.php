@@ -14,11 +14,6 @@ namespace Tests\Functional\Filter\Widget\Dynamic;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
-use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\Dynamic\DynamicAggregate;
-use ONGR\FilterManagerBundle\Search\FilterContainer;
-use ONGR\FilterManagerBundle\Search\FilterManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class DynamicAggregateTest extends AbstractElasticsearchTestCase

@@ -2,11 +2,11 @@ ongr_filter_manager:
     managers:
         pager:
             filters:
-                - page_filter
+                - pager_filter
                 - pager_sort
             repository: es.manager.default.product
     filters:
-        page_filter:
+        pager_filter:
             type: pager
             request_field: page
             document_field: ~
