@@ -11,7 +11,6 @@
 
 namespace ONGR\FilterManagerBundle\Filter\Widget\Range;
 
-use ONGR\ElasticsearchDSL\Aggregation\Bucketing\FilterAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\Metric\StatsAggregation;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
@@ -43,10 +42,13 @@ class Range extends AbstractRange
             return $state;
         }
 
-        $stateValues[$this->isInclusive() ? 'gte' : 'gt'] = $values[0];
-        $stateValues[$this->isInclusive() ? 'lte' : 'lt'] = $values[1];
+        $gt = $this->isInclusive() ? 'gte' : 'gt';
+        $lt = $this->isInclusive() ? 'lte' : 'lt';
 
-        $state->setValue($this->normalizeStateValues($stateValues));
+        $normalized[$gt] = $values[0];
+        $normalized[$lt] = $values[1];
+
+        $state->setValue($normalized);
 
         return $state;
     }
@@ -58,13 +60,6 @@ class Range extends AbstractRange
     {
         $stateAgg = new StatsAggregation($state->getName());
         $stateAgg->setField($this->getDocumentField());
-
-        if ($relatedSearch->getPostFilters()) {
-            $filterAgg = new FilterAggregation($state->getName() . '-filter', $relatedSearch->getPostFilters());
-            $filterAgg->addAggregation($stateAgg);
-            $stateAgg = $filterAgg;
-        }
-
         $search->addAggregation($stateAgg);
     }
 
@@ -74,28 +69,10 @@ class Range extends AbstractRange
     public function getViewData(DocumentIterator $result, ViewData $data)
     {
         $name = $data->getState()->getName();
-
-        if (!$agg = $result->getAggregation($name)) {
-            $agg = $result->getAggregation($name . '-filter')->getAggregation($name);
-        }
-
         /** @var $data ViewData\RangeAwareViewData */
-        $data->setMinBounds($agg['min']);
-        $data->setMaxBounds($agg['max']);
+        $data->setMinBounds($result->getAggregation($name)['min']);
+        $data->setMaxBounds($result->getAggregation($name)['max']);
 
         return $data;
-    }
-
-    /**
-     * @param array $stateValues
-     * @return array
-     */
-    private function normalizeStateValues(array $stateValues)
-    {
-        if (!$this instanceof DateRange) {
-            $stateValues = array_map('floatval', $stateValues);
-        }
-
-        return $stateValues;
     }
 }

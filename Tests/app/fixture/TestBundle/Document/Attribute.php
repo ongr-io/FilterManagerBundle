@@ -20,13 +20,13 @@ class Attribute
 {
     /**
      * @var string
-     * @ES\Property(type="string", options={"index":"not_analyzed"})
+     * @ES\Property(type="keyword")
      */
     public $name;
 
     /**
      * @var string
-     * @ES\Property(type="string", options={"index":"not_analyzed"})
+     * @ES\Property(type="keyword")
      */
     public $value;
 }

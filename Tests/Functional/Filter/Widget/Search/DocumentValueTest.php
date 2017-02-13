@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
-use ONGR\ElasticsearchBundle\Tests\app\fixture\Acme\BarBundle\Document\Product;
+use ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Document\Product;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -61,7 +61,7 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
 
         // Case #0
         $document = new Product();
-        $document->setCategory('jeans');
+        $document->category = 'jeans';
         $out[] = [
             [1,2],
             ['document' => $document],
@@ -69,7 +69,7 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
 
         // Case #1
         $document = new Product();
-        $document->setCategory('shirts');
+        $document->category = 'shirts';
         $out[] = [
             [3, 1],
             ['document' => $document],
@@ -88,7 +88,7 @@ class DocumentValueTest extends AbstractElasticsearchTestCase
      */
     public function testFilter($expectedChoices, $query = [])
     {
-        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('search'));
+        $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('document_value'));
         $result = $manager->handleRequest(new Request($query))->getResult();
 
         $actual = [];

@@ -13,8 +13,6 @@ namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
-use ONGR\FilterManagerBundle\Filter\ViewData\RangeAwareViewData;
-use ONGR\FilterManagerBundle\Search\FilterManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -79,7 +77,13 @@ class DateRangeTest extends AbstractElasticsearchTestCase
         // Case #1
         $out[] = [
             [3,2],
-            ['date_range' => '1030886789;1125581189'],
+            ['date_range' => '1031788700000;1063239400000'],
+        ];
+
+        // Case #1
+        $out[] = [
+            [3,2],
+            ['date_range' => '2002-09-11;1063239400000'],
         ];
 
         return $out;
@@ -116,7 +120,7 @@ class DateRangeTest extends AbstractElasticsearchTestCase
 
         $result = $manager->handleRequest(new Request(['limit' => 'blue']))->getFilters()['date_range_filter'];
 
-        $this->assertEquals('2002-09-12', $result->getMinBounds()->format('Y-m-d'));
-        $this->assertEquals('2004-09-11', $result->getMaxBounds()->format('Y-m-d'));
+        $this->assertEquals('2001-09-11', $result->getMinBounds()->format('Y-m-d'));
+        $this->assertEquals('2005-10-11', $result->getMaxBounds()->format('Y-m-d'));
     }
 }

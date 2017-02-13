@@ -11,9 +11,9 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\Search;
 
-use ONGR\FilterManagerBundle\Search\SearchResponse;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
-use ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Document\Person;
+use ONGR\FilterManagerBundle\Filter\ViewData;
+use ONGR\FilterManagerBundle\Search\SearchResponse;
 
 class SearchResponseTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,12 +25,16 @@ class SearchResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSerializableDataException()
     {
-        $filters = $this->getMock('NGR\FilterManagerBundle\Filter\ViewData');
+        /** @var ViewData $filters */
+        $filters = $this->createMock('ONGR\FilterManagerBundle\Filter\ViewData');
+
+        /** @var DocumentIterator $result */
         $result = $this->getMockBuilder('ONGR\ElasticsearchBundle\Result\DocumentIterator')
             ->disableOriginalConstructor()
             ->getMock();
         $result->expects($this->any())->method('valid')->will($this->returnValue(true));
         $result->expects($this->any())->method('current')->will($this->returnValue(new \stdClass()));
+
         $response = new SearchResponse($filters, $result, []);
         $response->getSerializableData();
     }

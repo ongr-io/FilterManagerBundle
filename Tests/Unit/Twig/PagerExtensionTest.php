@@ -11,7 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Unit\Twig;
 
-use ONGR\FilterManagerBundle\Pager\PagerService;
+use ONGR\FilterManagerBundle\Filter\ViewData\PagerAwareViewData;
 use ONGR\FilterManagerBundle\Twig\PagerExtension;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -32,7 +32,7 @@ class PagerExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->router = $this->getMock('Symfony\Component\Routing\RouterInterface');
+        $this->router = $this->createMock('Symfony\Component\Routing\RouterInterface');
         $this->pagerExtension = new PagerExtension($this->router);
     }
 
@@ -68,8 +68,8 @@ class PagerExtensionTest extends \PHPUnit_Framework_TestCase
             ->method('render')
             ->will($this->returnValue('result'));
 
-        /** @var PagerService|\PHPUnit_Framework_MockObject_MockObject $managerMock */
-        $pager = $this->getMockBuilder('ONGR\FilterManagerBundle\Pager\PagerService')
+        /** @var PagerAwareViewData|\PHPUnit_Framework_MockObject_MockObject $managerMock */
+        $pager = $this->getMockBuilder('ONGR\FilterManagerBundle\Filter\ViewData\PagerAwareViewData')
             ->disableOriginalConstructor()
             ->getMock();
 

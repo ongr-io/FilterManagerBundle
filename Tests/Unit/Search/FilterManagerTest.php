@@ -22,12 +22,12 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandleRequest()
     {
-        $mockFilterState = $this->getMock('ONGR\FilterManagerBundle\Filter\FilterState');
+        $mockFilterState = $this->createMock('ONGR\FilterManagerBundle\Filter\FilterState');
         $mockFilterState->expects($this->any())
             ->method('getURLParameters')
             ->will($this->returnValue([]));
 
-        $mockFilterInterface = $this->getMock('ONGR\FilterManagerBundle\Filter\FilterInterface');
+        $mockFilterInterface = $this->createMock('ONGR\FilterManagerBundle\Filter\FilterInterface');
         $mockFilterInterface->expects($this->once())
             ->method('preProcessSearch');
         $mockFilterInterface->expects($this->once())
@@ -40,13 +40,13 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
         $searchRequest = new SearchRequest();
         $searchRequest->set('filter', $mockFilterState);
 
-        $mockFilterContainer = $this->getMock('ONGR\FilterManagerBundle\Search\FilterContainer');
+        $mockFilterContainer = $this->createMock('ONGR\FilterManagerBundle\Search\FilterContainer');
         $mockFilterContainer->expects($this->once())
             ->method('buildSearchRequest')
             ->will($this->returnValue($searchRequest));
         $mockFilterContainer->expects($this->exactly(2))
             ->method('buildSearch')
-            ->will($this->returnValue($this->getMock('ONGR\ElasticsearchDSL\Search')));
+            ->will($this->returnValue($this->createMock('ONGR\ElasticsearchDSL\Search')));
         $mockFilterContainer->expects($this->exactly(2))
             ->method('all')
             ->will($this->returnValue(['filter' => $mockFilterInterface]));
@@ -70,6 +70,6 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
             $mockRepository,
             new EventDispatcher()
         );
-        $filterManager->handleRequest($this->getMock('Symfony\Component\HttpFoundation\Request'));
+        $filterManager->handleRequest($this->createMock('Symfony\Component\HttpFoundation\Request'));
     }
 }

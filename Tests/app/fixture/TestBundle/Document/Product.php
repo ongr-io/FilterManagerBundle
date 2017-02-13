@@ -37,21 +37,21 @@ class Product implements SerializableInterface
     /**
      * @var string
      *
-     * @ES\Property(type="string")
+     * @ES\Property(type="text", options={"fielddata"="true"})
      */
     public $sku;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string")
+     * @ES\Property(type="text")
      */
     public $title;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string")
+     * @ES\Property(type="text")
      */
     public $description;
 
@@ -86,49 +86,49 @@ class Product implements SerializableInterface
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword")
      */
-    public $categories;
+    public $category;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword")
      */
     public $manufacturer;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword")
      */
     public $color;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword")
      */
     public $size;
 
     /**
      * @var int
      *
-     * @ES\Property(type="integer", options={"index"="not_analyzed"})
+     * @ES\Property(type="integer")
      */
     public $items;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword")
      */
     public $words;
 
     /**
      * @var string
      *
-     * @ES\Property(type="date", options={"format":"strict_date_optional_time"})
+     * @ES\Property(type="date")
      */
     public $date;
 
