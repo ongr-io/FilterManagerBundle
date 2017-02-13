@@ -40,7 +40,7 @@ ongr_elasticsearch:
         default:
             index:
                 hosts:
-                    - 192.168.99.100:9200
+                    - 127.0.0.1:9200
                 index_name: filter_manager_testing
                 settings:
                     refresh_interval: -1
