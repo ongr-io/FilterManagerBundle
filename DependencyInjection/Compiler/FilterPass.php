@@ -13,7 +13,6 @@ namespace ONGR\FilterManagerBundle\DependencyInjection\Compiler;
 
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -50,7 +49,7 @@ class FilterPass implements CompilerPassInterface
                 );
             }
 
-            $definition = new ChildDefinition($filters[($filterOptions['type'])]);
+            $definition = new DefinitionDecorator($filters[($filterOptions['type'])]);
             $definition->addMethodCall('setRequestField', [$filterOptions['request_field']]);
             $definition->addMethodCall('setDocumentField', [$filterOptions['document_field']]);
             $definition->addMethodCall('setTags', [$filterOptions['tags']]);
