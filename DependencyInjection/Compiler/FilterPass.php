@@ -54,6 +54,10 @@ class FilterPass implements CompilerPassInterface
             $definition->addMethodCall('setDocumentField', [$filterOptions['document_field']]);
             $definition->addMethodCall('setTags', [$filterOptions['tags']]);
             $definition->addMethodCall('setOptions', [$filterOptions['options']]);
+            $this->addRelation($definition, $filterOptions, 'search', 'include');
+            $this->addRelation($definition, $filterOptions, 'search', 'exclude');
+            $this->addRelation($definition, $filterOptions, 'reset', 'include');
+            $this->addRelation($definition, $filterOptions, 'reset', 'exclude');
 
             $container->setDefinition(ONGRFilterManagerExtension::getFilterId($filterName), $definition);
         }
@@ -81,5 +85,29 @@ class FilterPass implements CompilerPassInterface
 
             $container->setDefinition(ONGRFilterManagerExtension::getFilterManagerId($managerName), $managerDefinition);
         }
+    }
+
+    /**
+     * Adds relation to filter.
+     *
+     * @param Definition $definition
+     * @param array      $filter
+     * @param string     $urlType
+     * @param string     $relationType
+     */
+    private function addRelation(Definition $definition, $filter, $urlType, $relationType)
+    {
+        if (empty($filter['relations'][$urlType][$relationType])) {
+            return;
+        }
+
+        $relation = new Definition(
+            sprintf('ONGR\FilterManagerBundle\Relation\%sRelation', ucfirst($relationType)),
+            [$filter['relations'][$urlType][$relationType]]
+        );
+        $definition->addMethodCall(
+            'set' . ucfirst($urlType) . 'Relation',
+            [$relation]
+        );
     }
 }

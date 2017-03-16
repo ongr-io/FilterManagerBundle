@@ -46,6 +46,14 @@ class FilterPassTest extends \PHPUnit_Framework_TestCase
                             'type' => 'match',
                             'request_field' => 'acme',
                             'document_field' => 'acme',
+                            'relations' => [
+                                'search' => [
+                                    'include' => ['foo'],
+                                ],
+                                'reset' => [
+                                    'exclude' => ['bar'],
+                                ],
+                            ],
                             'tags' => [],
                             'options' => [],
                         ],

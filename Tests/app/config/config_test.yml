@@ -54,6 +54,16 @@ ongr_filter_manager:
         default:
             filters: ['sort_filter']
             repository: 'es.manager.default.product'
+        relation_control:
+            filters: ['color_control', 'price', 'active']
+            repository: 'es.manager.default.product'
+        relation_search:
+            filters: ['color_search_include', 'color_search_exclude', 'price', 'active']
+            repository: 'es.manager.default.product'
+        relation_reset:
+            filters: ['color_reset_include', 'color_reset_exclude',  'price', 'active']
+            repository: 'es.manager.default.product'
+
     filters:
         sort_filter:
             type: sort
@@ -62,3 +72,49 @@ ongr_filter_manager:
             options:
                 choices:
                     - { label: foo, field: price, default: true, order: asc }
+        color_control:
+            type: choice
+            request_field: 'color_control'
+            document_field: 'color'
+        color_search_include:
+            type: choice
+            request_field: 'color_search_include'
+            document_field: 'color'
+            relations:
+                search:
+                    include:
+                        - active
+        color_search_exclude:
+            type: choice
+            request_field: 'color_search_exclude'
+            document_field: 'color'
+            relations:
+                search:
+                    exclude:
+                        - active
+        color_reset_include:
+            type: choice
+            request_field: 'color_reset_include'
+            document_field: 'color'
+            relations:
+                reset:
+                    include:
+                        - price
+        color_reset_exclude:
+            type: choice
+            request_field: 'color_reset_exclude'
+            document_field: 'color'
+            relations:
+                reset:
+                    exclude:
+                        - price
+        price:
+            type: range
+            request_field: 'price'
+            document_field: 'price'
+        active:
+            type: field_value
+            request_field: ~
+            document_field: 'active'
+            options:
+                value: true

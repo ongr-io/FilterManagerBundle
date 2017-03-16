@@ -33,12 +33,12 @@ ongr_filter_manager:
             type: multi_choice
             request_field: c
             document_field: color
+            relations:
+                search:
+                    include:
+                        - people
             options:
                 size: 10
-                relations:
-                    search:
-                        include:
-                            - people
         material:
             type: multi_choice
             request_field: m
@@ -53,12 +53,12 @@ ongr_filter_manager:
             type: choice
             request_field: 'p'
             document_field: variants.people
+            relations:
+                search:
+                    include:
+                        - color
             options:
                 size: 10
-                relations:
-                    search:
-                        include:
-                            - color
         # Filter name cannot be the same as filter type.
         pagination:
             type: pager
