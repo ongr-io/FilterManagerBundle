@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Filter;
 
+use ONGR\FilterManagerBundle\Filter\Helper\OptionsAwareTrait;
 use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
@@ -18,6 +19,9 @@ use ONGR\FilterManagerBundle\SerializableInterface;
  */
 class FilterState implements SerializableInterface
 {
+
+    use OptionsAwareTrait;
+
     /**
      * @var bool True if filter is currently.
      */
