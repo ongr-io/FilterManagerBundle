@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Search;
 
+use JMS\Serializer\Serializer;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\SerializableInterface;
@@ -36,15 +37,22 @@ class SearchResponse implements SerializableInterface
     private $urlParameters;
 
     /**
+     * @var Serializer
+     */
+    private $serializer;
+
+    /**
      * @param ViewData[]       $filters
      * @param DocumentIterator $result
      * @param array            $urlParameters
+     * @param Serializer       $serializer
      */
-    public function __construct($filters, $result, $urlParameters)
+    public function __construct($filters, $result, $urlParameters, $serializer)
     {
         $this->filters = $filters;
         $this->result = $result;
         $this->urlParameters = $urlParameters;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -84,14 +92,7 @@ class SearchResponse implements SerializableInterface
         ];
 
         foreach ($this->result as $document) {
-            if (!$document instanceof SerializableInterface) {
-                throw new \LogicException(
-                    'In order to serialize search response documents MUST implement ' .
-                        '"ONGR\FilterManagerBundle\SerializableInterface" interface.'
-                );
-            }
-
-            $data['documents'][] = $document->getSerializableData();
+            $data['documents'][] = $this->serializer->toArray($document);
         }
 
         foreach ($this->filters as $name => $filter) {
