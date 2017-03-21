@@ -29,7 +29,7 @@ class Product
     public $id;
 
     /**
-     * @ES\Property(type="string")
+     * @ES\Property(type="keyword")
      */
     public $title;
 
@@ -62,13 +62,13 @@ class Attribute
 {
     /**
      * @var string
-     * @ES\Property(type="string", options={"index":"not_analyzed"})
+     * @ES\Property(type="keyword", options={"index":"not_analyzed"})
      */
     public $name;
 
     /**
      * @var string
-     * @ES\Property(type="string", options={"index":"not_analyzed"})
+     * @ES\Property(type="keyword", options={"index":"not_analyzed"})
      */
     public $value;
 }
@@ -76,7 +76,8 @@ class Attribute
 
 > Note that internally `DynamicAggregateFilter` uses the `TermQuery`, which
 means that if the index will be analyzed you may get unexpected results with it
-or it may not work at all.
+or it may not work at all. If you need the properties analyzed for other search operations,
+you can use [multi field annotations](http://docs.ongr.io/ElasticsearchBundle/mapping)
 
 ## 3. Adding filter to manager
 
@@ -92,11 +93,12 @@ ongr_filter_manager:
                 - attributes
             repository: 'es.manager.default.product'
     filters:
-        dynamic_aggregate:
-            attributes:
-                request_field: 'attributes'
+        attributes:
+            type: dynamic_aggregate
+            request_field: 'attributes'
+            document_field: attributes>attributes.value
+            options:
                 name_field: attributes.name
-                field: attributes>attributes.value
 ```
 
 ## 4. Using filter  
