@@ -18,7 +18,7 @@ ongr_search_page:
         template: "AppBundle:List:results.html.twig"
 ```
 
-This specific example will render template AppBundle:List:results.html.twig, with [SearchResponse] object from filter manager named item_list.
+This specific example will render template AppBundle:List:results.html.twig, with [SearchResponse] object from filter manager named `filter_manager`.
 
 ## Custom controller
 
@@ -53,7 +53,9 @@ class ListController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $results = $this->get('ongr_filter_manager.item_list')->handleRequest($request);
+        $results = $this
+            ->get(ONGRFilterManagerExtension::getFilterManagerId('item_list'))
+            ->handleRequest($request);
 
         return $this->render(
             'AppBundle:List:results.html.twig',
@@ -69,8 +71,8 @@ class ListController extends Controller
 ## Template variables
 
 If you’re using default controller, [SearchResponse] from
-[FilterManager](https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FilterManager.php) will be named filter_manager in template, otherwise
-it’s whatever you call it in your controller.
+[FilterManager](https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/FilterManager.php) will be named 
+`filter_manager` in template, otherwise it’s whatever you call it in your controller.
 
 You can use [SearchResponse] to get results in your template:
 
@@ -83,10 +85,10 @@ You can use [SearchResponse] to get results in your template:
 You can also use it to get data about your filter:
 
 ```twig
-Pager url parameters: {{ filter_manager.filters.pager.getUrlParameters() }}
+Pager url parameters: {{ filter_manager.filters.pager.urlParameters }}
 ```
 
 A complete list of parameters for each filter can be found can be found
-on [main page](../index.md#filters).
+on [View data page](http://docs.ongr.io/FilterManagerBundle/ViewData).
 
-  [SearchResponse]: https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php
+[SearchResponse]: https://github.com/ongr-io/FilterManagerBundle/blob/master/Search/SearchResponse.php
