@@ -2,100 +2,81 @@
 
 There is possibility to add custom filters to filter managers via tagged filter service.
 You must create filter class, define it as a service with `ongr_filter_manager.filter` tag.
+Afterwards it will be available to use the same way that the regular filters are.
   
 ## 1. Create filter class  
  
-Class must implement [`FilterInterface`](https://github.com/ongr-io/FilterManagerBundle/blob/master/Filter/FilterInterface.php).
-This class will boost some fields depending on values.
+The only real requirement for the class must implement [`FilterInterface`](https://github.com/ongr-io/FilterManagerBundle/blob/master/Filter/FilterInterface.php),
+But our recommendation is to extend one of the filters to gain the base functionality. 
+
+In this example we will provide a filter that will exclude documents with certain values in specified field:
 
 ```php
-// src/AppBundle/Filter/FunctionScoreFilter.php
+<?php
 
 namespace AppBundle\Filter;
 
-use ONGR\ElasticsearchBundle\Result\DocumentIterator;
-use ONGR\ElasticsearchDSL\Filter\TermFilter;
-use ONGR\ElasticsearchDSL\Query\FunctionScoreQuery;
-use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
+use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
-use ONGR\FilterManagerBundle\Filter\FilterInterface;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use ONGR\FilterManagerBundle\Filter\ViewData;
-use ONGR\FilterManagerBundle\Filter\Widget\Choice\MultiTermChoice;
+use ONGR\FilterManagerBundle\Filter\Widget\Search\DocumentValue;
 use ONGR\FilterManagerBundle\Search\SearchRequest;
 
 /**
- * Filter for ONGR FilterManager. Helps to create function score boosting.
- */
-class FunctionScoreFilter extends MultiTermChoice
+* Filter for ONGR FilterManager. Excludes certain values from search.
+*/
+class ExclusionFilter extends DocumentValue
 {
     /**
-     * @var FunctionScoreQuery
-     */
-    private $functionScore;
-
-    /**
-     * Public constructor
-     */
-    public function __construct()
-    {
-        $this->functionScore = new FunctionScoreQuery(new MatchAllQuery());
-    }
-
-    /**
-     * Boost field by terms map. Map key saves term and value - weight.
-     * Ie.: $map = ['XL' => 4, 'L' => 3.2, 'M' => 2.5, 'S' => 1.4]
-     *
-     * @param string $field
-     * @param array  $map
-     */
-    public function boostTermByMap($field, $map)
-    {
-        foreach ($map as $term => $weight) {
-            $filter = new TermFilter($field, $term);
-            $this->functionScore->addWeightFunction($weight, $filter);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
+    * {@inheritdoc}
+    */
     public function modifySearch(Search $search, FilterState $state = null, SearchRequest $request = null)
     {
-        $search->addQuery($this->functionScore);
+        $exclusion = new BoolQuery();
+
+        if (!empty($values = $this->getOption('exclude'))) {
+            foreach ($values as $value) {
+                $exclusion->add(new TermQuery($this->getDocumentField(), $value), BoolQuery::MUST_NOT);
+            }
+        }
+
+        $search->addQuery($exclusion);
     }
 
     /**
-     * {@inheritdoc}
-     */
+    * {@inheritdoc}
+    */
     public function preProcessSearch(Search $search, Search $relatedSearch, FilterState $state = null)
     {
         // Nothing more to do here.
     }
 }
-```  
+``` 
+ 
+As you can see, the filter will exclude all the values that will be defined in the `exclude` option
+from the results.
   
 ## 2. Defining service  
 
-Filter service must be tagged with `ongr_filter_manager.filter` tag, `filter_name` node is required.
+Filter service must be tagged with `ongr_filter_manager.filter` tag, and you must also provide a unique type name
+that will be used when you will be defining the actual filters.
   
 ```yaml
 # app/config/services.yml
 
 services:
-    ongr_filter_manager.filter.custom_boost_filter:
-      class: AppBundle\Filter\FunctionScoreFilter
-      calls:
-        - ['boostTermByMap', ['country', {'Ireland': 100}]]
-      tags:
-        - { name: ongr_filter_manager.filter, filter_name: custom_boost_filter }
+    app.filter:
+        class: AppBundle\Filter\ExclusionFilter
+        tags:
+            - { name: ongr_filter_manager.filter, type: app.exclusion_filter }
 ```
-
-This configuration means that we are going to boost all objects from Ireland by factor of 100. More about boosting in [official documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-function-score-query.html).
 
 ## 3. Adding filter to manager
 
-You can add custom filter in same way that you add regular filters. Say you want to add just created `foo_range` filter to `foo_manager`, your configuration would look like this:
+You can add custom filter in the same way that you add regular filters. The only catch here is that you
+need to provide your newly created filter type
+
 ```yaml
 # app/config/config.yml
 
@@ -103,10 +84,19 @@ ongr_filter_manager:
     managers:
         search_list:
             filters:
-                - custom_boost_filter
+                - custom_exclusion_filter
+                # ...
             repository: 'es.manager.default.product'
+    filters:
+        # ...
+        custom_exclusion_filter:
+            type: app.exclusion_filter #notice that we are using our custom filter type here
+            request_field: ~
+            document_field: category
+            options:
+                exclude: ['hidden', 'private', 'classified']
 ```
 
 ## 4. Using filter  
 
-Filter can be used as other filters trough `FilterManager`, see one of our  [`examples`](../index.md#usage-examples).
+Filter can be used as other filters through `FilterManager`, see [`basics chapter`](http://docs.ongr.io/FilterManagerBundle/Basics).
