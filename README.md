@@ -47,6 +47,7 @@ public function registerBundles()
         // ...
         new ONGR\ElasticsearchBundle\ONGRElasticsearchBundle(),
         new ONGR\FilterManagerBundle\ONGRFilterManagerBundle(),
+        new \JMS\SerializerBundle\JMSSerializerBundle(),
     ];
     
     // ...
