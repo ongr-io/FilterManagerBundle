@@ -3,7 +3,7 @@
 This example will be implemented on empty Symfony Standard project (can be previewed at [this](https://github.com/symfony/symfony-standard/tree/master) link).
 Documents will be defined in already created `AppBundle`.
 
-Make sure that you have ESB configured and working before continuing. More info about that in [official documentation](https://github.com/ongr-io/ElasticsearchBundle/blob/master/Resources/doc/setup.md).
+Make sure that you have ESB configured and working before continuing. More info about that in [official documentation](http://docs.ongr.io/ElasticsearchBundle).
 
 ## Sample data
 In this example we will use `Product` documents:
@@ -23,21 +23,21 @@ class Product
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword", options={"index"="not_analyzed"})
      */
     public $title;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword", options={"index"="not_analyzed"})
      */
     public $color;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="not_analyzed"})
+     * @ES\Property(type="keyword", options={"index"="not_analyzed"})
      */
     public $country;
 
@@ -51,7 +51,7 @@ class Product
     /**
      * @var string
      *
-     * @ES\Property(type="string", options={"index"="no"})
+     * @ES\Property(type="keyword", options={"index"=false})
      */
     public $image;
 
@@ -83,50 +83,43 @@ ongr_filter_manager:
                 - search_sort
             repository: 'es.manager.default.product'
     filters:
-        choice:
-            color:
-                request_field: 'color'
-                field: color
-        multi_choice:
-            country:
-                request_field: 'country'
-                field: country
-        match:
-            search:
-                request_field: 'q'
-                field: title
-        range:
-            weight:
-                request_field: 'weight'
-                field: weight
-        pager:
-            search_pager:
-                request_field: 'page'
+        color:
+            type: choice
+            request_field: 'color'
+            document_field: color
+        country:
+            type: multi_choice
+            request_field: 'country'
+            document_field: country
+        search:
+            type: match
+            request_field: 'q'
+            document_field: title
+        weight:
+            type: range
+            request_field: 'weight'
+            document_field: weight
+        search_pager:
+            type: pager
+            document_field: ~
+            request_field: 'page'
+            options:
                 count_per_page: 5
-        field_value:
-            only_active:
-                field: 'active'
+        only_active:
+            type: field_value
+            document_field: 'active'
+            request_field: ~
+            options:
                 value: true
-        sort:
-            search_sort:
-                request_field: 'sort'
+        search_sort:
+            type: sort
+            request_field: 'sort'
+            document_field: ~
+            options:
                 choices:
                   - { label: No sorting, key: score, field: _score }
                   - { label: Heaviest to lightest, key: weight_desc, field: weight, order: desc }
                   - { label: Lightest to heaviest, key: weight_asc, field: weight, order: asc  }
-```
-
-## Caching
-
-Filter manager builds filter list from configuration. In this process there are many recursions and blocks rebuilding operations, just to make sure build correctly relations on selected filters. Built filters might be cached using `es.cache_engine`. Filters, that are more likely to be different most of the time, should be excluded from caching (in this case we have filter `search` excluded).
-
-```yaml
-ongr_filter_manager:
-    cache:
-    	engine: 'es.cache_engine' # cache engine, set null to disable caching
-        life_time: 1080 # cache life time in seconds, 3 hours default
-        exclude:
-        	- search
 ```
 
 ## Define route
@@ -136,7 +129,7 @@ Next step is to define route for search page, let's add following lines to routi
 # app/config/routing.yml
 
 ongr_search_page:
-    pattern: /search
+    path: /search
     methods:  [GET]
     defaults:
         _controller: ONGRFilterManagerBundle:Manager:manager
@@ -144,19 +137,23 @@ ongr_search_page:
         template: "AppBundle::search.html.twig"
 ```
 
-As seen from this example already predefined action `ONGRFilterManagerBundle:Manager:manager` will be used. We provide previously defined `search_list` manager. Search page will be reachable via `/search`.
+As seen from this example already predefined action `ONGRFilterManagerBundle:Manager:manager` will be used. We provide 
+previously defined `search_list` manager. Search page will be reachable via `/search`.
 Last parameter is template to use, see below for more information
 
 ## Templating
 
-Our template will be placed in AppBundle's `Resources/views/search.html.twig` file. This template will get `filter_manager` variable which contains all information related to our filtered list.
+Our template will be placed in AppBundle's `Resources/views/search.html.twig` file. This template will get 
+`filter_manager` variable from the inbuilt controller. It contains all information related to our filtered list.
+
+> Please note that you can use your custom controller for this purpose. Check the [docs](http://docs.ongr.io/FilterManagerBundle/examples/custom_controller) how.
 
 ### Listing documents
 
-Documents can be accessed through `filter_manager.getResult()`. To make a dummy list of results put following code to your template:
+Documents can be accessed through `filter_manager.result`. To make a dummy list of results put following code to your template:
 
 ```twig
-{% for product in filter_manager.getResult() %}
+{% for product in filter_manager.result %}
     <ul>
         <li>Title: {{ product.title }}</li>
         <li>Color: {{ product.color }}</li>
@@ -170,12 +167,6 @@ Documents can be accessed through `filter_manager.getResult()`. To make a dummy 
 
 ### Listing filters
 
-Previously we assigned several filters to `search_list` filter manager. They are accessible via `filter_manager.getFilters()`.
-
-Because filters have different types usually representation of them is different. Example of every filter can be found in dedicated filter type pages:
-- [Match](../filter/match.md#usage-in-template-example)
-- [Choice](../filter/choice.md#usage-in-template-example)
-- [Multi choice](../filter/multi_choice.md#usage-in-template-example)
-- [Pager](../filter/pager.md#usage-in-template-example)
-- [Sort](../filter/sort.md#usage-in-template-example)
-- [Document field](../filter/document_field.md)
+Previously we assigned several filters to `search_list` filter manager. They are accessible via `filter_manager.filters`.
+This returns the array with the `ViewData` objects associated with every filter. You can read more on that in 
+[dedicated docs](http://docs.ongr.io/FilterManagerBundle/ViewData)

@@ -29,10 +29,10 @@ ongr_filter_manager:
             filters:
                 - boosted_search
             repository: 'es.manager.default.product'
-        match:
-            boosted_search:
-                request_field: 'q'
-                field: title^0.5,color^2
+        boosted_search:
+            type: match
+            request_field: 'q'
+            document_field: title^0.5,color^2
 ```
 
 Next step is to define document:
@@ -52,14 +52,14 @@ class Product
     /**
      * @var string
      *
-     * @ES\Property(type="string")
+     * @ES\Property(type="keyword")
      */
     public $title;
 
     /**
      * @var string
      *
-     * @ES\Property(type="string")
+     * @ES\Property(type="keyword")
      */
     public $color;
 }
@@ -88,7 +88,7 @@ Define template:
     <input type="submit" value="Search">
 </form>
 
-{% for product in filter_manager.getResult() %}
+{% for product in filter_manager.result %}
     <ul>
         <li>Title: {{ product.title }}</li>
         <li>Color: {{ product.color }}</li>
@@ -98,7 +98,7 @@ Define template:
 
 ## Importing sample data
 
-Create index with `app/console ongr:es:index:create`.
+Create index with `bin/console ongr:es:index:create`.
 
 Create file `products.json` with following content:
 
@@ -112,7 +112,7 @@ Create file `products.json` with following content:
 ]
 ```
 
-Import this data with `app/console ongr:es:index:import products.json` command.
+Import this data with `bin/console ongr:es:index:import products.json` command.
 
 ## Usage
 

@@ -34,7 +34,7 @@ data class.
 
 ### Accessing View Data
 
-When you call the filter managers `handleResponse` method, it returns `ONGR\FilterManagerBundle\Search\SearchResponse`
+When you call the filter managers `handleRequest` method, it returns `ONGR\FilterManagerBundle\Search\SearchResponse`
 instance as result. You can get to the array with the view data objects from each filter
 by calling `getFilters` method on this result and pass this array to the template. 
 
