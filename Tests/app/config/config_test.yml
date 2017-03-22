@@ -10,6 +10,7 @@ imports:
 
 framework:
     secret: "supersecret"
+    translator: { fallbacks: [en] }
     test: ~
     assets: ~
     router:

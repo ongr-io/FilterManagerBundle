@@ -64,7 +64,8 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
         return new FilterManager(
             $container,
             $this->getManager()->getRepository('TestBundle:Product'),
-            new EventDispatcher()
+            new EventDispatcher(),
+            $this->createMock('JMS\Serializer\Serializer')
         );
     }
 

@@ -22,6 +22,8 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandleRequest()
     {
+        $mockSerializer = $this->createMock('JMS\Serializer\Serializer');
+
         $mockFilterState = $this->createMock('ONGR\FilterManagerBundle\Filter\FilterState');
         $mockFilterState->expects($this->any())
             ->method('getURLParameters')
@@ -68,7 +70,8 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
         $filterManager = new FilterManager(
             $mockFilterContainer,
             $mockRepository,
-            new EventDispatcher()
+            new EventDispatcher(),
+            $mockSerializer
         );
         $filterManager->handleRequest($this->createMock('Symfony\Component\HttpFoundation\Request'));
     }
