@@ -1,5 +1,8 @@
 # Using `document_field` filter
  
+ > Important! This documentation is based on the `1.x` version of the bundle
+  The documentation update is in process
+ 
 This example will provide real use case of `document_field` filter. Two different document types will be created: `country` and `city`. Every city will contain id of country. We want to display page for country and list cities in that country.
  
 ## Configuration
