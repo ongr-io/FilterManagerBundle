@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v2.0.0 (2017-03-23)
+## v2.0.0 (2017-03-24)
 - Added support for Elasticsearch 5.0
 - Added a cache for repetitive search formations. #168
 - Introduced event dispatching. #169
@@ -29,6 +29,11 @@
 - Removed `FuzzyFilter`, use `MatchFilter` instead. #214
 - Added `isRelated` method to `FilterInterface`. #186
 
+## v1.0.3 (2017-03-24)
+- Implemented `InvalidArgumentException` in SingleTermChoice when there is no choice #174
+- Minor fixes
+- Added more docs
+- Added deprecations
 ## v1.0.2 (2016-05-28)
 - Fixed first-page pagination when page parameter is forced in controller
 
