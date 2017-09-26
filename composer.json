@@ -26,7 +26,6 @@
         "psr-4": { "ONGR\\FilterManagerBundle\\": "" },
         "exclude-from-classmap": ["/Test/", "/Tests/"]
     },
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "2.1-dev"
