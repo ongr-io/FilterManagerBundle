@@ -18,7 +18,6 @@ install:
   - unzip elasticsearch.zip
   - ./elasticsearch-*/bin/elasticsearch -d
 before_script:
-  - composer config -g github-oauth.github.com $GITHUB_COMPOSER_AUTH
   - composer install --no-interaction --prefer-dist
 script:
   - vendor/bin/phpunit --coverage-clover=coveralls.clover

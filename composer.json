@@ -14,7 +14,7 @@
         "php": "^7.0",
         "symfony/symfony": "~3.0",
         "ongr/elasticsearch-bundle": "~5.0",
-        "jms/serializer-bundle": "^1.2"
+        "jms/serializer-bundle": "^1.2|^2.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.0",
@@ -26,7 +26,6 @@
         "psr-4": { "ONGR\\FilterManagerBundle\\": "" },
         "exclude-from-classmap": ["/Test/", "/Tests/"]
     },
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "2.1-dev"
