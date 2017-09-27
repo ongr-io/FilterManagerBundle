@@ -131,7 +131,7 @@ class MultiDynamicAggregate extends DynamicAggregate
      *
      * @return BoolQuery
      */
-    private function getFilterQuery($terms)
+    protected function getFilterQuery($terms)
     {
         list($path, $field) = explode('>', $this->getDocumentField());
         $boolQuery = new BoolQuery();
