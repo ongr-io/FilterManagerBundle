@@ -92,7 +92,7 @@ class ViewData implements SerializableInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getTags()
     {
