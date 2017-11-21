@@ -173,36 +173,37 @@ class PagerAwareViewData extends ViewData
      */
     public function getPages()
     {
+        if ($this->numPages <= 1) {
+            return [];
+        }
+
+        if ($this->numPages <= $this->maxPages) {
+            return range(1, $this->numPages);
+        }
+
+        // Determine the sliding range, centered around the current page.
         $numAdjacents = (int) floor(($this->maxPages - 3) / 2);
 
         if ($this->currentPage + $numAdjacents > $this->numPages) {
-            $begin = $this->numPages - $this->maxPages + 2;
+            $slidingStart = $this->numPages - $this->maxPages + 2;
         } else {
-            $begin = $this->currentPage - $numAdjacents;
-        }
-        if ($begin < 2) {
-            $begin = 2;
+            $slidingStart = $this->currentPage - $numAdjacents;
         }
 
-        $end = $begin + $this->maxPages - 2;
-//        if ($end >= $this->numPages) $end = $this->numPages - 1;
+        if ($slidingStart < 2) {
+            $slidingStart = 2;
+        }
 
-//        $tmpBegin = $this->maxPages - floor($this->maxPages / 2);
-//        $tmpEnd = $tmpBegin + $this->maxPages - 1;
-//
-//        if ($tmpBegin < 1) {
-//            $tmpEnd += 1 - $tmpBegin;
-//            $tmpBegin = 1;
-//        }
-//
-//        if ($tmpEnd > $this->getLastPage()) {
-//            $tmpBegin -= $tmpEnd - $this->getLastPage();
-//            $tmpEnd = $this->getLastPage();
-//        }
-//
-//        $begin = min($tmpBegin, 2);
-//        $end = $tmpEnd;
+        $slidingEnd = $slidingStart + $this->maxPages - 3;
 
-        return range($begin, $end, 1);
+        if ($slidingEnd >= $this->numPages) {
+            $slidingEnd = $this->numPages - 1;
+        }
+
+        return array_merge(
+            [1],
+            range($slidingStart, $slidingEnd),
+            [$this->numPages]
+        );
     }
 }
