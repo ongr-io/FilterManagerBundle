@@ -1,15 +1,10 @@
 <ul class="pagination">
     {% if pager.isFirstPage %}
-        <li class="first">&laquo;</li>
         <li class="previous">&lsaquo;</li>
     {% else %}
         <li class="previous">
             <a href="{{ ongr_paginate_path(route, pager.getPreviousPage, parameters) }}">&lsaquo;</a>
         </li>
-    {% endif %}
-
-    {% if pager.isFirstPage == false %}
-        <li class="previous"><a href="{{ ongr_paginate_path(route, pager.getPreviousPage, parameters) }}">&lsaquo;</a></li>
     {% endif %}
 
     {% set previous = false %}
