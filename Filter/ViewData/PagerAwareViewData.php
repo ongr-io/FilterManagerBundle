@@ -59,13 +59,13 @@ class PagerAwareViewData extends ViewData
         $this->totalItems = $totalItems;
         $this->currentPage = $currentPage;
         $this->itemsPerPage = $itemsPerPage;
-
-//        if ($maxPages < 3) {
-//            throw new \InvalidArgumentException('Max pages has to be more than 3.');
-//        }
-        $this->maxPages = $maxPages;
-
         $this->numPages = (int) ceil($this->totalItems/$this->itemsPerPage);
+
+        if ($maxPages < 3) {
+            throw new \InvalidArgumentException('Max pages has to be not less than 3.');
+        }
+
+        $this->maxPages = $maxPages;
     }
 
     /**
@@ -173,8 +173,6 @@ class PagerAwareViewData extends ViewData
      */
     public function getPages()
     {
-        $maxPagesIsEven = $this->maxPages % 2 === 0;
-
         $this->maxPages--;
 
         $start = 1;
@@ -186,17 +184,13 @@ class PagerAwareViewData extends ViewData
 
         } elseif ($this->currentPage + $numAdjacents > $this->numPages) {
             $begin = max($start, $this->numPages - $this->maxPages + 1);
-
-        } else {
-            $begin = $this->currentPage - $numAdjacents + ($maxPagesIsEven ? 1 : 0);
             $end = $this->numPages;
+        } else {
+            $correction = $this->maxPages % 2 === 0 ? 0 : 1;
+            $begin = $this->currentPage - $numAdjacents + $correction;
             $end = $this->currentPage + $numAdjacents;
         }
 
-        return array_unique(array_merge(
-            [1],
-            range($begin, $end, 1),
-            [$this->numPages]
-        ));
+        return array_unique(array_merge([1], range($begin, $end, 1), [$this->numPages]));
     }
 }

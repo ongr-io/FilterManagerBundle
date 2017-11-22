@@ -99,8 +99,8 @@ class PagerAwareViewDataTest extends \PHPUnit_Framework_TestCase
             ],
             // 1 [2]
             [
-                'totalItems'    => 20,
-                'itemsPerPage'  => 10,
+                'totalItems'    => 10,
+                'itemsPerPage'  => 5,
                 'currentPage'   => 2,
                 'maxPages'      => 5,
                 'resultRange' => [1, 2]
