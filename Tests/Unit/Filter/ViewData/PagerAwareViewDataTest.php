@@ -68,18 +68,99 @@ class PagerAwareViewDataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $pagerData->getFirstPage());
     }
 
-    public function testGetPages()
+    /**
+     * @dataProvider getPagesDataProvider
+     * @param int $totalItems
+     * @param int $currentPage
+     * @param int $itemsPerPage
+     * @param int $maxPages
+     * @param array $resultRange
+     */
+    public function testGetPages($totalItems, $itemsPerPage, $currentPage, $maxPages, $resultRange)
     {
         $pagerData = new PagerAwareViewData();
         $pagerData->setState($this->createMock('ONGR\FilterManagerBundle\Filter\FilterState'));
-        $pagerData->setData(100, 1, 12, 5);
 
-        $this->assertEquals(range(2, 5, 1), $pagerData->getPages());
+        $pagerData->setData($totalItems, $currentPage, $itemsPerPage, $maxPages);
 
-        $pagerData->setData(100, 5, 12, 5);
-        $this->assertEquals(range(4, 7, 1), $pagerData->getPages());
+        $this->assertEquals(array_values($resultRange), array_values($pagerData->getPages()));
+    }
 
-        $pagerData->setData(100, 9, 12, 5);
-        $this->assertEquals(range(6, 9, 1), $pagerData->getPages());
+    public function getPagesDataProvider()
+    {
+        return [
+            // [1]
+            [
+                'totalItems'    => 1,
+                'itemsPerPage'  => 10,
+                'currentPage'   => 1,
+                'maxPages'      => 5,
+                'resultRange' => [1]
+            ],
+            // 1 [2]
+            [
+                'totalItems'    => 20,
+                'itemsPerPage'  => 10,
+                'currentPage'   => 2,
+                'maxPages'      => 5,
+                'resultRange' => [1, 2]
+            ],
+            // [1] 2 3 4 ... 10
+            [
+                'totalItems' => 100,
+                'itemsPerPage' => 10,
+                'currentPage' => 1,
+                'maxPages' => 5,
+                'resultRange' => [1, 2, 3, 4, 10]
+            ],
+            // 1 ... 4 [5] 6 ... 10
+            [
+                'totalItems' => 100,
+                'itemsPerPage' => 10,
+                'currentPage' => 5,
+                'maxPages' => 5,
+                'resultRange' => [1, 4, 5, 6, 10],
+            ],
+            // 1 ... 4 [5] 6 7 ... 10
+            [
+                'totalItems' => 100,
+                'itemsPerPage' => 10,
+                'currentPage' => 5,
+                'maxPages' => 6,
+                'resultRange' => [1, 4, 5, 6, 7, 10],
+            ],
+            // 1 ...  6 7 8 [9]
+            [
+                'totalItems' => 100,
+                'itemsPerPage' => 12,
+                'currentPage' => 9,
+                'maxPages' => 5,
+                'resultRange' => array_merge([1], range(6, 8, 1), [9])
+            ],
+            // 1 ... 37 38 39 [40]
+            [
+                'totalItems' => 200,
+                'itemsPerPage' => 5,
+                'currentPage' => 40,
+                'maxPages' => 5,
+                'resultRange' => array_merge([1], range(37, 39, 1), [40])
+            ],
+            // 1 ... 18 19 20 21 22 23 ... [40]
+            [
+                'totalItems' => 200,
+                'itemsPerPage' => 5,
+                'currentPage' => 20,
+                'maxPages' => 8,
+                'resultRange' => array_merge([1], range(18, 23, 1), [40])
+            ],
+            // 1 ... 7 8 9 [10] 11 12 13 14 ... 100
+            [
+                'totalItems' => 1000,
+                'itemsPerPage' => 10,
+                'currentPage' => 10,
+                'maxPages' => 10,
+                'resultRange' => array_merge([1], range(7, 14, 1), [100])
+            ],
+        ];
     }
 }
