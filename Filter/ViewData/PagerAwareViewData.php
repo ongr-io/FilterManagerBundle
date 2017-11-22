@@ -173,6 +173,10 @@ class PagerAwareViewData extends ViewData
      */
     public function getPages()
     {
+        $maxPagesIsEven = $this->maxPages % 2 === 0;
+
+        $this->maxPages--;
+
         $start = 1;
         $numAdjacents = (int) floor(($this->maxPages - 1) / 2);
 
@@ -182,10 +186,10 @@ class PagerAwareViewData extends ViewData
 
         } elseif ($this->currentPage + $numAdjacents > $this->numPages) {
             $begin = max($start, $this->numPages - $this->maxPages + 1);
-            $end = $this->numPages;
 
         } else {
-            $begin = $this->currentPage - $numAdjacents;
+            $begin = $this->currentPage - $numAdjacents + ($maxPagesIsEven ? 1 : 0);
+            $end = $this->numPages;
             $end = $this->currentPage + $numAdjacents;
         }
 
