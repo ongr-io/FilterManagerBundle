@@ -173,37 +173,26 @@ class PagerAwareViewData extends ViewData
      */
     public function getPages()
     {
-        if ($this->numPages <= 1) {
-            return [];
-        }
+        $start = 1;
+        $numAdjacents = (int) floor(($this->maxPages - 1) / 2);
 
-        if ($this->numPages <= $this->maxPages) {
-            return range(1, $this->numPages);
-        }
+        if ($this->currentPage - $numAdjacents < $start) {
+            $begin = $start;
+            $end = min($this->numPages, $this->maxPages);
 
-        // Determine the sliding range, centered around the current page.
-        $numAdjacents = (int) floor(($this->maxPages - 3) / 2);
+        } elseif ($this->currentPage + $numAdjacents > $this->numPages) {
+            $begin = max($start, $this->numPages - $this->maxPages + 1);
+            $end = $this->numPages;
 
-        if ($this->currentPage + $numAdjacents > $this->numPages) {
-            $slidingStart = $this->numPages - $this->maxPages + 2;
         } else {
-            $slidingStart = $this->currentPage - $numAdjacents;
+            $begin = $this->currentPage - $numAdjacents;
+            $end = $this->currentPage + $numAdjacents;
         }
 
-        if ($slidingStart < 2) {
-            $slidingStart = 2;
-        }
-
-        $slidingEnd = $slidingStart + $this->maxPages - 3;
-
-        if ($slidingEnd >= $this->numPages) {
-            $slidingEnd = $this->numPages - 1;
-        }
-
-        return array_merge(
+        return array_unique(array_merge(
             [1],
-            range($slidingStart, $slidingEnd),
+            range($begin, $end, 1),
             [$this->numPages]
-        );
+        ));
     }
 }

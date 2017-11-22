@@ -3,16 +3,12 @@
         <li class="first">&laquo;</li>
         <li class="previous">&lsaquo;</li>
     {% else %}
-        <li class="first">
-            <a href="{{ ongr_paginate_path(route, pager.getFirstPage, parameters) }}">&laquo;</a>
-        </li>
         <li class="previous">
             <a href="{{ ongr_paginate_path(route, pager.getPreviousPage, parameters) }}">&lsaquo;</a>
         </li>
     {% endif %}
 
     {% if pager.isFirstPage == false %}
-        <li class="first"><a href="{{ ongr_paginate_path(route, pager.getFirstPage, parameters) }}">&laquo;</a></li>
         <li class="previous"><a href="{{ ongr_paginate_path(route, pager.getPreviousPage, parameters) }}">&lsaquo;</a></li>
     {% endif %}
 
@@ -33,9 +29,7 @@
 
     {% if pager.isLastPage %}
         <li class="next">&rsaquo;</li>
-        <li class="last">&raquo;</li>
     {% else %}
         <li class="next"><a href="{{ ongr_paginate_path(route, pager.getNextPage, parameters) }}">&rsaquo;</a></li>
-        <li class="last"><a href="{{ ongr_paginate_path(route, pager.getLastPage, parameters) }}">&raquo;</a></li>
     {% endif %}
 </ul>
