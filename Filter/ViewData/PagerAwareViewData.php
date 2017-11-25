@@ -186,8 +186,7 @@ class PagerAwareViewData extends ViewData
             $begin = max($start, $this->numPages - $this->maxPages + 1);
             $end = $this->numPages;
         } else {
-            $correction = $this->maxPages % 2;
-            $begin = $this->currentPage - $numAdjacents + $correction;
+            $begin = $this->currentPage - $numAdjacents + ($this->maxPages % 2);
             $end = $this->currentPage + $numAdjacents;
         }
 

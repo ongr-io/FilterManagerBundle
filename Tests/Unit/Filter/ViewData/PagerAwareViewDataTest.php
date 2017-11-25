@@ -105,61 +105,69 @@ class PagerAwareViewDataTest extends \PHPUnit_Framework_TestCase
                 'maxPages'      => 5,
                 'resultRange' => [1, 2]
             ],
-            // [1] 2 3 4 ... 10
+            // [1] 2 3 4 5 6 7 8 ... 30
             [
-                'totalItems' => 100,
+                'totalItems' => 300,
                 'itemsPerPage' => 10,
                 'currentPage' => 1,
-                'maxPages' => 5,
-                'resultRange' => [1, 2, 3, 4, 10]
+                'maxPages' => 9,
+                'resultRange' => array_merge(range(1, 8, 1), [30])
             ],
-            // 1 ... 4 [5] 6 ... 10
+            // 1 ... 3 4 5 [6] 7 8 9 ... 30
             [
-                'totalItems' => 100,
+                'totalItems' => 300,
                 'itemsPerPage' => 10,
-                'currentPage' => 5,
-                'maxPages' => 5,
-                'resultRange' => [1, 4, 5, 6, 10],
+                'currentPage' => 6,
+                'maxPages' => 9,
+                'resultRange' => array_merge([1], range(3, 9, 1), [30])
             ],
-            // 1 ... 4 [5] 6 7 ... 10
+            // 1 ... 12 13 14 [15] 16 17 18 ... 30
             [
-                'totalItems' => 100,
+                'totalItems' => 300,
                 'itemsPerPage' => 10,
-                'currentPage' => 5,
-                'maxPages' => 6,
-                'resultRange' => [1, 4, 5, 6, 7, 10],
+                'currentPage' => 15,
+                'maxPages' => 9,
+                'resultRange' => array_merge([1], range(12, 18, 1), [30])
             ],
-            // 1 ...  6 7 8 [9]
+            // 1 ... 23 24 25 26 27 [28] 29 30
             [
-                'totalItems' => 100,
-                'itemsPerPage' => 12,
-                'currentPage' => 9,
-                'maxPages' => 5,
-                'resultRange' => array_merge([1], range(6, 8, 1), [9])
+                'totalItems' => 300,
+                'itemsPerPage' => 10,
+                'currentPage' => 28,
+                'maxPages' => 9,
+                'resultRange' => array_merge([1], range(23, 30, 1))
             ],
-            // 1 ... 37 38 39 [40]
+            // [1] 2 3 4 5 6 7 ... 30
             [
-                'totalItems' => 200,
-                'itemsPerPage' => 5,
-                'currentPage' => 40,
-                'maxPages' => 5,
-                'resultRange' => array_merge([1], range(37, 39, 1), [40])
-            ],
-            // 1 ... 18 19 20 21 22 23 ... [40]
-            [
-                'totalItems' => 200,
-                'itemsPerPage' => 5,
-                'currentPage' => 20,
+                'totalItems' => 300,
+                'itemsPerPage' => 10,
+                'currentPage' => 1,
                 'maxPages' => 8,
-                'resultRange' => array_merge([1], range(18, 23, 1), [40])
+                'resultRange' => array_merge(range(1, 7, 1), [30])
             ],
-            // 1 ... 7 8 9 [10] 11 12 13 14 ... 100
+            // 1 ... 4 5 [6] 7 8 9 ... 30
             [
-                'totalItems' => 1000,
+                'totalItems' => 300,
                 'itemsPerPage' => 10,
-                'currentPage' => 10,
-                'maxPages' => 10,
-                'resultRange' => array_merge([1], range(7, 14, 1), [100])
+                'currentPage' => 6,
+                'maxPages' => 8,
+                'resultRange' => array_merge([1], range(4, 9, 1), [30])
+            ],
+            // 1 ... 13 14 [15] 16 17 18 ... 30
+            [
+                'totalItems' => 300,
+                'itemsPerPage' => 10,
+                'currentPage' => 15,
+                'maxPages' => 8,
+                'resultRange' => array_merge([1], range(13, 18, 1), [30])
+            ],
+            // 1 ... 24 25 26 27 [28] 29 30
+            [
+                'totalItems' => 300,
+                'itemsPerPage' => 10,
+                'currentPage' => 28,
+                'maxPages' => 8,
+                'resultRange' => array_merge([1], range(24, 30, 1))
             ],
         ];
     }
