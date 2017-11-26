@@ -110,10 +110,13 @@ Here is an example of how to create a list of options for sorting in twig enviro
         <li>
             {% if choice.active %}
                 <a href="{{ path('your_route', choice.unsetUrlParameters) }}" class="active">
+                    {{ choice.label|trans() }}
+                </a>
             {% else %}
                 <a href="{{ path('your_route', choice.urlParameters) }}">
+                    {{ choice.label|trans() }}
+                </a>
             {%  endif %}
-                {{ choice.label|trans() }}</a>
         </li>
     {% endfor %}
 </ul>
