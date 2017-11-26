@@ -49,19 +49,20 @@ ongr_filter_manager:
             type: sort
             request_field: sort
             document_field: ~
-            choices:
-                # single field sorting
-                stock_asc: { field: stock, default: true, order: asc }
-                stock_desc: { field: stock, order: desc }
-                # molti field sorting
-                price_desc_hits_desc: 
-                    fields: 
-                        - {field: price, order: desc}
-                        - {field: hits, order: desc}
-                price_desc_hits_asc:
-                    fields:
-                        - {field: price, order: desc}
-                        - {field: hits, order: asc}
+            options:
+                choices:
+                    # single field sorting
+                    stock_asc: { field: stock, default: true, order: asc }
+                    stock_desc: { field: stock, order: desc }
+                    # molti field sorting
+                    price_desc_hits_desc: 
+                        fields: 
+                            - {field: price, order: desc}
+                            - {field: hits, order: desc}
+                    price_desc_hits_asc:
+                        fields:
+                            - {field: price, order: desc}
+                            - {field: hits, order: asc}
 
 ```
 
