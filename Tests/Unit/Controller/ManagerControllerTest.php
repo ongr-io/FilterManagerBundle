@@ -13,6 +13,9 @@ namespace ONGR\FilterManagerBundle\Tests\Unit\Controller;
 
 use ONGR\FilterManagerBundle\Controller\ManagerController;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
+use ONGR\FilterManagerBundle\Search\FilterManager;
+use ONGR\FilterManagerBundle\Search\SearchResponse;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,12 +30,12 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder();
 
         $searchResponse = $this
-            ->getMockBuilder('ONGR\FilterManagerBundle\Search\SearchResponse')
+            ->getMockBuilder(SearchResponse::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $managerMock = $this
-            ->getMockBuilder('ONGR\FilterManagerBundle\Search\FilterManager')
+            ->getMockBuilder(FilterManager::class)
             ->disableOriginalConstructor()
             ->setMethods(['handleRequest'])
             ->getMock();
@@ -43,7 +46,7 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
             ->with(new Request())
             ->will($this->returnValue($searchResponse));
 
-        $templating = $this->createMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $templating = $this->createMock(EngineInterface::class);
         $templating
             ->expects($this->once())
             ->method('renderResponse')
