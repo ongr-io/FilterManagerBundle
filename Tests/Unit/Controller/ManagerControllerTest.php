@@ -13,10 +13,17 @@ namespace ONGR\FilterManagerBundle\Tests\Unit\Controller;
 
 use ONGR\FilterManagerBundle\Controller\ManagerController;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
+use ONGR\FilterManagerBundle\Search\FilterManager;
+use ONGR\FilterManagerBundle\Search\SearchResponse;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ManagerControllerTest
+ * @package ONGR\FilterManagerBundle\Tests\Unit\Controller
+ */
 class ManagerControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -26,35 +33,39 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
     {
         $container = new ContainerBuilder();
 
-        $searchResponse = $this
-            ->getMockBuilder('ONGR\FilterManagerBundle\Search\SearchResponse')
+        $searchResponseMock = $this
+            ->getMockBuilder(SearchResponse::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
-        $managerMock = $this
-            ->getMockBuilder('ONGR\FilterManagerBundle\Search\FilterManager')
+        $filterManagerMock = $this
+            ->getMockBuilder(FilterManager::class)
             ->disableOriginalConstructor()
             ->setMethods(['handleRequest'])
-            ->getMock();
+            ->getMock()
+        ;
 
-        $managerMock
+        $filterManagerMock
             ->expects($this->once())
             ->method('handleRequest')
             ->with(new Request())
-            ->will($this->returnValue($searchResponse));
+            ->will($this->returnValue($searchResponseMock))
+        ;
 
-        $templating = $this->createMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
-        $templating
+        $templatingMock = $this->createMock(EngineInterface::class);
+        $templatingMock
             ->expects($this->once())
-            ->method('renderResponse')
+            ->method('render')
             ->with(
                 'template:name.html.twig',
                 $this->arrayHasKey('filter_manager')
             )
-            ->will($this->returnValue(new Response()));
+            ->will($this->returnValue(new Response()))
+        ;
 
-        $container->set(ONGRFilterManagerExtension::getFilterManagerId('default'), $managerMock);
-        $container->set('templating', $templating);
+        $container->set(ONGRFilterManagerExtension::getFilterManagerId('default'), $filterManagerMock);
+        $container->set('templating', $templatingMock);
 
         $controller = new ManagerController();
         $controller->setContainer($container);
