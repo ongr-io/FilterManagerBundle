@@ -20,6 +20,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ManagerControllerTest
+ * @package ONGR\FilterManagerBundle\Tests\Unit\Controller
+ */
 class ManagerControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
