@@ -29,35 +29,39 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
     {
         $container = new ContainerBuilder();
 
-        $searchResponse = $this
+        $searchResponseMock = $this
             ->getMockBuilder(SearchResponse::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
-        $managerMock = $this
+        $filterManagerMock = $this
             ->getMockBuilder(FilterManager::class)
             ->disableOriginalConstructor()
             ->setMethods(['handleRequest'])
-            ->getMock();
+            ->getMock()
+        ;
 
-        $managerMock
+        $filterManagerMock
             ->expects($this->once())
             ->method('handleRequest')
             ->with(new Request())
-            ->will($this->returnValue($searchResponse));
+            ->will($this->returnValue($searchResponseMock))
+        ;
 
-        $templating = $this->createMock(EngineInterface::class);
-        $templating
+        $templatingMock = $this->createMock(EngineInterface::class);
+        $templatingMock
             ->expects($this->once())
             ->method('renderResponse')
             ->with(
                 'template:name.html.twig',
                 $this->arrayHasKey('filter_manager')
             )
-            ->will($this->returnValue(new Response()));
+            ->will($this->returnValue(new Response()))
+        ;
 
-        $container->set(ONGRFilterManagerExtension::getFilterManagerId('default'), $managerMock);
-        $container->set('templating', $templating);
+        $container->set(ONGRFilterManagerExtension::getFilterManagerId('default'), $filterManagerMock);
+        $container->set('templating', $templatingMock);
 
         $controller = new ManagerController();
         $controller->setContainer($container);
