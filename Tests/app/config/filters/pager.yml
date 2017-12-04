@@ -12,7 +12,7 @@ ongr_filter_manager:
             document_field: ~
             options:
                 count_per_page: 3
-                max_pages: 2
+                max_pages: 3
         pager_sort:
             type: sort
             request_field: 'sort'

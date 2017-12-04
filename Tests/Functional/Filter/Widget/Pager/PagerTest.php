@@ -56,6 +56,12 @@ class PagerTest extends AbstractElasticsearchTestCase
                         'manufacturer' => 'b',
                         'stock' => 5,
                     ],
+                    [
+                        '_id' => 6,
+                        'color' => 'green',
+                        'manufacturer' => 'd',
+                        'stock' => 6,
+                    ],
                 ],
             ],
         ];
@@ -75,7 +81,7 @@ class PagerTest extends AbstractElasticsearchTestCase
             $actual[] = $document->id;
         }
 
-        $this->assertEquals([5,4,3], $actual);
+        $this->assertEquals([6,5,4], $actual);
     }
 
     /**
@@ -92,6 +98,6 @@ class PagerTest extends AbstractElasticsearchTestCase
             $actual[] = $document->id;
         }
 
-        $this->assertEquals([2,1], $actual);
+        $this->assertEquals([3,2,1], $actual);
     }
 }
