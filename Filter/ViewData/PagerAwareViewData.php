@@ -51,8 +51,8 @@ class PagerAwareViewData extends ViewData
      *
      * @param $totalItems
      * @param $currentPage
-     * @param int $itemsPerPage
-     * @param int $maxPages
+     * @param int         $itemsPerPage
+     * @param int         $maxPages
      */
     public function setData($totalItems, $currentPage, $itemsPerPage = 12, $maxPages = 10)
     {
@@ -181,7 +181,6 @@ class PagerAwareViewData extends ViewData
         if ($this->currentPage - $numAdjacents < $start) {
             $begin = $start;
             $end = min($this->numPages, $this->maxPages);
-
         } elseif ($this->currentPage + $numAdjacents > $this->numPages) {
             $begin = max($start, $this->numPages - $this->maxPages + 1);
             $end = $this->numPages;
