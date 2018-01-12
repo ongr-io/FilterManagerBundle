@@ -61,11 +61,7 @@ class PagerAwareViewData extends ViewData
         $this->itemsPerPage = $itemsPerPage;
         $this->numPages = (int) ceil($this->totalItems/$this->itemsPerPage);
 
-        if ($maxPages < 3) {
-            throw new \InvalidArgumentException('Max pages has to be not less than 3.');
-        }
-
-        $this->maxPages = $maxPages;
+        $this->maxPages = $maxPages < 3 ? 3 : $maxPages;
     }
 
     /**
