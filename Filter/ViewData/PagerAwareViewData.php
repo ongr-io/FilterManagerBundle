@@ -51,21 +51,17 @@ class PagerAwareViewData extends ViewData
      *
      * @param $totalItems
      * @param $currentPage
-     * @param int $itemsPerPage
-     * @param int $maxPages
+     * @param int         $itemsPerPage
+     * @param int         $maxPages
      */
     public function setData($totalItems, $currentPage, $itemsPerPage = 12, $maxPages = 10)
     {
         $this->totalItems = $totalItems;
         $this->currentPage = $currentPage;
         $this->itemsPerPage = $itemsPerPage;
-
-//        if ($maxPages < 3) {
-//            throw new \InvalidArgumentException('Max pages has to be more than 3.');
-//        }
-        $this->maxPages = $maxPages;
-
         $this->numPages = (int) ceil($this->totalItems/$this->itemsPerPage);
+
+        $this->maxPages = $maxPages < 3 ? 3 : $maxPages;
     }
 
     /**
@@ -167,42 +163,39 @@ class PagerAwareViewData extends ViewData
     }
 
     /**
+     * @return int
+     */
+    private function calculateAdjacent()
+    {
+        $minus = $this->maxPages === 2 ? 0 : 1;
+
+        return (int) floor(($this->maxPages - $minus) / 2);
+    }
+
+    /**
      * Generates a page list.
      *
      * @return array The page list.
      */
     public function getPages()
     {
-        $numAdjacents = (int) floor(($this->maxPages - 3) / 2);
+        // Reserve one position for first/last page
+        $this->maxPages--;
 
-        if ($this->currentPage + $numAdjacents > $this->numPages) {
-            $begin = $this->numPages - $this->maxPages + 2;
+        $start = 1;
+        $numAdjacents = $this->calculateAdjacent();
+
+        if ($this->currentPage - $numAdjacents < $start) {
+            $begin = $start;
+            $end = min($this->numPages, $this->maxPages);
+        } elseif ($this->currentPage + $numAdjacents > $this->numPages) {
+            $begin = max($start, $this->numPages - $this->maxPages + 1);
+            $end = $this->numPages;
         } else {
-            $begin = $this->currentPage - $numAdjacents;
-        }
-        if ($begin < 2) {
-            $begin = 2;
+            $begin = $this->currentPage - $numAdjacents + ($this->maxPages % 2);
+            $end = $this->currentPage + $numAdjacents;
         }
 
-        $end = $begin + $this->maxPages - 2;
-//        if ($end >= $this->numPages) $end = $this->numPages - 1;
-
-//        $tmpBegin = $this->maxPages - floor($this->maxPages / 2);
-//        $tmpEnd = $tmpBegin + $this->maxPages - 1;
-//
-//        if ($tmpBegin < 1) {
-//            $tmpEnd += 1 - $tmpBegin;
-//            $tmpBegin = 1;
-//        }
-//
-//        if ($tmpEnd > $this->getLastPage()) {
-//            $tmpBegin -= $tmpEnd - $this->getLastPage();
-//            $tmpEnd = $this->getLastPage();
-//        }
-//
-//        $begin = min($tmpBegin, 2);
-//        $end = $tmpEnd;
-
-        return range($begin, $end, 1);
+        return array_unique(array_merge([1], range($begin, $end, 1), [$this->numPages]));
     }
 }

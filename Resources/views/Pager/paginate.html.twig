@@ -1,23 +1,30 @@
 <ul class="pagination">
-    {% if pager.isFirstPage == false %}
-        <li class="first"><a href="{{ ongr_paginate_path(route, pager.getFirstPage, parameters) }}">&laquo;</a></li>
-        <li class="previous"><a href="{{ ongr_paginate_path(route, pager.getPreviousPage, parameters) }}">&lsaquo;</a></li>
-    {% endif %}
-    <li class="{% if 1 == pager.getCurrentPage %}active{% endif %}">
-        <a href="{{ ongr_paginate_path(route, 1, parameters) }}">1</a>
-    </li>
-    {% if 1 < pager.getPages.0 - 1%}
-        <li>
-            <span>...</span>
+    {% if pager.isFirstPage %}
+        <li class="previous">&lsaquo;</li>
+    {% else %}
+        <li class="previous">
+            <a href="{{ ongr_paginate_path(route, pager.getPreviousPage, parameters) }}">&lsaquo;</a>
         </li>
     {% endif %}
+
+    {% set previous = false %}
+
     {% for page in pager.getPages %}
+        {% if previous and page > previous + 1 %}
+            <li>
+                <span>...</span>
+            </li>
+        {% endif %}
+
         <li class="{% if page == pager.getCurrentPage %}active{% endif %}">
             <a href="{{ ongr_paginate_path(route, page, parameters) }}">{{ page }}</a>
         </li>
+        {% set previous = page %}
     {% endfor %}
-    {% if pager.isLastPage == false %}
+
+    {% if pager.isLastPage %}
+        <li class="next">&rsaquo;</li>
+    {% else %}
         <li class="next"><a href="{{ ongr_paginate_path(route, pager.getNextPage, parameters) }}">&rsaquo;</a></li>
-        <li class="last"><a href="{{ ongr_paginate_path(route, pager.getLastPage, parameters) }}">&raquo;</a></li>
     {% endif %}
 </ul>
