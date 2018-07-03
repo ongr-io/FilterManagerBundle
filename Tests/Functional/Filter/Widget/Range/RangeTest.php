@@ -121,7 +121,6 @@ class RangeTest extends AbstractElasticsearchTestCase
      */
     public function testFilter($expectedChoices, $query = [])
     {
-
         $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range'));
         $result = $manager->handleRequest(new Request($query))->getResult();
 
@@ -141,6 +140,6 @@ class RangeTest extends AbstractElasticsearchTestCase
         $priceViewData = $result->getFilters()['price_range'];
 
         $this->assertEquals(1, floor($priceViewData->getMinBounds()));
-        $this->assertEquals(5, ceil($priceViewData->getMaxBounds()));
+        $this->assertEquals(3, ceil($priceViewData->getMaxBounds()));
     }
 }

@@ -120,7 +120,7 @@ class DateRangeTest extends AbstractElasticsearchTestCase
 
         $result = $manager->handleRequest(new Request(['limit' => 'blue']))->getFilters()['date_range_filter'];
 
-        $this->assertEquals('2001-09-11', $result->getMinBounds()->format('Y-m-d'));
-        $this->assertEquals('2005-10-11', $result->getMaxBounds()->format('Y-m-d'));
+        $this->assertEquals('2002-09-12', $result->getMinBounds()->format('Y-m-d'));
+        $this->assertEquals('2004-09-11', $result->getMaxBounds()->format('Y-m-d'));
     }
 }

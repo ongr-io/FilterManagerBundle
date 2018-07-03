@@ -46,7 +46,7 @@ class ManagerControllerTest extends \PHPUnit_Framework_TestCase
         $templating = $this->createMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $templating
             ->expects($this->once())
-            ->method('renderResponse')
+            ->method('render')
             ->with(
                 'template:name.html.twig',
                 $this->arrayHasKey('filter_manager')
