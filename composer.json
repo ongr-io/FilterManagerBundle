@@ -13,7 +13,7 @@
     "require": {
         "php": "^7.0",
         "symfony/symfony": "~3.0",
-        "ongr/elasticsearch-bundle": "~5.0",
+        "ongr/elasticsearch-bundle": "dev-6.0-dev",
         "jms/serializer-bundle": "^1.2"
     },
     "require-dev": {
