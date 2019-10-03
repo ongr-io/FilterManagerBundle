@@ -15,6 +15,6 @@ before_script:
   - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --prefer-dist --no-interaction
 script:
   - vendor/bin/phpunit --coverage-clover=coveralls.clover
-  - vendor/bin/phpcs -p --standard=PSR2 --extensions=php --ignore=vendor/,Tests/app/ ./
+  - vendor/bin/phpcs -p --standard=PSR2 --extensions=php --ignore=vendor/,Tests/,var/ ./
 after_script:
   - travis_retry php vendor/bin/coveralls
