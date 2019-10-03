@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,44 +24,42 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
     public function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'title' => 'Foo',
-                        'description' => 'fish',
-                        'attributes' => [
-                            [
-                                'name' => 'acme'
-                            ],
-                            [
-                                'name' => 'foo'
-                            ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'title' => 'Foo',
+                    'description' => 'fish',
+                    'attributes' => [
+                        [
+                            'name' => 'acme'
+                        ],
+                        [
+                            'name' => 'foo'
                         ],
                     ],
-                    [
-                        '_id' => 2,
-                        'title' => 'Baz',
-                        'description' => 'tuna fish',
-                        'attributes' => [
-                            [
-                                'name' => 'foo'
-                            ],
-                            [
-                                'name' => 'bar'
-                            ],
+                ],
+                [
+                    '_id' => 2,
+                    'title' => 'Baz',
+                    'description' => 'tuna fish',
+                    'attributes' => [
+                        [
+                            'name' => 'foo'
+                        ],
+                        [
+                            'name' => 'bar'
                         ],
                     ],
-                    [
-                        '_id' => 3,
-                        'title' => 'Foo bar',
-                        'description' => 'bar acme acme',
-                        'attributes' => [
-                            [
-                                'name' => 'acme'
-                            ]
+                ],
+                [
+                    '_id' => 3,
+                    'title' => 'Foo bar',
+                    'description' => 'bar acme acme',
+                    'attributes' => [
+                        [
+                            'name' => 'acme'
                         ]
-                    ],
+                    ]
                 ],
             ],
         ];
@@ -77,7 +76,7 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
 
         // Case #0
         $out[] = [
-            [3, 1, 2],
+            [2, 1, 3],
         ];
 
         // Case #1
@@ -114,5 +113,10 @@ class MatchSearchTest extends AbstractElasticsearchTestCase
         }
 
         $this->assertEquals($expectedChoices, $actual);
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

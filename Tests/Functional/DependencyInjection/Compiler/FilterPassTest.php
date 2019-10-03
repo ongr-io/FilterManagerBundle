@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Choice;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
@@ -24,80 +25,78 @@ class FilterPassTest extends AbstractElasticsearchTestCase
     protected function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'color' => 'blue',
-                        'active' => true,
-                        'price' => 1.5,
-                    ],
-                    [
-                        '_id' => 2,
-                        'color' => 'blue',
-                        'active' => false,
-                        'price' => 2.5,
-                    ],
-                    [
-                        '_id' => 3,
-                        'color' => 'blue',
-                        'active' => true,
-                        'price' => 3.5,
-                    ],
-                    [
-                        '_id' => 4,
-                        'color' => 'blue',
-                        'active' => false,
-                        'price' => 4.5,
-                    ],
-                    [
-                        '_id' => 5,
-                        'color' => 'red',
-                        'active' => true,
-                        'price' => 2.5,
-                    ],
-                    [
-                        '_id' => 6,
-                        'color' => 'red',
-                        'active' => false,
-                        'price' => 3.5,
-                    ],
-                    [
-                        '_id' => 7,
-                        'color' => 'red',
-                        'active' => true,
-                        'price' => 4.5,
-                    ],
-                    [
-                        '_id' => 8,
-                        'color' => 'red',
-                        'active' => false,
-                        'price' => 5.5,
-                    ],
-                    [
-                        '_id' => 9,
-                        'color' => 'green',
-                        'active' => true,
-                        'price' => 4.5,
-                    ],
-                    [
-                        '_id' => 10,
-                        'color' => 'green',
-                        'active' => false,
-                        'price' => 5.5,
-                    ],
-                    [
-                        '_id' => 11,
-                        'color' => 'yellow',
-                        'active' => true,
-                        'price' => 6.5,
-                    ],
-                    [
-                        '_id' => 12,
-                        'color' => 'yellow',
-                        'active' => false,
-                        'price' => 7.5,
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'color' => 'blue',
+                    'active' => true,
+                    'price' => 1.5,
+                ],
+                [
+                    '_id' => 2,
+                    'color' => 'blue',
+                    'active' => false,
+                    'price' => 2.5,
+                ],
+                [
+                    '_id' => 3,
+                    'color' => 'blue',
+                    'active' => true,
+                    'price' => 3.5,
+                ],
+                [
+                    '_id' => 4,
+                    'color' => 'blue',
+                    'active' => false,
+                    'price' => 4.5,
+                ],
+                [
+                    '_id' => 5,
+                    'color' => 'red',
+                    'active' => true,
+                    'price' => 2.5,
+                ],
+                [
+                    '_id' => 6,
+                    'color' => 'red',
+                    'active' => false,
+                    'price' => 3.5,
+                ],
+                [
+                    '_id' => 7,
+                    'color' => 'red',
+                    'active' => true,
+                    'price' => 4.5,
+                ],
+                [
+                    '_id' => 8,
+                    'color' => 'red',
+                    'active' => false,
+                    'price' => 5.5,
+                ],
+                [
+                    '_id' => 9,
+                    'color' => 'green',
+                    'active' => true,
+                    'price' => 4.5,
+                ],
+                [
+                    '_id' => 10,
+                    'color' => 'green',
+                    'active' => false,
+                    'price' => 5.5,
+                ],
+                [
+                    '_id' => 11,
+                    'color' => 'yellow',
+                    'active' => true,
+                    'price' => 6.5,
+                ],
+                [
+                    '_id' => 12,
+                    'color' => 'yellow',
+                    'active' => false,
+                    'price' => 7.5,
                 ],
             ],
         ];
@@ -215,5 +214,10 @@ class FilterPassTest extends AbstractElasticsearchTestCase
         }
 
         $this->assertEquals($expectedChoices, $actualChoices);
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

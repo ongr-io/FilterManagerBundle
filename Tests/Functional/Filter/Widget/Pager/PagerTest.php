@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Pager;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Search\FilterManager;
@@ -24,38 +25,36 @@ class PagerTest extends AbstractElasticsearchTestCase
     protected function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'color' => 'red',
-                        'manufacturer' => 'a',
-                        'stock' => 1,
-                    ],
-                    [
-                        '_id' => 2,
-                        'color' => 'blue',
-                        'manufacturer' => 'a',
-                        'stock' => 2,
-                    ],
-                    [
-                        '_id' => 3,
-                        'color' => 'red',
-                        'manufacturer' => 'b',
-                        'stock' => 3,
-                    ],
-                    [
-                        '_id' => 4,
-                        'color' => 'blue',
-                        'manufacturer' => 'c',
-                        'stock' => 4,
-                    ],
-                    [
-                        '_id' => 5,
-                        'color' => 'blue',
-                        'manufacturer' => 'b',
-                        'stock' => 5,
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'color' => 'red',
+                    'manufacturer' => 'a',
+                    'stock' => 1,
+                ],
+                [
+                    '_id' => 2,
+                    'color' => 'blue',
+                    'manufacturer' => 'a',
+                    'stock' => 2,
+                ],
+                [
+                    '_id' => 3,
+                    'color' => 'red',
+                    'manufacturer' => 'b',
+                    'stock' => 3,
+                ],
+                [
+                    '_id' => 4,
+                    'color' => 'blue',
+                    'manufacturer' => 'c',
+                    'stock' => 4,
+                ],
+                [
+                    '_id' => 5,
+                    'color' => 'blue',
+                    'manufacturer' => 'b',
+                    'stock' => 5,
                 ],
             ],
         ];
@@ -93,5 +92,10 @@ class PagerTest extends AbstractElasticsearchTestCase
         }
 
         $this->assertEquals([2,1], $actual);
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

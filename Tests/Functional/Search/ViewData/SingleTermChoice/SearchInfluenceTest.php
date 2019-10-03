@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Search\ViewData\SingleTermChoice;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\ViewData\ChoicesAwareViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Choice\SingleTermChoice;
@@ -77,7 +78,7 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
 
         return new FilterManager(
             $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
+            $this->getIndex(Product::class),
             new EventDispatcher(),
             $this->createMock('JMS\Serializer\Serializer')
         );
@@ -142,6 +143,6 @@ class SearchInfluenceTest extends AbstractElasticsearchTestCase
             $actual[$choice->getLabel()] = $choice->getCount();
         }
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals(sort($expected), sort($actual));
     }
 }

@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
@@ -26,21 +27,19 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
     public function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'title' => 'Foo',
-                    ],
-                    [
-                        '_id' => 2,
-                        'title' => 'Baz',
-                        'description' => 'Foo',
-                    ],
-                    [
-                        '_id' => 3,
-                        'title' => 'Bar',
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'title' => 'Foo',
+                ],
+                [
+                    '_id' => 2,
+                    'title' => 'Baz',
+                    'description' => 'Foo',
+                ],
+                [
+                    '_id' => 3,
+                    'title' => 'Bar',
                 ],
             ],
         ];
@@ -63,7 +62,7 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
 
         return new FilterManager(
             $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
+            $this->getIndex(Product::class),
             new EventDispatcher(),
             $this->createMock('JMS\Serializer\Serializer')
         );
@@ -106,5 +105,10 @@ class BoostedMatchTest extends AbstractElasticsearchTestCase
         }
 
         $this->assertEquals($expected, $actual);
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

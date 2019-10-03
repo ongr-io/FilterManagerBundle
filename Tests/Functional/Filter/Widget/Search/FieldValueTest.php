@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Search;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,27 +24,25 @@ class FieldValueTest extends AbstractElasticsearchTestCase
     public function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'categories' => [
-                            'jeans',
-                            'shirts',
-                        ]
-                    ],
-                    [
-                        '_id' => 2,
-                        'categories' => [
-                            'jeans',
-                        ]
-                    ],
-                    [
-                        '_id' => 3,
-                        'categories' => [
-                            'shirts',
-                        ]
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'category' => [
+                        'jeans',
+                        'shirts',
+                    ]
+                ],
+                [
+                    '_id' => 2,
+                    'category' => [
+                        'jeans',
+                    ]
+                ],
+                [
+                    '_id' => 3,
+                    'category' => [
+                        'shirts',
+                    ]
                 ],
             ],
         ];
@@ -85,6 +84,11 @@ class FieldValueTest extends AbstractElasticsearchTestCase
             $actual[] = $document->id;
         }
 
-        $this->assertEquals($expectedChoices, $actual);
+        $this->assertEquals(sort($expectedChoices), sort($actual));
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

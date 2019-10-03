@@ -13,7 +13,13 @@
     "require": {
         "php": "^7.0",
         "ongr/elasticsearch-bundle": "dev-6.0-dev",
-        "jms/serializer-bundle": "^2.4"
+        "jms/serializer-bundle": "^2.4",
+        "symfony/twig-bundle": "^3.4|^4.0",
+        "symfony/translation": "^3.4|^4.0",
+        "symfony/asset": "^5.0@dev",
+        "twig/twig": "^2",
+        "symfony/browser-kit": "^5.0@dev",
+        "symfony/css-selector": "^5.0@dev"
     },
     "require-dev": {
         "monolog/monolog": "~1.0",
@@ -24,6 +30,14 @@
     "autoload": {
         "psr-4": { "ONGR\\FilterManagerBundle\\": "" },
         "exclude-from-classmap": ["/Test/", "/Tests/"]
+    },
+    "autoload-dev": {
+        "files": [
+            "Tests/app/AppKernel.php"
+        ],
+        "psr-4": {
+            "App\\": "\\Tests\\app\\src\\"
+        }
     },
     "minimum-stability": "dev",
     "extra": {

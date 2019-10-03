@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Search\FilterManager;
@@ -27,38 +28,36 @@ class RangeTest extends AbstractElasticsearchTestCase
     public function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'color' => 'red',
-                        'manufacturer' => 'a',
-                        'price' => 1,
-                    ],
-                    [
-                        '_id' => 2,
-                        'color' => 'blue',
-                        'manufacturer' => 'a',
-                        'price' => 2,
-                    ],
-                    [
-                        '_id' => 3,
-                        'color' => 'red',
-                        'manufacturer' => 'b',
-                        'price' => 3,
-                    ],
-                    [
-                        '_id' => 4,
-                        'color' => 'blue',
-                        'manufacturer' => 'b',
-                        'price' => 4,
-                    ],
-                    [
-                        '_id' => 5,
-                        'color' => 'blue',
-                        'manufacturer' => 'b',
-                        'price' => 4.2,
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'color' => 'red',
+                    'manufacturer' => 'a',
+                    'price' => 1,
+                ],
+                [
+                    '_id' => 2,
+                    'color' => 'blue',
+                    'manufacturer' => 'a',
+                    'price' => 2,
+                ],
+                [
+                    '_id' => 3,
+                    'color' => 'red',
+                    'manufacturer' => 'b',
+                    'price' => 3,
+                ],
+                [
+                    '_id' => 4,
+                    'color' => 'blue',
+                    'manufacturer' => 'b',
+                    'price' => 4,
+                ],
+                [
+                    '_id' => 5,
+                    'color' => 'blue',
+                    'manufacturer' => 'b',
+                    'price' => 4.2,
                 ],
             ],
         ];
@@ -121,7 +120,6 @@ class RangeTest extends AbstractElasticsearchTestCase
      */
     public function testFilter($expectedChoices, $query = [])
     {
-
         $manager = $this->getContainer()->get(ONGRFilterManagerExtension::getFilterManagerId('range'));
         $result = $manager->handleRequest(new Request($query))->getResult();
 
@@ -142,5 +140,10 @@ class RangeTest extends AbstractElasticsearchTestCase
 
         $this->assertEquals(1, floor($priceViewData->getMinBounds()));
         $this->assertEquals(5, ceil($priceViewData->getMaxBounds()));
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

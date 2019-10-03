@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Search\ViewData;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
@@ -76,7 +77,7 @@ class FilterStateTest extends AbstractElasticsearchTestCase
 
         return new FilterManager(
             $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
+            $this->getIndex(Product::class),
             new EventDispatcher(),
             $this->createMock('JMS\Serializer\Serializer')
         );

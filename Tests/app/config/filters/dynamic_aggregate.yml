@@ -5,7 +5,7 @@ ongr_filter_manager:
                 - dynamic_aggregate_filter
                 - dynamic_aggregate_with_zero_choice_filter
                 - multi_dynamic_aggregate_filter
-            repository: es.manager.default.product
+            repository: App\Document\Product
     filters:
         dynamic_aggregate_filter:
             type: dynamic_aggregate

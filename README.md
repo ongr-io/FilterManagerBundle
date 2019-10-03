@@ -29,7 +29,7 @@ FilterManager bundle is installed using [Composer](https://getcomposer.org).
 
 ```bash
 # You can require any version you need, check the latest stable to make sure you are using the newest version.
-$ composer require ongr/filter-manager-bundle "~2.0"
+$ composer require ongr/filter-manager-bundle "~3.0"
 ```
 
 > Please note that filter manager requires Elasticsearch bundle, guide on how to install and configure it can be found [here](https://github.com/ongr-io/ElasticsearchBundle).
@@ -39,19 +39,19 @@ $ composer require ongr/filter-manager-bundle "~2.0"
 Enable Filter Manager bundle in your AppKernel:
 
 ```php
-// app/AppKernel.php
+// config/bundles.php
 
-public function registerBundles()
-{
-    $bundles = [
-        // ...
-        new ONGR\ElasticsearchBundle\ONGRElasticsearchBundle(),
-        new ONGR\FilterManagerBundle\ONGRFilterManagerBundle(),
-        new \JMS\SerializerBundle\JMSSerializerBundle(),
-    ];
-    
-    // ...
-}
+<?php
+
+return [
+    ...
+
+    ONGR\ElasticsearchBundle\ONGRElasticsearchBundle::class => ['all' => true],
+    ONGR\FilterManagerBundle\ONGRFilterManagerBundle::class => ['all' => true],
+    JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
+
+    ...
+];
 ```
 
 ### Step 3: Add configuration for manager
@@ -62,19 +62,17 @@ Add minimal configuration for Elasticsearch and FilterManager bundles.
 # app/config/config.yml
 
 ongr_elasticsearch:
-    managers:
-        default:
-            index: 
-                hosts:
-                    - 127.0.0.1:9200
-                index_name: products
+  indexes:
+    App\Document\Product:
+      hosts: 
+         - 127.0.0.1:9200 
 
 ongr_filter_manager:
     managers:
         search_list: # <- Filter manager name
             filters:
                 - country
-            repository: es.manager.default.product # <- Product document repository service to execute queries on
+            repository: App\Document\Product # <- Product document rindex service (used to be a repository prior to v3.0)
     filters:
         country: # <- Filter name
             type: choice

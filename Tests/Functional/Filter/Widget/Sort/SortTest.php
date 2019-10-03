@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Sort;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,48 +24,46 @@ class SortTest extends AbstractElasticsearchTestCase
     protected function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'color' => 'red',
-                        'manufacturer' => 'a',
-                        'stock' => 5,
-                        'price' => 1,
-                        // Average = 3, sum = 15.
-                        'items' => [1, 2, 3, 4, 5],
-                        'words' => ['one', 'two', 'three', 'alfa', 'beta'],
-                    ],
-                    [
-                        '_id' => 2,
-                        'color' => 'blue',
-                        'manufacturer' => 'a',
-                        'stock' => 6,
-                        'price' => 3,
-                        // Average = 7.2, sum = 36.
-                        'items' => [2, 12, 3, 14, 5],
-                        'words' => ['eta', 'geta', 'zeta', 'beta', 'deta'],
-                    ],
-                    [
-                        '_id' => 3,
-                        'color' => 'red',
-                        'manufacturer' => 'b',
-                        'stock' => 2,
-                        'price' => 3,
-                        // Average = 3.2, sum = 16.
-                        'items' => [5, 4, 3, -12, 16],
-                        'words' => ['vienas', 'du', 'trys', 'keturi', 'penki'],
-                    ],
-                    [
-                        '_id' => 4,
-                        'color' => 'blue',
-                        'manufacturer' => 'b',
-                        'stock' => 7,
-                        'price' => 4,
-                        // Average = 6, sum = 30.
-                        'items' => [1, -2, 30, -4, 5],
-                        'words' => ['eins', 'zwei', 'drei', 'fier', 'funf'],
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'color' => 'red',
+                    'manufacturer' => 'a',
+                    'stock' => 5,
+                    'price' => 1,
+                    // Average = 3, sum = 15.
+                    'items' => [1, 2, 3, 4, 5],
+                    'words' => ['one', 'two', 'three', 'alfa', 'beta'],
+                ],
+                [
+                    '_id' => 2,
+                    'color' => 'blue',
+                    'manufacturer' => 'a',
+                    'stock' => 6,
+                    'price' => 3,
+                    // Average = 7.2, sum = 36.
+                    'items' => [2, 12, 3, 14, 5],
+                    'words' => ['eta', 'geta', 'zeta', 'beta', 'deta'],
+                ],
+                [
+                    '_id' => 3,
+                    'color' => 'red',
+                    'manufacturer' => 'b',
+                    'stock' => 2,
+                    'price' => 3,
+                    // Average = 3.2, sum = 16.
+                    'items' => [5, 4, 3, -12, 16],
+                    'words' => ['vienas', 'du', 'trys', 'keturi', 'penki'],
+                ],
+                [
+                    '_id' => 4,
+                    'color' => 'blue',
+                    'manufacturer' => 'b',
+                    'stock' => 7,
+                    'price' => 4,
+                    // Average = 6, sum = 30.
+                    'items' => [1, -2, 30, -4, 5],
+                    'words' => ['eins', 'zwei', 'drei', 'fier', 'funf'],
                 ],
             ],
         ];
@@ -145,5 +144,10 @@ class SortTest extends AbstractElasticsearchTestCase
         }
 
         $this->assertEquals($expectedChoices, $actual);
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

@@ -12,6 +12,7 @@
 namespace ONGR\FilterManagerBundle\Search;
 
 use JMS\Serializer\Serializer;
+use ONGR\ElasticsearchBundle\Service\IndexService;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchBundle\Service\Repository;
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
@@ -62,7 +63,7 @@ class FilterManager implements FilterManagerInterface
      */
     public function __construct(
         FilterContainer $container,
-        Repository $repository,
+        IndexService $repository,
         EventDispatcherInterface $eventDispatcher,
         $serializer
     ) {

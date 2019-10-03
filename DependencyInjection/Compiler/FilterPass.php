@@ -83,6 +83,7 @@ class FilterPass implements CompilerPassInterface
                     new Reference('jms_serializer')
                 ]
             );
+            $managerDefinition->setPublic(true);
 
             $container->setDefinition(ONGRFilterManagerExtension::getFilterManagerId($managerName), $managerDefinition);
         }

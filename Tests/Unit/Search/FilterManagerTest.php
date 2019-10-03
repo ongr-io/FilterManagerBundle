@@ -60,12 +60,9 @@ class FilterManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mockRepository = $this->getMockBuilder('ONGR\ElasticsearchBundle\Service\Repository')
+        $mockRepository = $this->getMockBuilder('ONGR\ElasticsearchBundle\Service\IndexService')
             ->disableOriginalConstructor()
             ->getMock();
-        $mockRepository->expects($this->once())
-            ->method('findDocuments')
-            ->will($this->returnValue($mockDocumentIterator));
 
         $filterManager = new FilterManager(
             $mockFilterContainer,

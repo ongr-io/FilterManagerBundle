@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Filter\Widget\Range;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,33 +27,31 @@ class DateRangeTest extends AbstractElasticsearchTestCase
     public function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'date' => '2001-09-11',
-                        'color' => 'red',
-                    ],
-                    [
-                        '_id' => 2,
-                        'date' => '2002-09-12',
-                        'color' => 'blue',
-                    ],
-                    [
-                        '_id' => 3,
-                        'date' => '2003-09-11',
-                        'color' => 'blue',
-                    ],
-                    [
-                        '_id' => 4,
-                        'date' => '2004-09-11',
-                        'color' => 'blue',
-                    ],
-                    [
-                        '_id' => 5,
-                        'date' => '2005-10-11',
-                        'color' => 'red',
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'date' => '2001-09-11',
+                    'color' => 'red',
+                ],
+                [
+                    '_id' => 2,
+                    'date' => '2002-09-12',
+                    'color' => 'blue',
+                ],
+                [
+                    '_id' => 3,
+                    'date' => '2003-09-11',
+                    'color' => 'blue',
+                ],
+                [
+                    '_id' => 4,
+                    'date' => '2004-09-11',
+                    'color' => 'blue',
+                ],
+                [
+                    '_id' => 5,
+                    'date' => '2005-10-11',
+                    'color' => 'red',
                 ],
             ],
         ];
@@ -107,7 +106,7 @@ class DateRangeTest extends AbstractElasticsearchTestCase
             $actual[] = $document->id;
         }
 
-        $this->assertEquals($expectedChoices, $actual);
+        $this->assertEquals(sort($expectedChoices), sort($actual));
     }
 
     public function testBoundsFormation()
@@ -122,5 +121,10 @@ class DateRangeTest extends AbstractElasticsearchTestCase
 
         $this->assertEquals('2001-09-11', $result->getMinBounds()->format('Y-m-d'));
         $this->assertEquals('2005-10-11', $result->getMaxBounds()->format('Y-m-d'));
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

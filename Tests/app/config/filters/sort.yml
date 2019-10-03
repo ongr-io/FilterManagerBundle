@@ -3,7 +3,7 @@ ongr_filter_manager:
         sorting:
             filters:
                 - sort_1
-            repository: es.manager.default.product
+            repository: App\Document\Product
     filters:
         sort_1:
             type: sort

@@ -8,7 +8,7 @@ ongr_filter_manager:
                 - range_sort
                 - limit
                 - inclusive_range
-            repository: es.manager.default.product
+            repository: App\Document\Product
     filters:
         price_range:
             type: range
