@@ -8,6 +8,13 @@ imports:
     - { resource: filters/search.yml }
     - { resource: filters/sort.yml }
 
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    paths:
+        'Tests/app/templates': 'App'
+
 framework:
     secret: "supersecret"
     translator: { fallbacks: [en] }
@@ -37,33 +44,27 @@ ongr_elasticsearch:
                 type: custom
                 tokenizer: keyword
                 filter: [lowercase]
-    managers:
-        default:
-            index:
-                hosts:
-                    - 127.0.0.1:9200
-                index_name: filter_manager_testing
-                settings:
-                    refresh_interval: -1
-                    number_of_shards: 2
-                    number_of_replicas: 0
-            mappings:
-                - TestBundle
+    source_directories: 
+        - '/Tests/app/src'
+    indexes:
+        App\Document\Product:
+            hosts:
+                - 127.0.0.1:9200
 
 ongr_filter_manager:
     managers:
         default:
             filters: ['sort_filter']
-            repository: 'es.manager.default.product'
+            repository: 'App\Document\Product'
         relation_control:
             filters: ['color_control', 'price', 'active']
-            repository: 'es.manager.default.product'
+            repository: 'App\Document\Product'
         relation_search:
             filters: ['color_search_include', 'color_search_exclude', 'price', 'active']
-            repository: 'es.manager.default.product'
+            repository: 'App\Document\Product'
         relation_reset:
             filters: ['color_reset_include', 'color_reset_exclude',  'price', 'active']
-            repository: 'es.manager.default.product'
+            repository: 'App\Document\Product'
 
     filters:
         sort_filter:

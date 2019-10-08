@@ -12,9 +12,14 @@
     ],
     "require": {
         "php": "^7.0",
-        "symfony/symfony": "~3.0",
-        "ongr/elasticsearch-bundle": "~5.0",
-        "jms/serializer-bundle": "^1.2"
+        "ongr/elasticsearch-bundle": "^6.0",
+        "jms/serializer-bundle": "^2.4",
+        "symfony/twig-bundle": "^3.4|^4.0",
+        "symfony/translation": "^3.4|^4.0",
+        "symfony/asset": "^3.4|^4.0",
+        "twig/twig": "^2",
+        "symfony/browser-kit": "^3.4|^4.0",
+        "symfony/css-selector": "^3.4|^4.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.0",
@@ -25,6 +30,14 @@
     "autoload": {
         "psr-4": { "ONGR\\FilterManagerBundle\\": "" },
         "exclude-from-classmap": ["/Test/", "/Tests/"]
+    },
+    "autoload-dev": {
+        "files": [
+            "Tests/app/AppKernel.php"
+        ],
+        "psr-4": {
+            "App\\": "\\Tests\\app\\src\\"
+        }
     },
     "minimum-stability": "dev",
     "extra": {

@@ -6,7 +6,7 @@ ongr_filter_manager:
                 - mc_filter_man
                 - mc_filter_man_priority_blue
                 - mc_filter_zero
-            repository: es.manager.default.product
+            repository: App\Document\Product
     filters:
         mc_filter:
             type: multi_choice

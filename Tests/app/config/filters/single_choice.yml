@@ -9,7 +9,7 @@ ongr_filter_manager:
                 - sc_sort_term_a
                 - sc_sort_term_d
                 - sc_sort_count
-            repository: es.manager.default.product
+            repository: App\Document\Product
     filters:
         sc:
             type: choice

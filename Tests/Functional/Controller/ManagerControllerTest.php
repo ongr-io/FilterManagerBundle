@@ -11,6 +11,7 @@
 
 namespace ONGR\FilterManagerBundle\Tests\Functional\Controller;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 
 class ManagerControllerTest extends AbstractElasticsearchTestCase
@@ -21,23 +22,21 @@ class ManagerControllerTest extends AbstractElasticsearchTestCase
     protected function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'title' => 'Foo product',
-                        'color' => 'red',
-                    ],
-                    [
-                        '_id' => 2,
-                        'title' => 'Foo cool product',
-                        'color' => 'red',
-                    ],
-                    [
-                        '_id' => 3,
-                        'title' => 'Another cool product',
-                        'color' => 'red',
-                    ],
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'title' => 'Foo product',
+                    'color' => 'red',
+                ],
+                [
+                    '_id' => 2,
+                    'title' => 'Foo cool product',
+                    'color' => 'red',
+                ],
+                [
+                    '_id' => 3,
+                    'title' => 'Another cool product',
+                    'color' => 'red',
                 ],
             ],
         ];
@@ -87,5 +86,10 @@ class ManagerControllerTest extends AbstractElasticsearchTestCase
         $this->assertJson($response->getContent());
 
         $this->assertTrue(substr_count($response->getContent(), PHP_EOL) > 1);
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

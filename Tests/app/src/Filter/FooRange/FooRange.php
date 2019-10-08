@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange;
+namespace App\Filter\FooRange;
 
 use ONGR\ElasticsearchDSL\Aggregation\Metric\StatsAggregation;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;

@@ -1,6 +1,6 @@
 services:
   ongr_filter_manager.filter.custom_range:
-    class: ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Filter\FooRange\FooRange
+    class: App\Filter\FooRange\FooRange
     tags:
         - { name: ongr_filter_manager.filter, type: foo_range }
 

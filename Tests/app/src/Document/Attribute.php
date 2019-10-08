@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Document;
+namespace App\Document;
 
 use ONGR\ElasticsearchBundle\Annotation as ES;
 
 /**
- * @ES\Nested()
+ * @ES\NestedType()
  */
 class Attribute
 {

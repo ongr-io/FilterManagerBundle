@@ -6,15 +6,15 @@ ongr_filter_manager:
                 - nested_search
                 - must
                 - must_2
-            repository: es.manager.default.product
+            repository: App\Document\Product
         field:
             filters:
                 - field
-            repository: es.manager.default.product
+            repository: App\Document\Product
         document_value:
             filters:
                 - document
-            repository: es.manager.default.product
+            repository: App\Document\Product
     filters:
         phraze:
             type: match
@@ -51,12 +51,12 @@ ongr_filter_manager:
         document:
             type: document_value
             request_field: document
-            document_field: categories
+            document_field: category
             options:
                 field: category
         field:
             type: field_value
             request_field: ~
-            document_field: categories
+            document_field: category
             options:
                 value: jeans

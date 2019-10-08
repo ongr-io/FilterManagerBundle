@@ -11,6 +11,7 @@
 
 namespace Tests\Functional\Filter\Widget\Dynamic;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\DependencyInjection\ONGRFilterManagerExtension;
 use ONGR\FilterManagerBundle\Filter\ViewData\AggregateViewData;
@@ -24,195 +25,193 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
     protected function getDataArray()
     {
         return [
-            'default' => [
-                'product' => [
-                    [
-                        '_id' => 1,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'USA',
-                            ],
-                            [
-                                'name' => 'Designed in',
-                                'value' => 'USA',
-                            ],
-                            [
-                                'name' => 'Color',
-                                'value' => 'Green',
-                            ],
-                            [
-                                'name' => 'Condition',
-                                'value' => 'Excelent',
-                            ],
-                            [
-                                'name' => 'Group',
-                                'value' => 'Accessories',
-                            ]
+            Product::class => [
+                [
+                    '_id' => 1,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'USA',
+                        ],
+                        [
+                            'name' => 'Designed in',
+                            'value' => 'USA',
+                        ],
+                        [
+                            'name' => 'Color',
+                            'value' => 'Green',
+                        ],
+                        [
+                            'name' => 'Condition',
+                            'value' => 'Excelent',
+                        ],
+                        [
+                            'name' => 'Group',
+                            'value' => 'Accessories',
                         ]
-                    ],
-                    [
-                        '_id' => 2,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'Germany',
-                            ],
-                            [
-                                'name' => 'Condition',
-                                'value' => 'Excelent',
-                            ],
-                            [
-                                'name' => 'Group',
-                                'value' => 'Accessories',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 2,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'Germany',
+                        ],
+                        [
+                            'name' => 'Condition',
+                            'value' => 'Excelent',
+                        ],
+                        [
+                            'name' => 'Group',
+                            'value' => 'Accessories',
                         ]
-                    ],
-                    [
-                        '_id' => 3,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'Lithuania',
-                            ],
-                            [
-                                'name' => 'Designed in',
-                                'value' => 'USA',
-                            ],
-                            [
-                                'name' => 'Color',
-                                'value' => 'Green',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 3,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'Lithuania',
+                        ],
+                        [
+                            'name' => 'Designed in',
+                            'value' => 'USA',
+                        ],
+                        [
+                            'name' => 'Color',
+                            'value' => 'Green',
                         ]
-                    ],
-                    [
-                        '_id' => 4,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'China',
-                            ],
-                            [
-                                'name' => 'Condition',
-                                'value' => 'Fair',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 4,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'China',
+                        ],
+                        [
+                            'name' => 'Condition',
+                            'value' => 'Fair',
                         ]
-                    ],
-                    [
-                        '_id' => 5,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'USA',
-                            ],
-                            [
-                                'name' => 'Designed in',
-                                'value' => 'Germany',
-                            ],
-                            [
-                                'name' => 'Color',
-                                'value' => 'Red',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 5,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'USA',
+                        ],
+                        [
+                            'name' => 'Designed in',
+                            'value' => 'Germany',
+                        ],
+                        [
+                            'name' => 'Color',
+                            'value' => 'Red',
                         ]
-                    ],
-                    [
-                        '_id' => 6,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'USA',
-                            ],
-                            [
-                                'name' => 'Condition',
-                                'value' => 'Good',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 6,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'USA',
+                        ],
+                        [
+                            'name' => 'Condition',
+                            'value' => 'Good',
                         ]
-                    ],
-                    [
-                        '_id' => 7,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'China',
-                            ],
-                            [
-                                'name' => 'Condition',
-                                'value' => 'Good',
-                            ],
-                            [
-                                'name' => 'Group',
-                                'value' => 'Accessories',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 7,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'China',
+                        ],
+                        [
+                            'name' => 'Condition',
+                            'value' => 'Good',
+                        ],
+                        [
+                            'name' => 'Group',
+                            'value' => 'Accessories',
                         ]
-                    ],
-                    [
-                        '_id' => 8,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'Germany',
-                            ],
-                            [
-                                'name' => 'Color',
-                                'value' => 'Black',
-                            ],
-                            [
-                                'name' => 'Group',
-                                'value' => 'Maintenance',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 8,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'Germany',
+                        ],
+                        [
+                            'name' => 'Color',
+                            'value' => 'Black',
+                        ],
+                        [
+                            'name' => 'Group',
+                            'value' => 'Maintenance',
                         ]
-                    ],
-                    [
-                        '_id' => 9,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'China',
-                            ],
-                            [
-                                'name' => 'Designed in',
-                                'value' => 'USA',
-                            ],
-                            [
-                                'name' => 'Group',
-                                'value' => 'Utilities',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 9,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'China',
+                        ],
+                        [
+                            'name' => 'Designed in',
+                            'value' => 'USA',
+                        ],
+                        [
+                            'name' => 'Group',
+                            'value' => 'Utilities',
                         ]
-                    ],
-                    [
-                        '_id' => 10,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'China',
-                            ],
-                            [
-                                'name' => 'Designed in',
-                                'value' => 'Germany',
-                            ],
-                            [
-                                'name' => 'Color',
-                                'value' => 'Red',
-                            ],
-                            [
-                                'name' => 'Condition',
-                                'value' => 'Fair',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 10,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'China',
+                        ],
+                        [
+                            'name' => 'Designed in',
+                            'value' => 'Germany',
+                        ],
+                        [
+                            'name' => 'Color',
+                            'value' => 'Red',
+                        ],
+                        [
+                            'name' => 'Condition',
+                            'value' => 'Fair',
                         ]
-                    ],
-                    [
-                        '_id' => 11,
-                        'attributes' => [
-                            [
-                                'name' => 'Made in',
-                                'value' => 'Germany',
-                            ],
-                            [
-                                'name' => 'Group',
-                                'value' => 'Utilities',
-                            ]
+                    ]
+                ],
+                [
+                    '_id' => 11,
+                    'attributes' => [
+                        [
+                            'name' => 'Made in',
+                            'value' => 'Germany',
+                        ],
+                        [
+                            'name' => 'Group',
+                            'value' => 'Utilities',
                         ]
-                    ],
+                    ]
                 ],
             ],
         ];
@@ -360,5 +359,10 @@ class DynamicAggregateTest extends AbstractElasticsearchTestCase
         }
 
         return $actualChoices;
+    }
+
+    protected function setUp()
+    {
+        $this->getIndex(Product::class);
     }
 }

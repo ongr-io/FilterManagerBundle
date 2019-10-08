@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\app\fixture\TestBundle\Document;
+namespace App\Document;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use ONGR\ElasticsearchBundle\Annotation as ES;
-use ONGR\ElasticsearchBundle\Collection\Collection;
 use ONGR\FilterManagerBundle\SerializableInterface;
 
 /**
- * @ES\Document(type="product")
+ * @ES\Index()
  */
 class Product implements SerializableInterface
 {
@@ -37,7 +37,7 @@ class Product implements SerializableInterface
     /**
      * @var string
      *
-     * @ES\Property(type="text", options={"fielddata"="true"})
+     * @ES\Property(type="text", settings={"fielddata"="true"})
      */
     public $sku;
 
@@ -135,13 +135,13 @@ class Product implements SerializableInterface
     /**
      * @var Attribute[]
      *
-     * @ES\Embedded(class="TestBundle:Attribute", multiple=true)
+     * @ES\Embedded(class="App\Document\Attribute")
      */
     public $attributes;
 
     public function __construct()
     {
-        $this->attributes = new Collection();
+        $this->attributes = new ArrayCollection();
     }
 
     /**

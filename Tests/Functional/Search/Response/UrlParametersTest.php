@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\FilterManagerBundle\Tests\Functional\Response;
+namespace ONGR\FilterManagerBundle\Tests\Functional\Search\Response;
 
+use App\Document\Product;
 use ONGR\ElasticsearchBundle\Test\AbstractElasticsearchTestCase;
 use ONGR\FilterManagerBundle\Filter\Widget\Search\MatchSearch;
 use ONGR\FilterManagerBundle\Search\FilterContainer;
@@ -75,7 +76,7 @@ class UrlParametersTest extends AbstractElasticsearchTestCase
 
         return new FilterManager(
             $container,
-            $this->getManager()->getRepository('TestBundle:Product'),
+            $this->getIndex(Product::class),
             new EventDispatcher(),
             $this->createMock('JMS\Serializer\Serializer')
         );
