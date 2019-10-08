@@ -44,7 +44,8 @@ ongr_elasticsearch:
                 type: custom
                 tokenizer: keyword
                 filter: [lowercase]
-    source_directory: /Tests/app/src
+    source_directories: 
+        - '/Tests/app/src'
     indexes:
         App\Document\Product:
             hosts:
