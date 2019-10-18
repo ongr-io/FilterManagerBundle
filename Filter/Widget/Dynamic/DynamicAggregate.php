@@ -114,6 +114,10 @@ class DynamicAggregate extends AbstractFilter implements ViewDataFactoryInterfac
             $valueAggregation->addParameter('order', [$this->getSortType() => $this->getSortOrder()]);
         }
 
+        if ($this->getOption('size') > 0) {
+            $valueAggregation->addParameter('size', $this->getOption('size'));
+        }
+
         if ($state->isActive()) {
             foreach ($state->getValue() as $key => $term) {
                 $terms = $state->getValue();
