@@ -13,7 +13,7 @@ namespace ONGR\FilterManagerBundle\Event;
 
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\FilterManagerBundle\Filter\FilterState;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class PreProcessSearchEvent extends Event
 {
