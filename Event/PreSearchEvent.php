@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Event;
 
 use ONGR\FilterManagerBundle\Search\SearchRequest;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class PreSearchEvent extends Event
 {

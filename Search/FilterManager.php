@@ -90,7 +90,7 @@ class FilterManager implements FilterManagerInterface
      */
     public function search(SearchRequest $request)
     {
-        $this->eventDispatcher->dispatch(ONGRFilterManagerEvents::PRE_SEARCH, new PreSearchEvent($request));
+        $this->eventDispatcher->dispatch(new PreSearchEvent($request), ONGRFilterManagerEvents::PRE_SEARCH);
 
         $search = $this->container->buildSearch($request);
 
@@ -107,8 +107,8 @@ class FilterManager implements FilterManagerInterface
             }
 
             $this->eventDispatcher->dispatch(
-                ONGRFilterManagerEvents::PRE_PROCESS_SEARCH,
-                new PreProcessSearchEvent($request->get($name), $relatedSearch)
+                new PreProcessSearchEvent($request->get($name), $relatedSearch),
+                ONGRFilterManagerEvents::PRE_PROCESS_SEARCH
             );
 
             $filter->preProcessSearch(
@@ -119,7 +119,7 @@ class FilterManager implements FilterManagerInterface
         }
 
         $result = $this->repository->findDocuments($search);
-        $this->eventDispatcher->dispatch(ONGRFilterManagerEvents::SEARCH_RESPONSE, new SearchResponseEvent($result));
+        $this->eventDispatcher->dispatch(new SearchResponseEvent($result), ONGRFilterManagerEvents::SEARCH_RESPONSE);
 
         return new SearchResponse(
             $this->getFiltersViewData($result, $request),

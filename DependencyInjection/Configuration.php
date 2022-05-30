@@ -27,8 +27,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ongr_filter_manager');
+        $treeBuilder = new TreeBuilder('ongr_filter_manager');
+        $rootNode = $treeBuilder->getRootNode();
 
         $this->addManagersSection($rootNode);
         $this->addFiltersSection($rootNode);

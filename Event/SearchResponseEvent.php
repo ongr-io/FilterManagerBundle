@@ -12,7 +12,7 @@
 namespace ONGR\FilterManagerBundle\Event;
 
 use ONGR\ElasticsearchBundle\Result\DocumentIterator;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class SearchResponseEvent extends Event
 {
